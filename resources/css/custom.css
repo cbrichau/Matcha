@@ -1,0 +1,57 @@
+body
+{
+  background-color: #f3f3f3;
+}
+
+nav .navbar-nav li.nav-item > a
+{
+  color: #007bff !important; /*primary*/
+}
+nav .navbar-nav li.nav-item > a.active,
+nav .navbar-nav li.nav-item:hover
+{
+  color: #0056b3;text-decoration: underline;
+}
+
+form
+{
+  max-width: 500px;
+  margin: 1em auto;
+  padding: 1em;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+  text-align: center;
+}
+form label:hover,
+form input[type="range"]
+{
+  cursor: pointer;
+}
+
+/* ************************** *\
+    NOTIFICATIONS
+\* ************************** */
+
+.alert
+{
+  padding: .5rem 1.25rem .5rem 1.8rem;
+  text-align: left;
+}
+.alert span
+{
+  font-weight:bold;
+  text-transform:uppercase;
+}
+.alert-danger,
+.alert-success,
+.alert-warning,
+.alert-info
+{
+  background-repeat: no-repeat;
+  background-position: 10px 50%;
+}
+.alert-danger  { background-image: url('../images/layout/error.png'); }
+.alert-success { background-image: url('../images/layout/success.png'); }
+.alert-warning { background-image: url('../images/layout/warning.png'); }
+.alert-info    { background-image: url('../images/layout/notice.png'); }

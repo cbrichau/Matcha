@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Purrfect Partner</title>
+
+    <style type="text/css">
+      body {background-color: #f3f3f3;}
+      nav .navbar-nav li.nav-item > a {color: #007bff !important;} /*primary*/
+      nav .navbar-nav li.nav-item > a.active, nav .navbar-nav li.nav-item:hover {color: #0056b3;text-decoration: underline;}
+    </style>
+  </head>
+  <body class="d-flex flex-column h-100">
+
+    <nav class="navbar navbar-expand-sm navbar-light bg-white p-3 mb-3 border-bottom shadow-sm">
+      <a class="navbar-brand" href="#">Purrfect Partner</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active"><a class="nav-link active" href="#">Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Chat room</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">[username]</a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="#">Account</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Log out</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+<!-- ****************************************************************** -->
+    
+    <div class="container-fluid">
+      <div class="row">
+
+        <aside class="mb-3 col-sm-4 col-md-3 col-lg-2">
+          <form class="card" method="POST">
+
+            <h6 class="card-header">Gender</h6>
+            <div class="card-body">
+              <label class="form-check"><input class="form-check-input" type="radio" name="gender" value="any" checked>Any</label>
+              <label class="form-check"><input class="form-check-input" type="radio" name="gender" value="female">Female</label>
+              <label class="form-check"><input class="form-check-input" type="radio" name="gender" value="male">Male</label>
+            </div>
+
+            <h6 class="card-header">Age</h6>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Min</label>
+                  <input type="number" class="form-control" placeholder="2" min="1" max="25" name="age_min" value="">
+                </div>
+                <div class="form-group col-md-6 text-right">
+                  <label>Max</label>
+                  <input type="number" class="form-control" placeholder="12" min="1" max="25" name="age_max" value="">
+                </div>
+              </div>
+            </div>
+
+            <h6 class="card-header">Distance</h6>
+            <div class="card-body">
+              <output id="ageOutputId">8 km</output>
+              <input type="range" id="ageInputId" class="form-control-range" min="1" max="15" oninput="ageOutputId.value = ageInputId.value + ' km'" name="distance" value="">
+            </div>
+
+            <h6 class="card-header">Interests</h6>
+            <div class="card-body">
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Hunting</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Napping</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Cuddling</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Bird watching</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Eating</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Climbing</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">Grooming</label>
+              <label class="form-check"><input class="form-check-input" type="checkbox" value="">NOT the vet!</label>
+            </div>
+
+          </form>
+        </aside>
+
+        <main class="col-sm-8 col-md-9 col-lg-10">
+          <div class="container-fluid">
+            <div class="row">
+
+              <div class="mb-3 col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                  <img src="..." class="card-img-top">
+                  <div class="card-body">
+                    <p><a href="#" class="stretched-link">Username</a></p>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3 col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                  <img src="..." class="card-img-top">
+                  <div class="card-body">
+                    <p><a href="#" class="stretched-link">Username</a></p>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3 col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                  <img src="..." class="card-img-top">
+                  <div class="card-body">
+                    <p><a href="#" class="stretched-link">Username</a></p>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3 col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                  <img src="..." class="card-img-top">
+                  <div class="card-body">
+                    <p><a href="#" class="stretched-link">Username</a></p>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class='d-flex'>
+            <ul class="pagination mx-auto">
+              <li class="page-item disabled"><span class="page-link">Previous</span></li>
+              <li class="page-item active"><span class="page-link">1</span></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+          </div>
+         
+        </main>
+
+      </div>
+    </div>
+
+<!-- ****************************************************************** -->
+
+    <footer class="d-flex flex-column flex-md-row p-3 px-md-4 mt-auto bg-white border-top shadow-lg">
+      <p class="my-0 mr-md-auto font-weight-normal">Matcha 42/19 Coding School &copy; cbrichau 2019</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
