@@ -1,0 +1,16 @@
+form
+{
+  max-width: 500px;
+  margin: 1em auto;
+  padding: 1em;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+  text-align: center;
+}
+
+form label:hover,
+form input[type="range"]
+{
+  cursor: pointer;
+}

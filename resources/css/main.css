@@ -3,6 +3,10 @@ body
   background-color: #f3f3f3;
 }
 
+/* ************************** *\
+    NAV
+\* ************************** */
+
 nav .navbar-nav li.nav-item > a
 {
   color: #007bff !important; /*primary*/
@@ -11,22 +15,6 @@ nav .navbar-nav li.nav-item > a.active,
 nav .navbar-nav li.nav-item:hover
 {
   color: #0056b3;text-decoration: underline;
-}
-
-form
-{
-  max-width: 500px;
-  margin: 1em auto;
-  padding: 1em;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-  text-align: center;
-}
-form label:hover,
-form input[type="range"]
-{
-  cursor: pointer;
 }
 
 /* ************************** *\
