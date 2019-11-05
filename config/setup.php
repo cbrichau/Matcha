@@ -1,7 +1,7 @@
 <?php
 session_start();
 session_unset();
-require_once('app/core/Debugging.php'); // (De)activate debugging by (de)commenting the line.
+require_once('../app/core/Debugging.php'); // (De)activate debugging by (de)commenting the line.
 require_once('database.php');
 
 /* ************************************************** *\
@@ -19,7 +19,7 @@ $DB->exec('USE '.$DB_NAME);
 
 /* ------------------- USERS ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `users`
+$DB->exec("CREATE TABLE IF NOT EXISTS `users`
           (`id_user` int(11) NOT NULL AUTO_INCREMENT,
            `email` varchar(255) NOT NULL,
            `email_confirmed` varchar(255) NOT NULL,
@@ -34,7 +34,7 @@ $DB->exec('CREATE TABLE IF NOT EXISTS `users`
            `popularity_score` int(11) NOT NULL DEFAULT '0',
            `bio` varchar(255) NOT NULL,
            PRIMARY KEY (`id_user`)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 /////////////// merge this into users
 /*
@@ -48,55 +48,57 @@ $create_pw_resets_table = 'CREATE TABLE IF NOT EXISTS `password_resets`
 
 /* ------------------- USERS_VISITS ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `users_visits`
+$DB->exec("CREATE TABLE IF NOT EXISTS `users_visits`
           (`id_user_visitor` int(11) NOT NULL,
            `id_user_visited` int(11) NOT NULL,
            `last_visit` datetime NOT NULL,
            PRIMARY KEY (`id_user_visitor`, `id_user_visited`),
            CONSTRAINT `FK_users_visits_id_user_visitor` FOREIGN KEY (`id_user_visitor`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_users_visits_id_user_visited` FOREIGN KEY (`id_user_visited`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 /* ------------------- USERS_LIKES ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `users_likes`
+$DB->exec("CREATE TABLE IF NOT EXISTS `users_likes`
           (`id_user_liker` int(11) NOT NULL,
            `id_user_liked` int(11) NOT NULL,
            PRIMARY KEY (`id_user_liker`, `id_user_liked`),
            CONSTRAINT `FK_users_visits_id_user_liker` FOREIGN KEY (`id_user_liker`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_users_visits_id_user_liked` FOREIGN KEY (`id_user_liked`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 /* ------------------- USERS_BLOCKS ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `users_blocks`
+$DB->exec("CREATE TABLE IF NOT EXISTS `users_blocks`
           (`id_user_blocker` int(11) NOT NULL,
            `id_user_blocked` int(11) NOT NULL,
            PRIMARY KEY (`id_user_blocker`, `id_user_blocked`),
            CONSTRAINT `FK_users_visits_id_user_blocker` FOREIGN KEY (`id_user_blocker`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_users_visits_id_user_blocked` FOREIGN KEY (`id_user_blocked`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 /* ------------------- USERS_REPORTS ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `users_reports`
+$DB->exec("CREATE TABLE IF NOT EXISTS `users_reports`
           (`id_user_reporter` int(11) NOT NULL,
            `id_user_reported` int(11) NOT NULL,
            `reason` varchar(255) NOT NULL,
            PRIMARY KEY (`id_user_reporter`, `id_user_reported`),
            CONSTRAINT `FK_users_visits_id_user_reporter` FOREIGN KEY (`id_user_reporter`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_users_visits_id_user_reported` FOREIGN KEY (`id_user_reported`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 /* ------------------- INTERESTS ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `interests`
+$DB->exec("CREATE TABLE IF NOT EXISTS `interests`
           (`id_interest` int(11) NOT NULL AUTO_INCREMENT,
            `interest` varchar(255) NOT NULL,
            PRIMARY KEY (`id_interest`)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec('INSERT INTO `interests` (`id_interest`, `interest`) VALUES
+$DB->exec("INSERT INTO `interests`
+          (`id_interest`, `interest`)
+          VALUES
           (1, 'Hunting'),
           (2, 'Sunbathing'),
           (3, 'Nightlife'),
@@ -117,22 +119,21 @@ $DB->exec('INSERT INTO `interests` (`id_interest`, `interest`) VALUES
           (18, 'Climbing'),
           (19, 'Staring in the void'),
           (20, 'Grooming'),
-          (21, ''),
-          (22, 'Rolling in dirt');');
+          (21, 'Rolling in dirt');");
 
 /* ------------------- USERS_INTERESTS ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `users_interests`
+$DB->exec("CREATE TABLE IF NOT EXISTS `users_interests`
           (`id_user` int(11) NOT NULL,
            `id_interest` int(11) NOT NULL,
            PRIMARY KEY (`id_user`, `id_interest`),
            CONSTRAINT `FK_users_interests_id_user` FOREIGN KEY (`id_user`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_users_interests_id_interest` FOREIGN KEY (`id_interest`) REFERENCES `interests`(`id_interest`) ON DELETE CASCADE ON UPDATE CASCADE
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 /* ------------------- CHAT ------------------- */
 
-$DB->exec('CREATE TABLE IF NOT EXISTS `chat`
+$DB->exec("CREATE TABLE IF NOT EXISTS `chat`
           (`id_user_1` int(11) NOT NULL,
            `id_user_2` int(11) NOT NULL,
            `message` text NOT NULL,
@@ -140,7 +141,7 @@ $DB->exec('CREATE TABLE IF NOT EXISTS `chat`
            PRIMARY KEY (`id_user_1`, `id_user_2`),
            CONSTRAINT `FK_chat_id_user_1` FOREIGN KEY (`id_user_1`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_chat_id_user_2` FOREIGN KEY (`id_user_2`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;');
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 
 $_SESSION['is_setup'] = TRUE;
