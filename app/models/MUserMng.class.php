@@ -327,7 +327,8 @@ class MUserMng extends M_Manager
     $split = explode('-', $get['confirm']);
     if (count($split) > 2 ||
         $this->is_valid_int_format($split[0]) === FALSE ||
-        $this->is_valid_string_format($split[1]) === FALSE)
+        $this->is_valid_string_format($split[1]) === FALSE ||
+        $split[1] === '1')
       return NULL;
 
     $user = $this->select_user_by('id_user', $split[0]);
@@ -348,7 +349,8 @@ class MUserMng extends M_Manager
         $this->is_valid_int_format($split[0]) === FALSE ||
         $this->is_valid_string_format($split[1]) === FALSE ||
         $split[0] != $current_user->get_id_user() ||
-        $split[1] != $current_user->get_email_confirmed())
+        $split[1] != $current_user->get_email_confirmed() ||
+        $split[1] === '1')
       return FALSE;
     return TRUE;
   }

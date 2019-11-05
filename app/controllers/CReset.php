@@ -60,7 +60,7 @@ if (isset($_POST['reset_request']))
     $user->set_password(NULL);
     $user->set_email_confirmed(md5(rand(0,1000)));
     $userMng->reset_password($user);
-    $validation_alert = '<div class="alert alert-success"><span>success:</span> An email has been sent to you with a validation link.</div>';
+    $success_alert = '<div class="alert alert-success"><span>success:</span> An email has been sent to you with a validation link.</div>';
   }
 }
 
@@ -89,6 +89,7 @@ if (isset($_POST['new_password']))
     $user = $userMng->get_user_reset_validation_code(array('confirm' => $_POST['validation_code']));
     if (!is_null($user))
     {
+      $user->encrypt_and_set_password($_POST['pass']);
       $user->set_email_confirmed(TRUE);
       $userMng->update_user($user);
       $userMng->login($user->get_username());
