@@ -92,9 +92,6 @@ h3 > span {
 		position: relative;
 		margin-bottom: 15px;
 	}
-	#user-profile .profile-message-btn .btn {
-		display: block;
-	}
 }
 
 
@@ -114,26 +111,14 @@ h3 > span {
     border-left: 10px solid #c2c2c2; /*7e8c8d*/
 }
 
-.btn {
-    border: none;
-	padding: 6px 12px;
-	border-bottom: 4px solid;
-	-webkit-transition: border-color 0.1s ease-in-out 0s, background-color 0.1s ease-in-out 0s;
-	transition: border-color 0.1s ease-in-out 0s, background-color 0.1s ease-in-out 0s;
-	outline: none;
-}
-.btn-default,
+
 .wizard-cancel,
 .wizard-back {
 	background-color: #7e8c8d;
 	border-color: #626f70;
 	color: #fff;
 }
-.btn-default:hover,
-.btn-default:focus,
-.btn-default:active,
-.btn-default.active,
-.open .dropdown-toggle.btn-default,
+
 .wizard-cancel:hover,
 .wizard-cancel:focus,
 .wizard-cancel:active,
@@ -145,90 +130,4 @@ h3 > span {
 	background-color: #949e9f;
 	border-color: #748182;
 	color: #fff;
-}
-.btn-default .caret {
-	border-top-color: #FFFFFF;
-}
-.btn-info {
-	background-color: #5daee7;
-	border-color: #4c95c9;
-}
-.btn-info:hover,
-.btn-info:focus,
-.btn-info:active,
-.btn-info.active,
-.open .dropdown-toggle.btn-info {
-	background-color: #4c95c9;
-	border-color: #3f80af;
-}
-.btn-link {
-	border: none;
-}
-.btn-primary {
-	background-color: #3fcfbb;
-	border-color: #2fb2a0;
-}
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.open .dropdown-toggle.btn-primary {
-	background-color: #38c2af;
-	border-color: #2aa493;
-}
-.btn-success {
-	background-color: #8dc859;
-	border-color: #77ab49;
-}
-.btn-success:hover,
-.btn-success:focus,
-.btn-success:active,
-.btn-success.active,
-.open .dropdown-toggle.btn-success {
-	background-color: #77ab49;
-}
-.btn-danger {
-	background-color: #fe635f;
-	border-color: #dd504c;
-}
-.btn-danger:hover,
-.btn-danger:focus,
-.btn-danger:active,
-.btn-danger.active,
-.open .dropdown-toggle.btn-danger {
-	background-color: #dd504c;
-}
-.btn-warning {
-	background-color: #f1c40f;
-	border-color: #d5ac08;
-}
-.btn-warning:hover,
-.btn-warning:focus,
-.btn-warning:active,
-.btn-warning.active,
-.open .dropdown-toggle.btn-warning {
-	background-color: #e0b50a;
-	border-color: #bd9804;
-}
-
-.icon-box {
-
-}
-.icon-box .btn {
-	border: 1px solid #e1e1e1;
-	margin-left: 3px;
-	margin-right: 0;
-}
-.icon-box .btn:hover {
-	background-color: #eee;
-	color: #2BB6A3;
-}
-
-a {
-    color: #2bb6a3;
-	outline: none !important;
-}
-a:hover,
-a:focus {
-	color: #2bb6a3;
 }

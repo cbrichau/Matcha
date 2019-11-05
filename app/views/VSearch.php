@@ -34,27 +34,10 @@
 
       <h6 class="card-header">Interests</h6>
       <div class="card-body">
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Hunting</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Sunbathing</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Nightlife</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Naps</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Chillaxing</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Gourmet food</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Wildlife</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Cardboard boxes</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Cuddles</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Running</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Meditation</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Knocking things off the table</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Bird watching</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Adventure</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Food</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Window-gazing</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Silently judging you</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Climbing</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Staring in the void</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Grooming</label>
-        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Rolling in dirt</label>
+        <?php
+        // fetch from db and do foreach loop
+        ?>
+        <label class="form-check"><input class="form-check-input" type="checkbox" value="">Placeholder</label>
       </div>
 
     </form>

@@ -19,7 +19,7 @@ if (isset($_GET['confirm']))
 {
   // Checks the validation code from the URL is valid.
   // If so, updates the current user (object + database entry + SESSION).
-  if ($userMng->get_user_modification_validation_code($_GET))
+  if ($userMng->is_ok_modification_validation_code($_GET, $current_user))
   {
     $user->set_email_confirmed(TRUE);
     $userMng->update_user($user);

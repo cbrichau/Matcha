@@ -37,12 +37,12 @@ class MEmailMng extends M_Manager
 		$this->send_email($to, $subject, $message);
 	}
 
-	public function send_reset_confirmation(MUser $user, $password_confirmation_code)
+	public function send_reset_confirmation(MUser $user)
 	{
 		$to = $user->get_email();
-		$code = $user->get_id_user().'-'.$password_confirmation_code;
-		$subject = 'Validate your new password';
-		$message = 'Please click on the link to validate your new password: '.Config::ROOT.'index.php?cat=reset&confirm='.$code;
+		$code = $user->get_id_user().'-'.$user->get_email_confirmed();
+		$subject = 'Reset your password';
+		$message = 'Please click on the link to define your new password: '.Config::ROOT.'index.php?cat=reset&confirm='.$code;
 		$this->send_email($to, $subject, $message);
 	}
 

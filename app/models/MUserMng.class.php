@@ -144,12 +144,12 @@ class MUserMng extends M_Manager
     $_SESSION['is_logged'] = FALSE;
   }
 
-  public function reset_password(MUser $user, $password_confirmation_code)
+  public function reset_password(MUser $user)
   {
-    $this->add_password_reset($user, $password_confirmation_code);
+    $this->update_user($user);
 
     $emailMng = new MEmailMng();
-    $emailMng->send_reset_confirmation($user, $password_confirmation_code);
+    $emailMng->send_reset_confirmation($user);
   }
 
   /* *************************************************************** *\
@@ -315,7 +315,8 @@ class MUserMng extends M_Manager
 
   /* *********************************************************** *\
       GET_USER_action_VALIDATION_CODE
-      ...
+      Sets the "email_confirmed" validation code whenever
+      a user sets/modifies their email.
   \* *********************************************************** */
 
   public function get_user_registration_validation_code(array $get)
@@ -324,34 +325,36 @@ class MUserMng extends M_Manager
       return NULL;
 
     $split = explode('-', $get['confirm']);
-    if (count($split) > 2 || $this->is_valid_int_format($split[0]) === FALSE)
+    if (count($split) > 2 ||
+        $this->is_valid_int_format($split[0]) === FALSE ||
+        $this->is_valid_string_format($split[1]) === FALSE)
       return NULL;
 
     $user = $this->select_user_by('id_user', $split[0]);
-    if (is_null($user) || $user->get_email_confirmed() != $split[1])
+    if (is_null($user) ||
+        $user->get_email_confirmed() != $split[1])
       return NULL;
 
     return $user;
   }
 
-  public function get_user_reset_validation_code(array $get)
+  public function is_ok_modification_validation_code(array $get, $current_user)
   {
     if (empty($get['confirm']))
-      return NULL;
+      return FALSE;
 
     $split = explode('-', $get['confirm']);
-    if (count($split) > 2 || $this->is_valid_int_format($split[0]) === FALSE)
-      return NULL;
+    if (count($split) > 2 ||
+        $this->is_valid_int_format($split[0]) === FALSE ||
+        $this->is_valid_string_format($split[1]) === FALSE ||
+        $split[0] != $current_user->get_id_user() ||
+        $split[1] != $current_user->get_email_confirmed())
+      return FALSE;
+    return TRUE;
+  }
 
-    $user = $this->select_user_by('id_user', $split[0]);
-    if (is_null($user))
-      return NULL;
-
-    $password_data = $this->select_password_reset_data($split[0]);
-    if ($password_data['confirmation_code'] != $split[1])
-      return NULL;
-
-    $user->set_password($password_data['encrypted_password']);
-    return $user;
+  public function get_user_reset_validation_code(array $get)
+  {
+    return $this->get_user_registration_validation_code($get);
   }
 }

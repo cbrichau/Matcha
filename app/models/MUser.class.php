@@ -7,27 +7,29 @@
     - email_confirmed           --> contains a validation code or TRUE.
 \* ******************************************************************* */
 
-
-
 /*
 modify setup and check accordingly:
-
 min/max lengths:
 email b@x.c 5 255
 username  2 50
 names 1 255
-
 */
 
 class MUser extends M_Manager
 {
   private $_id_user;
   private $_email;
+  private $_email_confirmed; ////////// should be $_account_confirmed since used for email and pw reset confirmation
   private $_username;
   private $_first_name;
   private $_last_name;
   private $_password;
-  private $_email_confirmed;
+  private $_last_activity;
+  private $_localisation;
+  private $_gender_self;
+  private $_gender_seeked;
+  private $_popularity_score;
+  private $_bio;
 
   /* ******************************************************** *\
       INITILISATION
@@ -86,11 +88,17 @@ class MUser extends M_Manager
   }
   public function get_id_user()          { return $this->_id_user; }
   public function get_email()            { return $this->_email; }
+  public function get_email_confirmed()  { return $this->_email_confirmed; }
   public function get_username()         { return $this->_username; }
   public function get_first_name()       { return $this->_first_name; }
   public function get_last_name()        { return $this->_last_name; }
   public function get_password()         { return $this->_password; }
-  public function get_email_confirmed()  { return $this->_email_confirmed; }
+  public function get_last_activity()    { return $this->_last_activity; }
+  public function get_localisation()     { return $this->_localisation; }
+  public function get_gender_self()      { return $this->_gender_self; }
+  public function get_gender_seeked()    { return $this->_gender_seeked; }
+  public function get_popularity_score() { return $this->_popularity_score; }
+  public function get_bio()              { return $this->_bio; }
 
   /* ******************************************************** *\
       SETTERS
@@ -106,6 +114,11 @@ class MUser extends M_Manager
   {
     if ($this->is_valid_email_format($arg))
       $this->_email = $arg;
+  }
+
+  public function set_email_confirmed($arg)
+  {
+    $this->_email_confirmed = $arg;
   }
 
   public function set_username($arg)
@@ -131,8 +144,43 @@ class MUser extends M_Manager
     $this->_password = $arg;
   }
 
-  public function set_email_confirmed($arg)
+  public function set_last_activity($arg)
   {
-    $this->_email_confirmed = $arg;
+    //if is valid datetime format
+    $this->_last_activity = $arg;
+  }
+
+  public function set_localisation($arg)
+  {
+    // format?
+    $this->_localisation = $arg;
+  }
+
+  public function set_gender_self($arg)
+  {
+    if (in_array($arg, array('F', 'M', NULL)))
+      $this->_gender_self = $arg;
+    else
+      $this->_gender_self = NULL;
+  }
+
+  public function set_gender_seeked($arg)
+  {
+    if (in_array($arg, array('F', 'M', NULL)))
+      $this->_gender_self = $arg;
+    else
+      $this->_gender_self = NULL;
+  }
+
+  public function set_popularity_score($arg)
+  {
+    if ($this->is_valid_int_format($arg))
+      $this->_popularity_score = $arg;
+  }
+
+  public function set_bio($arg)
+  {
+    if ($this->is_valid_string_format($arg))
+      $this->_bio = $arg;
   }
 }
