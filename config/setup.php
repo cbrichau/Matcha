@@ -36,16 +36,6 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users`
            PRIMARY KEY (`id_user`)
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-/////////////// merge this into users
-/*
-$create_pw_resets_table = 'CREATE TABLE IF NOT EXISTS `password_resets`
-      (`id_user` int(11) NOT NULL AUTO_INCREMENT,
-       `password` varchar(255) NOT NULL,
-       `password_confirmation_code` varchar(255) NOT NULL,
-       PRIMARY KEY (`id_user`),
-       CONSTRAINT `FK_pw_resets_id_user` FOREIGN KEY (`id_user`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;';*/
-
 /* ------------------- USERS_VISITS ------------------- */
 
 $DB->exec("CREATE TABLE IF NOT EXISTS `users_visits`
@@ -110,8 +100,8 @@ $DB->exec("INSERT INTO `interests`
           (9, 'Cuddles'),
           (10, 'Running'),
           (11, 'Meditation'),
-          (12, 'Knocking things off the table'),
-          (13, 'Bird watching'),
+          (12, 'Knocking things off tables'),
+          (13, 'Bird-watching'),
           (14, 'Adventure'),
           (15, 'Food'),
           (16, 'Window-gazing'),
@@ -119,7 +109,7 @@ $DB->exec("INSERT INTO `interests`
           (18, 'Climbing'),
           (19, 'Staring in the void'),
           (20, 'Grooming'),
-          (21, 'Rolling in dirt');");
+          (21, 'Rolling in the dirt');");
 
 /* ------------------- USERS_INTERESTS ------------------- */
 
@@ -134,11 +124,12 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_interests`
 /* ------------------- CHAT ------------------- */
 
 $DB->exec("CREATE TABLE IF NOT EXISTS `chat`
-          (`id_user_1` int(11) NOT NULL,
+          (`id_message` int(11) NOT NULL AUTO_INCREMENT,
+           `id_user_1` int(11) NOT NULL,
            `id_user_2` int(11) NOT NULL,
            `message` text NOT NULL,
            `message_date` datetime NOT NULL,
-           PRIMARY KEY (`id_user_1`, `id_user_2`),
+           PRIMARY KEY (`id_message`),
            CONSTRAINT `FK_chat_id_user_1` FOREIGN KEY (`id_user_1`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_chat_id_user_2` FOREIGN KEY (`id_user_2`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");

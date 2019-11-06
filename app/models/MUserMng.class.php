@@ -12,8 +12,6 @@ class MUserMng extends M_Manager
       SELECT, ADD, UPDATE, DELETE functions
   \* *********************************************************** */
 
-  /* ------------------------- 'users' table ------------------------- */
-
   public function select_user_by($key, $value)
   {
     if (in_array($key, array('id_user', 'email', 'username')) && isset($value))
@@ -30,6 +28,19 @@ class MUserMng extends M_Manager
         return new MUser($r);
     }
     return NULL;
+  }
+
+  public function select_all_users()
+  {
+    $sql = 'SELECT id_user, username, bio
+            FROM users';
+    $query = $this->_db->prepare($sql);
+    $query->execute();
+
+    $users = array();
+    while ($r = $query->fetch())
+      $users[] = new MUser($r);
+    return $users;
   }
 
   public function add_user(MUser $user)
@@ -70,7 +81,7 @@ class MUserMng extends M_Manager
     $query->execute();
   }
 
-  /* ------------------------- 'password_resets' table ------------------------- */
+  /* ------------------------- 'password_resets' table -------------------------
 
   public function select_password_reset_data($id_user)
   {
@@ -114,7 +125,7 @@ class MUserMng extends M_Manager
     $query = $this->_db->prepare($sql);
     $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
     $query->execute();
-  }
+  }*/
 
   /* *********************************************************** *\
       REGISTER, LOGIN, LOGOUT, RESET_PASSWORD
