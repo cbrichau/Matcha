@@ -86,3 +86,7 @@ textarea.form-control {
     box-shadow: none;
     -webkit-box-shadow: none;
 }
+.user-icon {
+	height: auto;
+	width: 100%;
+}

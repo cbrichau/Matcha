@@ -4,12 +4,12 @@ https://www.bootdey.com/snippets/view/User-profile-with-friends-and-chat
 <div class="tab-pane" id="tab-chat">
     <div class="conversation-wrapper">
         <div class="conversation-content">
-            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 340px;">
-                <div class="conversation-inner" style="overflow: hidden; width: auto; height: 340px;">
+            <div class="slimScrollDiv" style="overflow: scroll;position: relative; width: auto; height: 340px;">
+                <div class="conversation-inner" style=" width: auto; height: 340px;">
 
                     <div class="conversation-item item-left clearfix">
                         <div class="conversation-user">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            <img class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                         </div>
                         <div class="conversation-body">
                             <div class="name">
@@ -25,7 +25,7 @@ https://www.bootdey.com/snippets/view/User-profile-with-friends-and-chat
                     </div>
                     <div class="conversation-item item-right clearfix">
                         <div class="conversation-user">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            <img class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                         </div>
                         <div class="conversation-body">
                             <div class="name">
@@ -41,7 +41,7 @@ https://www.bootdey.com/snippets/view/User-profile-with-friends-and-chat
                     </div>
                     <div class="conversation-item item-right clearfix">
                         <div class="conversation-user">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            <img class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                         </div>
                         <div class="conversation-body">
                             <div class="name">
@@ -57,7 +57,7 @@ https://www.bootdey.com/snippets/view/User-profile-with-friends-and-chat
                     </div>
                     <div class="conversation-item item-left clearfix">
                         <div class="conversation-user">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            <img class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                         </div>
                         <div class="conversation-body">
                             <div class="name">
@@ -73,7 +73,7 @@ https://www.bootdey.com/snippets/view/User-profile-with-friends-and-chat
                     </div>
                     <div class="conversation-item item-right clearfix">
                         <div class="conversation-user">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            <img class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                         </div>
                         <div class="conversation-body">
                             <div class="name">
@@ -94,12 +94,14 @@ https://www.bootdey.com/snippets/view/User-profile-with-friends-and-chat
             </div>
         </div>
         <div class="conversation-new-message">
-            <form>
+            <form method="post">
                 <div class="form-group">
-                    <textarea class="form-control" rows="2" placeholder="Enter your message..."></textarea>
+                    <textarea class="form-control" name="message" rows="2" placeholder="Enter your message..."></textarea>
                 </div>
 
                 <div class="clearfix">
+					<input type="hidden" name="sender" value="1">
+	  			  	<input type="hidden" name="receiver" value="2">
                     <button type="submit" class="btn btn-success pull-right">Send message</button>
                 </div>
             </form>
