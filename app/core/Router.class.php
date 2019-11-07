@@ -7,10 +7,8 @@
 class Router extends Config
 {
   public static $page = array('name' => 'home',
-                              //'path' => 'index.php?cat=home', /////////needed ever?
                               'controller' => 'CHome.php',
-                              'view' => 'VHome.php',
-                              'action' => '',
+                              'view' => 'VHome.php'
                               );
 
   /* ******************************************************** *\
@@ -28,7 +26,7 @@ class Router extends Config
 
   /* ******************************************************** *\
       DEFINE_PAGE_ELEMENTS:
-      Defines the expected output page and action.
+      Defines the expected output page.
   \* ******************************************************** */
 
   private static function define_page_elements($GET_array, $POST_array)
@@ -40,13 +38,11 @@ class Router extends Config
     if (isset($url_params['cat']))
     {
       self::$page['name'] = strtolower($url_params['cat']);
-      /////////////////////self::$page['path'] = 'index.php?cat='.self::$page['name'];/////////////
       self::$page['controller'] = 'C'.ucfirst(self::$page['name']).'.php';
       self::$page['view'] = 'V'.ucfirst(self::$page['name']).'.php';
     }
 
     // Sets the proper full paths for the page's url and files.
-    //////////////////self::$page['path'] = Config::ROOT.self::$page['path'];//////////////
     self::$page['controller'] = Config::CONTROLLERS_PATH.self::$page['controller'];
     self::$page['view'] = Config::VIEWS_PATH.self::$page['view'];
   }
@@ -91,7 +87,7 @@ class Router extends Config
 
   private static function include_controller($output)
   {
-    if (file_exists(self::$page['controller']) /*&& file_exists(self::$page['view'])*/)
+    if (file_exists(self::$page['controller']))
     {
       $output->set_page_name(self::$page['name']);
       require_once(self::$page['controller']);

@@ -30,6 +30,7 @@ class MUser extends M_Manager
   private $_gender_seeked;
   private $_popularity_score;
   private $_bio;
+  private $_interests;
 
   /* ******************************************************** *\
       INITILISATION
@@ -99,6 +100,7 @@ class MUser extends M_Manager
   public function get_gender_seeked()    { return $this->_gender_seeked; }
   public function get_popularity_score() { return $this->_popularity_score; }
   public function get_bio()              { return $this->_bio; }
+  public function get_interests()        { return $this->$_interests; }
 
   /* ******************************************************** *\
       SETTERS
@@ -184,5 +186,11 @@ class MUser extends M_Manager
   {
     if ($this->is_valid_string_format($arg))
       $this->_bio = $arg;
+  }
+
+  public function set_interests($arg)
+  {
+    if (preg_match('/^((\d+)(-{0,1}))+$/', $arg))
+      $this->_interests = $arg;
   }
 }

@@ -43,6 +43,22 @@ class MUserMng extends M_Manager
     return $users;
   }
 
+  public function select_user_interests(MUser $user)
+  {
+    $sql = 'SELECT id_interest
+            FROM users_interests
+            WHERE id_user = :id_user';
+    $query = $this->_db->prepare($sql);
+    $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
+    $query->execute();
+
+    $interests = array();
+    while ($r = $query->fetch())
+      $interests[] = $r['id_interest'];
+
+    return implode('-', $interests);
+  }
+
   public function add_user(MUser $user)
   {
     $sql = 'INSERT INTO users
