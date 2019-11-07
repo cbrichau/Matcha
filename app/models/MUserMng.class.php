@@ -46,16 +46,17 @@ class MUserMng extends M_Manager
   public function add_user(MUser $user)
   {
     $sql = 'INSERT INTO users
-           (email, username, first_name, last_name, password, email_confirmed)
+           (email, email_confirmed, username, first_name, last_name, password, localisation)
            VALUES
-           (:email, :username, :first_name, :last_name, :password, :email_confirmed)';
+           (:email, :email_confirmed, :username, :first_name, :last_name, :password, :localisation)';
     $query = $this->_db->prepare($sql);
     $query->bindValue(':email', $user->get_email(), PDO::PARAM_STR);
+    $query->bindValue(':email_confirmed', $user->get_email_confirmed(), PDO::PARAM_STR);
     $query->bindValue(':username', $user->get_username(), PDO::PARAM_STR);
     $query->bindValue(':first_name', $user->get_first_name(), PDO::PARAM_STR);
     $query->bindValue(':last_name', $user->get_last_name(), PDO::PARAM_STR);
     $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
-    $query->bindValue(':email_confirmed', $user->get_email_confirmed(), PDO::PARAM_STR);
+    $query->bindValue(':localisation', $user->get_localisation(), PDO::PARAM_STR);
     $query->execute();
     return $this->_db->lastInsertId();
   }
@@ -64,68 +65,29 @@ class MUserMng extends M_Manager
   {
     $sql = 'UPDATE users
             SET email = :email,
+                email_confirmed = :email_confirmed,
                 username = :username,
                 first_name = :first_name,
                 last_name = :last_name,
                 password = :password,
-                email_confirmed = :email_confirmed
+                last_activity = now(),
+                localisation = :localisation,
+                gender_self = :gender_self,
+                gender_seeked = :gender_seeked,
+                popularity_score = :popularity_score,
+                bio = :bio
             WHERE id_user = :id_user';
     $query = $this->_db->prepare($sql);
     $query->bindValue(':email', $user->get_email(), PDO::PARAM_STR);
+    $query->bindValue(':email_confirmed', $user->get_email_confirmed(), PDO::PARAM_STR);
     $query->bindValue(':username', $user->get_username(), PDO::PARAM_STR);
     $query->bindValue(':first_name', $user->get_first_name(), PDO::PARAM_STR);
     $query->bindValue(':last_name', $user->get_last_name(), PDO::PARAM_STR);
     $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
-    $query->bindValue(':email_confirmed', $user->get_email_confirmed(), PDO::PARAM_STR);
+    $query->bindValue(':localisation', $user->get_localisation(), PDO::PARAM_STR);
     $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
     $query->execute();
   }
-
-  /* ------------------------- 'password_resets' table -------------------------
-
-  public function select_password_reset_data($id_user)
-  {
-    $sql = 'SELECT password, password_confirmation_code
-            FROM password_resets
-            WHERE id_user = :id_user';
-    $query = $this->_db->prepare($sql);
-    $query->bindValue(':id_user', $id_user, PDO::PARAM_INT);
-    $query->execute();
-
-    $r = $query->fetch();
-    if (isset($r['password_confirmation_code']))
-    {
-      $password_data['encrypted_password'] = $r['password'];
-      $password_data['confirmation_code'] = $r['password_confirmation_code'];
-      return $password_data;
-    }
-    return NULL;
-  }
-
-  public function add_password_reset(MUser $user, $password_confirmation_code)
-  {
-    $sql = 'INSERT INTO password_resets
-           (id_user, password, password_confirmation_code)
-           VALUES
-           (:id_user, :password, :password_confirmation_code)
-           ON DUPLICATE KEY UPDATE
-           password = :password,
-           password_confirmation_code = :password_confirmation_code';
-    $query = $this->_db->prepare($sql);
-    $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
-    $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
-    $query->bindValue(':password_confirmation_code', $password_confirmation_code, PDO::PARAM_STR);
-    $query->execute();
-  }
-
-  public function delete_password_reset(MUser $user)
-  {
-    $sql = 'DELETE FROM password_resets
-            WHERE id_user = :id_user';
-    $query = $this->_db->prepare($sql);
-    $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
-    $query->execute();
-  }*/
 
   /* *********************************************************** *\
       REGISTER, LOGIN, LOGOUT, RESET_PASSWORD

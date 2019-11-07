@@ -3,4 +3,4 @@
   <?php require_once(Config::VIEWS_PATH.'VSearchResults.php'); ?>
 </div>
 
-<script src="<?php echo Config::JS_PATH.'search_form.js'; ?>"></script>
+<script src="<?php echo Config::JS_PATH.'search_form.js?'.time(); ?>"></script>

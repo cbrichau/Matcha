@@ -152,8 +152,10 @@ class MUser extends M_Manager
 
   public function set_localisation($arg)
   {
-    // format?
-    $this->_localisation = $arg;
+    list($latitude, $longitude) = explode(':', $arg);
+    if ($this->is_valid_float_format($latitude) &&
+        $this->is_valid_float_format($longitude))
+    $this->_localisation = $latitude.':'.$longitude;
   }
 
   public function set_gender_self($arg)

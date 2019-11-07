@@ -10,17 +10,36 @@ $userMng = new MUserMng();
     Search form
 \* *********************************************************** */
 
-// Initialises the form's prefill values to null.
-$error_alert = '';
-$form_prefill = array_fill_keys(array('username'), '');
-
-
-$filter_genders = array('F' => 'Female',
+// Sets the form's filter elements
+$list_genders = array('F' => 'Female',
                         'M' => 'Male');
 
-$selected_gen
+$list_interests = array('Sunbathing', 'Hunting', 'Naps');
 
-$filter_interests = array('Sunbathing', 'Hunting');
+// Initialises the form's prefill values.
+$form_prefill['gender_any'] = 'checked';
+foreach ($list_genders as $key => $value)
+  $form_prefill['gender_'.$key] = '';
+$form_prefill['age_min'] = 1;
+$form_prefill['age_max'] = 25;
+$form_prefill['distance'] = 8;
+$form_prefill['interest_any'] = 'checked';
+foreach ($list_interests as $key => $value)
+  $form_prefill['interest_'.$key] = '';
+
+// Processes the filtering form.
+if (count($_GET) >= 2)
+{
+  $searchMng = new MSearchMng();
+  $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests);
+
+  print_r($form_prefill);
+  // Overrides the prefill values with the posted ones
+  // and makes them secure for output.
+  //$form_prefill = array_replace($form_prefill, $_POST);
+  //$form_prefill = $userMng->sanitize_for_output($form_prefill);
+}
+
 
 /* *********************************************************** *\
     Search results

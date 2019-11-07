@@ -4,9 +4,15 @@
 
     <h6 class="card-header">Gender</h6>
     <div class="card-body">
-      <label class="form-check"><input class="form-check-input" type="radio" name="gender" value="A" checked>Any</label>
-      <?php foreach ($filter_genders as $key => $value): ?>
-        <label class="form-check"><input class="form-check-input" type="radio" name="gender" value="<?php echo $key; ?>"><?php echo $value; ?></label>
+      <label class="form-check">
+        <input class="form-check-input" type="radio" name="gender" value="any" <?php echo $form_prefill['gender_any']; ?>>
+        Any
+      </label>
+      <?php foreach ($list_genders as $key => $value): ?>
+        <label class="form-check">
+          <input class="form-check-input" type="radio" name="gender" value="<?php echo $key; ?>" <?php echo $form_prefill['gender_'.$key]; ?>>
+          <?php echo $value; ?>
+        </label>
       <?php endforeach; ?>
     </div>
 
@@ -15,26 +21,32 @@
       <div class="form-row">
         <div class="form-group col-6">
           <label>Min</label>
-          <input type="number" class="form-control" min="1" max="25" name="age_min" value="2">
+          <input type="number" class="form-control" min="1" max="25" name="age_min" value="<?php echo $form_prefill['age_min']; ?>">
         </div>
         <div class="form-group col-6 text-right">
           <label>Max</label>
-          <input type="number" class="form-control" min="1" max="25" name="age_max" value="12">
+          <input type="number" class="form-control" min="1" max="25" name="age_max" value="<?php echo $form_prefill['age_max']; ?>">
         </div>
       </div>
     </div>
 
     <h6 class="card-header">Distance</h6>
     <div class="card-body">
-      <output id="ageOutputId">Max 8 km</output>
-      <input type="range" id="ageInputId" class="form-control-range" min="1" max="15" oninput="ageOutputId.value = 'Max ' + ageInputId.value + ' km'" name="distance" value="8">
+      <output id="ageOutputId">Max <?php echo $form_prefill['distance']; ?> km</output>
+      <input type="range" id="ageInputId" class="form-control-range" min="1" max="15" oninput="ageOutputId.value = 'Max ' + ageInputId.value + ' km'" name="distance" value="<?php echo $form_prefill['distance']; ?>">
     </div>
 
     <h6 class="card-header">Interests</h6>
     <div class="card-body">
-      <label class="form-check"><input class="form-check-input" type="radio" name="interests" value="any" checked>Any</label>
-      <?php foreach ($filter_genders as $key => $value): ?>
-        <label class="form-check"><input class="form-check-input" type="checkbox" name="interest<?php echo $key; ?>" value="<?php echo $key; ?>"><?php echo $value; ?></label>
+      <label class="form-check">
+        <input class="form-check-input" type="radio" name="interests" value="any" <?php echo $form_prefill['interest_any']; ?>>
+        Any
+      </label>
+      <?php foreach ($list_interests as $key => $value): ?>
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="i_<?php echo $key; ?>" <?php echo $form_prefill['interest_'.$key]; ?>>
+          <?php echo $value; ?>
+        </label>
       <?php endforeach; ?>
     </div>
 

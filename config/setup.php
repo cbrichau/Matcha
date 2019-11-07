@@ -28,7 +28,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users`
            `last_name` varchar(255) NOT NULL,
            `password` varchar(255) NOT NULL,
            `last_activity` datetime NOT NULL,
-           `localisation` int(11) NOT NULL,
+           `localisation` varchar(255) DEFAULT NULL,
            `gender_self` varchar(1) DEFAULT NULL,
            `gender_seeked` varchar(1) DEFAULT NULL,
            `popularity_score` int(11) NOT NULL DEFAULT '0',

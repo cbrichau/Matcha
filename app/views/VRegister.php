@@ -2,6 +2,8 @@
 	<?php echo $success_alert; ?>
   <h1><?php echo $output->get_head_title(); ?></h1>
 
+	<input type="hidden" name="localisation" value="">
+
   <?php echo $error_alert['email']; ?>
   <input type="email" name="email" placeholder="Email" value="<?php echo $form_prefill['email']; ?>" class="form-control my-2" required>
 
@@ -20,3 +22,5 @@
 
 	<button type="submit" name="register" class="btn btn-primary btn-block"><?php echo $output->get_head_title(); ?></button>
 </form>
+
+<script src="<?php echo Config::JS_PATH.'localisation.js?'.time(); ?>"></script>
