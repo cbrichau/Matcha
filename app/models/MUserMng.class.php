@@ -30,19 +30,6 @@ class MUserMng extends M_Manager
     return NULL;
   }
 
-  public function select_all_users()
-  {
-    $sql = 'SELECT id_user, username, bio
-            FROM users';
-    $query = $this->_db->prepare($sql);
-    $query->execute();
-
-    $users = array();
-    while ($r = $query->fetch())
-      $users[] = new MUser($r);
-    return $users;
-  }
-
   public function select_user_interests(MUser $user)
   {
     $sql = 'SELECT id_interest

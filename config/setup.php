@@ -72,7 +72,6 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_blocks`
 $DB->exec("CREATE TABLE IF NOT EXISTS `users_reports`
           (`id_user_reporter` int(11) NOT NULL,
            `id_user_reported` int(11) NOT NULL,
-           `reason` varchar(255) NOT NULL,
            PRIMARY KEY (`id_user_reporter`, `id_user_reported`),
            CONSTRAINT `FK_users_visits_id_user_reporter` FOREIGN KEY (`id_user_reporter`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
            CONSTRAINT `FK_users_visits_id_user_reported` FOREIGN KEY (`id_user_reported`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -85,31 +84,6 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `interests`
            `interest` varchar(255) NOT NULL,
            PRIMARY KEY (`id_interest`)
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
-
-$DB->exec("INSERT INTO `interests`
-          (`id_interest`, `interest`)
-          VALUES
-          (1, 'Hunting'),
-          (2, 'Sunbathing'),
-          (3, 'Nightlife'),
-          (4, 'Naps'),
-          (5, 'Chillaxing'),
-          (6, 'Gourmet food'),
-          (7, 'Wildlife'),
-          (8, 'Cardboard boxes'),
-          (9, 'Cuddles'),
-          (10, 'Running'),
-          (11, 'Meditation'),
-          (12, 'Knocking things off tables'),
-          (13, 'Bird-watching'),
-          (14, 'Adventure'),
-          (15, 'Food'),
-          (16, 'Window-gazing'),
-          (17, 'Silently judging you'),
-          (18, 'Climbing'),
-          (19, 'Staring in the void'),
-          (20, 'Grooming'),
-          (21, 'Rolling in the dirt');");
 
 /* ------------------- USERS_INTERESTS ------------------- */
 

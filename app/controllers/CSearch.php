@@ -5,6 +5,10 @@
 \* *********************************************************** */
 
 $userMng = new MUserMng();
+$searchMng = new MSearchMng();
+
+$current_user = $userMng->select_user_by('id_user', $_SESSION['id_user']);
+$filter_conditions = '';
 
 /* *********************************************************** *\
     Search form
@@ -30,22 +34,30 @@ foreach ($list_interests as $key => $value)
 // Processes the filtering form.
 if (count($_GET) >= 2)
 {
-  $searchMng = new MSearchMng();
+  // Overrides the prefill values with the posted ones.
   $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests);
 
   print_r($form_prefill);
-  // Overrides the prefill values with the posted ones
-  // and makes them secure for output.
-  //$form_prefill = array_replace($form_prefill, $_POST);
-  //$form_prefill = $userMng->sanitize_for_output($form_prefill);
+
+  // Defines the filter conditions to apply to the search query.
+  $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $current_user);
 }
 
+/* *********************************************************** *\
+    Pagination
+\* *********************************************************** */
+
+//$nb_results = $userMng->count_users($filter_conditions);
+// $pagination = $searchMng->get_pagination_values($nb_results, $_GET);
 
 /* *********************************************************** *\
     Search results
 \* *********************************************************** */
 
-$results = $userMng->select_all_users();
+
+// $results = $userMng->select_users();
+$results = array();
+
 
 
 // Sets the output values and calls the views.
