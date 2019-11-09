@@ -10,7 +10,9 @@ $current_user = $userMng->select_user_by('id_user', $_SESSION['id_user']);
 // Initialises the form's alerts to null,
 // and its and prefill values to the user's current info from the DB.
 $success_alert = '';
-$error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password'), '');
+$error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password',
+                                     'date_of_birth', 'location', 'gender_self', 'gender_seeked', 'bio',
+                                     'interests'), '');
 $form_prefill = $userMng->sanitize_for_output($current_user->get_all_properties());
 
 // Processes the modification confirmation

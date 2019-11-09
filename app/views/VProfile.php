@@ -12,7 +12,7 @@
     <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="img-fluid">
 
     <?php if ($user_details['id_user'] == $_SESSION['id_user']): ?>
-      <a href="#" class="btn btn-primary">Modify my profile</a>
+      <a href="<?php echo Config::ROOT; ?>index.php?cat=account" class="btn btn-primary">Modify my account</a>
     <?php endif; ?>
   </div>
 

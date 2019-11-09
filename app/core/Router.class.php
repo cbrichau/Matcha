@@ -61,8 +61,8 @@ class Router extends Config
     $members_only = array('logout', 'account', 'profile', 'search', 'chat');
 
     if (!in_array($page, $common_area) &&
-        !(in_array($page, $members_only) && $_SESSION['is_logged'] === TRUE) &&
-        !(in_array($page, $visitors_only) && $_SESSION['is_logged'] === FALSE))
+        !(in_array($page, $visitors_only) && !$_SESSION['is_logged']) &&
+        !(in_array($page, $members_only) && $_SESSION['is_logged']))
       header('Location: '.Config::ROOT.''); ////////////////////// Better to redirect to "Please log in or register" page.
   }
 
