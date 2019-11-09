@@ -23,9 +23,11 @@ class MUser extends M_Manager
   private $_username;
   private $_first_name;
   private $_last_name;
+  private $_date_of_birth;
+  private $_age;
   private $_password;
   private $_last_activity;
-  private $_localisation;
+  private $_location;
   private $_gender_self;
   private $_gender_seeked;
   private $_popularity_score;
@@ -93,9 +95,11 @@ class MUser extends M_Manager
   public function get_username()         { return $this->_username; }
   public function get_first_name()       { return $this->_first_name; }
   public function get_last_name()        { return $this->_last_name; }
+  public function get_date_of_birth()    { return $this->_date_of_birth; }
+  public function get_age()              { return $this->_age; }
   public function get_password()         { return $this->_password; }
   public function get_last_activity()    { return $this->_last_activity; }
-  public function get_localisation()     { return $this->_localisation; }
+  public function get_location()         { return $this->_location; }
   public function get_gender_self()      { return $this->_gender_self; }
   public function get_gender_seeked()    { return $this->_gender_seeked; }
   public function get_popularity_score() { return $this->_popularity_score; }
@@ -141,6 +145,18 @@ class MUser extends M_Manager
       $this->_last_name = $arg;
   }
 
+  public function set_date_of_birth($arg)
+  {
+    //if is valid date format
+    $this->_date_of_birth = $arg;
+    $this->set_age();
+  }
+
+  public function set_age()
+  {
+    // if _dob is valid date
+  }
+
   public function set_password($arg)
   {
     $this->_password = $arg;
@@ -152,12 +168,12 @@ class MUser extends M_Manager
     $this->_last_activity = $arg;
   }
 
-  public function set_localisation($arg)
+  public function set_location($arg)
   {
     list($latitude, $longitude) = explode(':', $arg);
     if ($this->is_valid_float_format($latitude) &&
         $this->is_valid_float_format($longitude))
-    $this->_localisation = $latitude.':'.$longitude;
+    $this->_location = $latitude.':'.$longitude;
   }
 
   public function set_gender_self($arg)

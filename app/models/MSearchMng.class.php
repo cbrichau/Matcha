@@ -30,8 +30,8 @@ class MSearchMng extends M_Manager
   {
     if (isset($get['age_min']) &&
         $this->is_valid_int_format($get['age_min']) &&
-        $get['age_min'] >= 1 &&
-        $get['age_min'] <= 25)
+        $get['age_min'] >= 0 &&
+        $get['age_min'] <= 35)
       $prefill['age_min'] = $get['age_min'];
 
     return $prefill;
@@ -41,8 +41,8 @@ class MSearchMng extends M_Manager
   {
     if (isset($get['age_max']) &&
         $this->is_valid_int_format($get['age_max']) &&
-        $get['age_max'] >= 1 &&
-        $get['age_max'] <= 25)
+        $get['age_max'] >= 0 &&
+        $get['age_max'] <= 35)
       $prefill['age_max'] = $get['age_max'];
 
     return $prefill;
@@ -99,7 +99,7 @@ class MSearchMng extends M_Manager
       'current_user' => array(
         'id_user' => $user->get_id_user(),
         'gender' => $user->get_gender_self(),
-        'localisation' => $user->get_localisation()
+        'location' => $user->get_location()
       ),
       'search' => array(
         'gender' => '',

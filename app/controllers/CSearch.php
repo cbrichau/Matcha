@@ -37,7 +37,9 @@ if (count($_GET) >= 2)
   // Overrides the prefill values with the posted ones.
   $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests);
 
+  echo "<pre>";
   print_r($form_prefill);
+  echo "</pre>";
 
   // Defines the filter conditions to apply to the search query.
   $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $current_user);

@@ -1,6 +1,7 @@
 body
 {
   background-color: #f3f3f3;
+  overflow-wrap: break-word;
 }
 
 /* ************************** *\
@@ -9,7 +10,7 @@ body
 
 nav .navbar-nav li.nav-item > a
 {
-  color: #007bff !important; /*primary*/
+  color: #007bff !important;
 }
 nav .navbar-nav li.nav-item > a.active,
 nav .navbar-nav li.nav-item:hover
@@ -43,3 +44,60 @@ nav .navbar-nav li.nav-item:hover
 .alert-success { background-image: url('../images/layout/success.png'); }
 .alert-warning { background-image: url('../images/layout/warning.png'); }
 .alert-info    { background-image: url('../images/layout/notice.png'); }
+
+/* ************************** *\
+    FORMS
+\* ************************** */
+
+form
+{
+  max-width: 500px;
+  margin: 1em auto;
+  padding: 1em;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+  text-align: center;
+}
+
+form label:hover,
+form input[type="range"]
+{
+  cursor: pointer;
+}
+
+/* ************************** *\
+    PROFILE
+\* ************************** */
+
+#profile
+{
+  max-width: 1400px;
+}
+#profile p
+{
+  margin: 0;
+}
+#profile .status.online
+{
+  color: green;
+}
+#profile .status.offline
+{
+  color: grey;
+}
+#profile img
+{
+  border: 1px solid #e1e1e1;
+  padding: 0.5em;
+  margin: 1.2em 0;
+}
+#profile .btn
+{
+  display: block;
+  max-width: 200px;
+}
+#profile > .row .row > p:first-child
+{
+  font-weight: bold;
+}

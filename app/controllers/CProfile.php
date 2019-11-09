@@ -4,19 +4,43 @@
     ...
 \* *********************************************************** */
 
-$error = TRUE;
+$userMng = new MUserMng();
 
-if (isset($_GET['id_user']) &&
-    !empty($_GET['id_user']))
+// Initialises error state before going through all the checks.
+$valid_profile = FALSE;
+
+// Checks requested user is defined and exists.
+if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 {
-  $userMng = new MUserMng();
   $user = $userMng->select_user_by('id_user', $_GET['id_user']);
   if (!is_null($user))
   {
-    $error = FALSE;
+    // Sets profile as valid, and gets the requested user's info.
+    $valid_profile = TRUE;
     $interests = $userMng->select_user_interests($user);
     $user->set_interests($interests);
-    $user_values = $user->get_all_properties();
+
+    // Sets the profile's array(label => value) for output
+    $user_details['id_user'] = $user->get_id_user();
+    $user_details['username'] = $user->get_username();
+    $user_details['status'] = ($user->get_last_activity()) ? 'Online' : 'Offline since '.$user->get_last_activity(); ////////change if condition to last_activity < 5 minutes
+
+    $user_details_labeled['Full name'] = $user->get_first_name().' '.$user->get_last_name();
+
+    if ($user->get_gender_self() != NULL)
+      $user_details_labeled['Gender'] = ($user->get_gender_self() == 'F') ? 'Female' : 'Male';
+
+    if ($user->get_age() != '')
+      $user_details_labeled['Age'] = $user->get_age();
+
+    if ($user->get_location() != '')
+      $user_details_labeled['Location'] = $user->get_location();
+
+    if ($user->get_bio() != '')
+      $user_details_labeled['Bio'] = $user->get_bio();
+
+    // if ($user->get_interests() != '')
+    //   $user_details_labeled['Interests'] = $user->get_interests();
   }
 }
 
@@ -24,7 +48,7 @@ if (isset($_GET['id_user']) &&
 $output->set_head_title('Profile');
 
 require_once(Config::VIEW_HEADER);
-if (!$error)
+if ($valid_profile)
   require_once(Router::$page['view']);
 else
   echo '<p>Invalid profile.';

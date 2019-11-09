@@ -49,9 +49,9 @@ class MUserMng extends M_Manager
   public function add_user(MUser $user)
   {
     $sql = 'INSERT INTO users
-           (email, email_confirmed, username, first_name, last_name, password, localisation)
+           (email, email_confirmed, username, first_name, last_name, password, location)
            VALUES
-           (:email, :email_confirmed, :username, :first_name, :last_name, :password, :localisation)';
+           (:email, :email_confirmed, :username, :first_name, :last_name, :password, :location)';
     $query = $this->_db->prepare($sql);
     $query->bindValue(':email', $user->get_email(), PDO::PARAM_STR);
     $query->bindValue(':email_confirmed', $user->get_email_confirmed(), PDO::PARAM_STR);
@@ -59,7 +59,7 @@ class MUserMng extends M_Manager
     $query->bindValue(':first_name', $user->get_first_name(), PDO::PARAM_STR);
     $query->bindValue(':last_name', $user->get_last_name(), PDO::PARAM_STR);
     $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
-    $query->bindValue(':localisation', $user->get_localisation(), PDO::PARAM_STR);
+    $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
     $query->execute();
     return $this->_db->lastInsertId();
   }
@@ -72,9 +72,10 @@ class MUserMng extends M_Manager
                 username = :username,
                 first_name = :first_name,
                 last_name = :last_name,
+                date_of_birth = :date_of_birth,
                 password = :password,
                 last_activity = now(),
-                localisation = :localisation,
+                location = :location,
                 gender_self = :gender_self,
                 gender_seeked = :gender_seeked,
                 popularity_score = :popularity_score,
@@ -86,8 +87,9 @@ class MUserMng extends M_Manager
     $query->bindValue(':username', $user->get_username(), PDO::PARAM_STR);
     $query->bindValue(':first_name', $user->get_first_name(), PDO::PARAM_STR);
     $query->bindValue(':last_name', $user->get_last_name(), PDO::PARAM_STR);
+    $query->bindValue(':date_of_birth', $user->get_date_of_birth(), PDO::PARAM_STR);
     $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
-    $query->bindValue(':localisation', $user->get_localisation(), PDO::PARAM_STR);
+    $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
     $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
     $query->execute();
   }

@@ -60,6 +60,17 @@ class M_Manager extends Config
     return TRUE;
   }
 
+/*  protected function is_valid_date_format($input)
+  {
+    $time = strtotime($input);
+
+    $day = date('d', $time);
+    $month = date('m', $time);
+    $year  = date('Y', $time);
+
+
+  }
+*/
   /* *********************************************************** *\
       SANITIZE_FOR_OUTPUT: Ensures user data is safe to output.
   \* *********************************************************** */

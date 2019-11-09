@@ -21,11 +21,11 @@
       <div class="form-row">
         <div class="form-group col-6">
           <label>Min</label>
-          <input type="number" class="form-control" min="1" max="25" name="age_min" value="<?php echo $form_prefill['age_min']; ?>">
+          <input type="number" class="form-control" min="0" max="35" name="age_min" value="<?php echo $form_prefill['age_min']; ?>">
         </div>
         <div class="form-group col-6 text-right">
           <label>Max</label>
-          <input type="number" class="form-control" min="1" max="25" name="age_max" value="<?php echo $form_prefill['age_max']; ?>">
+          <input type="number" class="form-control" min="0" max="35" name="age_max" value="<?php echo $form_prefill['age_max']; ?>">
         </div>
       </div>
     </div>
