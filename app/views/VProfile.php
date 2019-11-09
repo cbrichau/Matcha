@@ -1,6 +1,6 @@
-<div class="row p-3">
+<div class="row m-3">
 
-  <div class="col-sm-5 col-lg-4 bg-white py-4 px-5 mb-3">
+  <div class="col-sm-5 col-lg-4 bg-white py-4 px-5">
     <h2><?php echo $user_details['username']; ?></h2>
 
     <?php if ($user_details['status'] == 'Online'): ?>
@@ -16,13 +16,25 @@
     <?php endif; ?>
   </div>
 
-  <div class="col-sm-7 col-lg-8 bg-white py-4 px-5 mb-3">
+  <div class="col-sm-7 col-lg-8 bg-white py-4 px-5">
     <?php foreach ($user_details_labeled as $label => $value): ?>
       <div class="row">
         <p class="col-md-4 col-lg-3"><?php echo $label; ?></p>
         <p class="col-md-8 col-lg-9"><?php echo $value; ?></p>
       </div>
     <?php endforeach; ?>
+  </div>
+
+</div>
+
+<div class="row m-3">
+
+  <div class="col-md-6 bg-white mb-3">
+    <h3>My visitors</h3>
+  </div>
+
+  <div class="col-md-6 bg-white mb-3">
+    <h3>My likers</h3>
   </div>
 
 </div>

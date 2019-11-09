@@ -6,15 +6,15 @@
 
 class Config
 {
-  const ROOT              = 'http://localhost:8081/gitmatcha/'; // Also hardcoded in setup.php
+  const ROOT              = 'http://localhost:8081/gitmatcha/'; // Also hardcoded in setup.php and delete_setup.php
   const MODELS_PATH       = 'app/models/';
   const CONTROLLERS_PATH  = 'app/controllers/';
   const VIEWS_PATH        = 'app/views/';
-  const VIEW_HEADER       = self::VIEWS_PATH.'V_header.php';
-  const VIEW_FOOTER       = self::VIEWS_PATH.'V_footer.php';
   const IMAGES_PATH       = 'resources/images/';
   const CSS_PATH          = 'resources/css/';
   const JS_PATH           = 'resources/js/';
+  const VIEW_HEADER       = self::VIEWS_PATH.'V_header.php';
+  const VIEW_FOOTER       = self::VIEWS_PATH.'V_footer.php';
 
   private static $_db;
 

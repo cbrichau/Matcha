@@ -70,22 +70,10 @@ form input[type="range"]
     PROFILE
 \* ************************** */
 
-#profile
-{
-  max-width: 1400px;
-}
-#profile p
-{
-  margin: 0;
-}
-#profile .status.online
-{
-  color: green;
-}
-#profile .status.offline
-{
-  color: grey;
-}
+#profile { max-width: 1400px; }
+#profile p { margin: 0; }
+#profile .status.online { color: green; }
+#profile .status.offline { color: grey; }
 #profile img
 {
   border: 1px solid #e1e1e1;

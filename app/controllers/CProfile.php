@@ -1,6 +1,6 @@
 <?php
 /* *********************************************************** *\
-    
+
 \* *********************************************************** */
 
 $userMng = new MUserMng();
@@ -41,6 +41,8 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     // if ($user->get_interests() != '')
     //   $user_details_labeled['Interests'] = $user->get_interests();
   }
+
+  //select_user_visitors(MUser $user)
 }
 
 // Sets the output values and calls the views.
