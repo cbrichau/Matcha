@@ -44,10 +44,12 @@
     {
       if (individual_interests[k].checked)
       {
+        var id_interest = individual_interests[k].getAttribute('name').substr(2);
+
         if (selected_interests !== '')
-          selected_interests = selected_interests + '-' + k;
+          selected_interests = selected_interests + '-' + id_interest;
         else
-          selected_interests = k;
+          selected_interests = id_interest;
         individual_interests[k].checked = false;
       }
     }

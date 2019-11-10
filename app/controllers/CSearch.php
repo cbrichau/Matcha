@@ -6,61 +6,53 @@
 
 $userMng = new MUserMng();
 $searchMng = new MSearchMng();
-
 $current_user = $userMng->select_user_by('id_user', $_SESSION['id_user']);
-$filter_conditions = '';
 
 /* *********************************************************** *\
     Search form
 \* *********************************************************** */
 
 // Sets the form's filter elements
-$list_genders = array('F' => 'Female',
-                        'M' => 'Male');
-
-$list_interests = array('Sunbathing', 'Hunting', 'Naps');
+$list_genders = $searchMng->list_gender_options();
+$list_interests = $searchMng->list_interest_options();
 
 // Initialises the form's prefill values.
-$form_prefill['gender_any'] = 'checked';
 foreach ($list_genders as $key => $value)
   $form_prefill['gender_'.$key] = '';
+$form_prefill['gender_any'] = 'checked';
 $form_prefill['age_min'] = 1;
 $form_prefill['age_max'] = 25;
 $form_prefill['distance'] = 8;
-$form_prefill['interest_any'] = 'checked';
 foreach ($list_interests as $key => $value)
   $form_prefill['interest_'.$key] = '';
+$form_prefill['interest_any'] = 'checked';
+
+// Initialises the filter conditions
+$filter_conditions = $searchMng->define_filter_conditions($form_prefill, $list_interests, $current_user);
 
 // Processes the filtering form.
-if (count($_GET) >= 2)
+if (count($_GET) > 1)
 {
   // Overrides the prefill values with the posted ones.
   $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests);
 
-  echo "<pre>";
-  print_r($form_prefill);
-  echo "</pre>";
-
   // Defines the filter conditions to apply to the search query.
-  $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $current_user);
+  $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $list_interests, $current_user);
 }
 
 /* *********************************************************** *\
     Pagination
 \* *********************************************************** */
 
-//$nb_results = $userMng->count_users($filter_conditions);
-// $pagination = $searchMng->get_pagination_values($nb_results, $_GET);
+$nb_results = $searchMng->count_search_results($filter_conditions);
+$pagination = $searchMng->get_pagination_values($nb_results, $_GET);
 
+print_r($pagination);
 /* *********************************************************** *\
     Search results
 \* *********************************************************** */
 
-
-// $results = $userMng->select_users();
-$results = array();
-
-
+$results = $searchMng->select_search_results($filter_conditions, $pagination);
 
 // Sets the output values and calls the views.
 $output->set_head_title('Search results');

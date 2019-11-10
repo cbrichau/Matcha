@@ -4,10 +4,6 @@
 
     <h6 class="card-header">Gender</h6>
     <div class="card-body">
-      <label class="form-check">
-        <input class="form-check-input" type="radio" name="gender" value="any" <?php echo $form_prefill['gender_any']; ?>>
-        Any
-      </label>
       <?php foreach ($list_genders as $key => $value): ?>
         <label class="form-check">
           <input class="form-check-input" type="radio" name="gender" value="<?php echo $key; ?>" <?php echo $form_prefill['gender_'.$key]; ?>>

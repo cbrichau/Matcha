@@ -154,7 +154,10 @@ class MUser extends M_Manager
 
   public function set_age()
   {
-    // if _dob is valid date
+        // if _dob is valid date
+    $now = time();
+    $dob = strtotime($this->_date_of_birth);
+    $this->_age = floor(($now - $dob) / 31556926);
   }
 
   public function set_password($arg)
@@ -187,9 +190,9 @@ class MUser extends M_Manager
   public function set_gender_seeked($arg)
   {
     if (in_array($arg, array('F', 'M', NULL)))
-      $this->_gender_self = $arg;
+      $this->_gender_seeked = $arg;
     else
-      $this->_gender_self = NULL;
+      $this->_gender_seeked = NULL;
   }
 
   public function set_popularity_score($arg)

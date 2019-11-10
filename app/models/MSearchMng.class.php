@@ -11,6 +11,30 @@ class MSearchMng extends M_Manager
   \* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| */
 
   /* ************************************************************** *\
+      LIST_xxx_OPTIONS
+      Gets the filter choices.
+  \* ************************************************************** */
+
+  public function list_gender_options()
+  {
+    $genders = array('any' => 'Any', 'F' => 'Female', 'M' => 'Male');
+    return $genders;
+  }
+
+  public function list_interest_options()
+  {
+    $sql = 'SELECT id_interest, interest
+            FROM interests';
+    $query = $this->_db->prepare($sql);
+    $query->execute();
+
+    $interests = array();
+    while ($r = $query->fetch())
+      $interests[$r['id_interest']] = $r['interest'];
+    return $interests;
+  }
+
+  /* ************************************************************** *\
       UPDATE_xxx_PREFILL
       Takes valid form input from GET and sets it as prefill values.
   \* ************************************************************** */
@@ -19,10 +43,8 @@ class MSearchMng extends M_Manager
   {
     if (isset($get['gender']) &&
         array_key_exists($get['gender'], $list_genders))
-    {
-      $prefill['gender_any'] = '';
       $prefill['gender_'.$get['gender']] = 'checked';
-    }
+
     return $prefill;
   }
 
@@ -65,7 +87,6 @@ class MSearchMng extends M_Manager
         preg_match('/^((\d+)(-{0,1}))+$/', $get['interests']))
     {
       $selected_interests = explode('-', $get['interests']);
-      print_r($selected_interests);
       foreach ($selected_interests as $key)
         $prefill['interest_'.$key] = 'checked';
       $prefill['interest_any'] = '';
@@ -85,48 +106,145 @@ class MSearchMng extends M_Manager
 
   /* ************************************************************** *\
       DEFINE_FILTER_CONDITIONS
-
-
-
-      missing user age/dob field !!!!!!!!!!!!!!
-
-
+      Translates the form's prefill values (i.e the default search
+      or the contents of GET) into an array for the SELECT query.
   \* ************************************************************** */
 
-  public function define_filter_conditions(array $f, MUser $user)
+  public function define_filter_conditions(array $f, array $list_interests, MUser $user)
   {
+    // Translates the checked interests into a list of ids.
+    if ($f['interest_any'] == 'checked')
+      $interests = NULL;
+    else
+    {
+      foreach ($list_interests as $key => $value)
+      {
+        if ($f['interest_'.$key] == 'checked')
+          $interests[] = $key;
+      }
+      $interests = implode(',', $interests);
+    }
+
+    // Translates the checked gender into a key.
+    if ($f['gender_F'] == 'checked')
+      $gender_seeked = 'F';
+    else if ($f['gender_M'] == 'checked')
+      $gender_seeked = 'M';
+    else
+      $gender_seeked = NULL;
+
+    // Sets the filter array.
     $filter_conditions = array(
       'current_user' => array(
         'id_user' => $user->get_id_user(),
         'gender' => $user->get_gender_self(),
+        'age' => $user->get_age(),
         'location' => $user->get_location()
       ),
       'search' => array(
-        'gender' => '',
+        'gender' => $gender_seeked,
         'age_min' => $f['age_min'],
         'age_max' => $f['age_max'],
         'distance' => $f['distance'],
-        'interests' => '',
+        'interests' => $interests
       ),
     );
-
-    // current_user ['age'] = $user->get_age();
-    // pop score?
-    // interests?
-
-    if ($f['gender_F'] == 'checked')
-      $filter_conditions['search']['gender'] = 'F';
-    else if ($f['gender_M'] == 'checked')
-      $filter_conditions['search']['gender'] = 'M';
-
-
 
     return $filter_conditions;
   }
 
   /* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| *\
+                Support functions for pagination and search
+  \* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| */
+
+  /* ************************************************************** *\
+      CREATE/EXECUTE_SEARCH_QUERY
+      (used by COUNT/SELECT_SEARCH_RESULTS)
+      Translates the search 'conditions' array into SQL statements
+      and executed query.
+  \* ************************************************************** */
+
+  private function create_search_query($case, array $conditions, array $pagination)
+  {
+    if ($case == 'count')
+    {
+      $statement['action'] = 'SELECT COUNT(*) AS nb_results';
+      $statement['order'] = '';
+      $statement['limit'] = '';
+    }
+    else
+    {
+      $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';
+      $statement['order'] = 'ORDER BY popularity_score DESC';
+      $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
+    }
+
+    $statement['from'] = 'FROM users';
+    $statement['where'] = 'WHERE id_user != :id_user';
+    $statement['and'][] = 'AND email_confirmed = "1"';
+    $statement['and'][] = 'AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max';
+
+    if ($conditions['search']['gender'] != NULL)
+      $statement['and'][] = 'AND gender_self = :gender_seeked';
+
+    $sql_and = implode(' ', $statement['and']);
+    $sql = $statement['action'].' '.
+           $statement['from'].' '.
+           $statement['where'].' '.
+           $sql_and.' '.
+           $statement['order'].' '.
+           $statement['limit'];
+    $sql = preg_replace('/\s+/', ' ', $sql);
+    
+    return $sql;
+    /*
+      $filter_conditions = array(
+        'current_user' => array(
+          'id_user' => $user->get_id_user(),
+          'gender' => $user->get_gender_self(),
+          'age' => $user->get_age(),
+          'location' => $user->get_location()
+        ),
+    'distance' => $f['distance'],
+          */
+    /*if ($conditions['search']['interests'] != NULL)
+      $sql .= ' AND interests IN (:interests)';*/
+  }
+
+  private function execute_search_query($sql, array $conditions)
+  {
+    $query = $this->_db->prepare($sql);
+    $query->bindValue(':id_user', $conditions['current_user']['id_user'], PDO::PARAM_INT);
+    $query->bindValue(':age_min', $conditions['search']['age_min'], PDO::PARAM_INT);
+    $query->bindValue(':age_max', $conditions['search']['age_max'], PDO::PARAM_INT);
+
+    if ($conditions['search']['gender'] != NULL)
+      $query->bindValue(':gender_seeked', $conditions['search']['gender'], PDO::PARAM_STR);
+
+    $query->execute();
+
+    return $query;
+    /*if ($conditions['search']['interests'] != NULL)
+      $sql .= ' AND interests IN (:interests)';*/
+  }
+
+  /* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| *\
                               Pagination
   \* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| */
+
+  /* ************************************************************** *\
+      COUNT_SEARCH_RESULTS
+      Counts the users that fit into the search conditions.
+  \* ************************************************************** */
+
+  public function count_search_results(array $conditions)
+  {
+    $sql = $this->create_search_query('count', $conditions, array());
+    $query = $this->execute_search_query($sql, $conditions);
+
+    $r = $query->fetch();
+    return $r['nb_results'];
+  }
 
   /* ************************************************************** *\
       GET_PAGINATION_VALUES
@@ -145,9 +263,12 @@ class MSearchMng extends M_Manager
       $pagination['current_page'] = 1;
 
     $pagination['start_i'] = ($pagination['current_page'] - 1) * $results_per_page;
-    $pagination['end_i'] = $pagination['start_i'] + $results_per_page;
-    if ($pagination['end_i'] > $nb_results)
-      $pagination['end_i'] = $nb_results;
+    $pagination['end_i'] = $results_per_page;
+
+    $http_s = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $base_url = $http_s.'://'.$_SERVER["HTTP_HOST"];
+    $base_uri = preg_replace('/&page=\d+/', '', $_SERVER["REQUEST_URI"]);
+    $pagination['url'] = $base_url.$base_uri.'&page=';
 
     return $pagination;
   }
@@ -156,32 +277,15 @@ class MSearchMng extends M_Manager
                               Search results
   \* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| */
 
+  /* ************************************************************** *\
+      SELECT_SEARCH_RESULTS
+      Selects the users that fit into the search conditions.
+  \* ************************************************************** */
 
-  public function select_all_users()
+  public function select_search_results(array $conditions, array $pagination)
   {
-    $sql = 'SELECT id_user, username, bio
-            FROM users';
-    $query = $this->_db->prepare($sql);
-    $query->execute();
-
-    $users = array();
-    while ($r = $query->fetch())
-      $users[] = new MUser($r);
-    return $users;
-  }
-
-  public function count_users(array $filter_conditions)
-  {
-    $sql = 'SELECT id_user, username, bio
-            FROM users
-            WHERE id_user != :id_user
-              AND email_confirmed = "1"';
-
-    //if ($filter_conditions)
-
-    $query = $this->_db->prepare($sql);
-    $query->bindValue(':id_user', $filter_conditions['current_user']['id_user'], PDO::PARAM_INT);
-    $query->execute();
+    $sql = $this->create_search_query('select', $conditions, $pagination);
+    $query = $this->execute_search_query($sql, $conditions);
 
     $users = array();
     while ($r = $query->fetch())

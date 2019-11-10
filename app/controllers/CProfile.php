@@ -30,7 +30,10 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $user_details_labeled['Gender'] = ($user->get_gender_self() == 'F') ? 'Female' : 'Male';
 
     if ($user->get_age() != '')
-      $user_details_labeled['Age'] = $user->get_age();
+    {
+      $s = ($user->get_age() > 1) ? 's' : '';
+      $user_details_labeled['Age'] = $user->get_age().' year'.$s.' old';
+    }
 
     if ($user->get_location() != '')
       $user_details_labeled['Location'] = $user->get_location();
