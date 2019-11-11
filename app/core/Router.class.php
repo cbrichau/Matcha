@@ -58,7 +58,7 @@ class Router extends Config
     $page = self::$page['name'];
     $common_area = array('home');
     $visitors_only = array('register', 'login', 'reset');
-    $members_only = array('logout', 'account', 'profile', 'search', 'chat');
+    $members_only = array('logout', 'account', 'profile', 'search', 'chat', 'chatmessage');
 
     if (!in_array($page, $common_area) &&
         !(in_array($page, $visitors_only) && !$_SESSION['is_logged']) &&
