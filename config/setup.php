@@ -36,7 +36,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users`
            PRIMARY KEY (`id_user`)
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("");
+//$DB->exec("");
 
 /* ------------------- USERS_VISITS ------------------- */
 
@@ -49,7 +49,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_visits`
            CONSTRAINT `FK_users_visits_id_user_visited` FOREIGN KEY (`id_user_visited`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("");
+//$DB->exec("");
 
 /* ------------------- USERS_LIKES ------------------- */
 
@@ -61,7 +61,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_likes`
            CONSTRAINT `FK_users_visits_id_user_liked` FOREIGN KEY (`id_user_liked`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("INSERT INTO `users_likes`
+/*$DB->exec("INSERT INTO `users_likes`
           (`id_user_liker`, `id_user_liked`)
           VALUES
           (215, 1),
@@ -510,7 +510,7 @@ $DB->exec("INSERT INTO `users_likes`
           (387, 547),
           (259, 549),
           (403, 549),
-          (136, 550);");
+          (136, 550);");*/
 
 /* ------------------- USERS_BLOCKS ------------------- */
 
@@ -522,7 +522,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_blocks`
            CONSTRAINT `FK_users_visits_id_user_blocked` FOREIGN KEY (`id_user_blocked`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("INSERT INTO `users_blocks`
+/*$DB->exec("INSERT INTO `users_blocks`
           (`id_user_blocker`, `id_user_blocked`)
           VALUES
           (487, 14),
@@ -531,7 +531,7 @@ $DB->exec("INSERT INTO `users_blocks`
           (303, 351),
           (382, 466),
           (247, 477),
-          (56, 522);");
+          (56, 522);");*/
 
 /* ------------------- USERS_REPORTS ------------------- */
 
@@ -543,7 +543,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_reports`
            CONSTRAINT `FK_users_visits_id_user_reported` FOREIGN KEY (`id_user_reported`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("INSERT INTO `users_reports`
+/*$DB->exec("INSERT INTO `users_reports`
           (`id_user_reporter`, `id_user_reported`)
           VALUES
           (165, 19),
@@ -552,7 +552,7 @@ $DB->exec("INSERT INTO `users_reports`
           (248, 261),
           (200, 284),
           (473, 329),
-          (197, 528);");
+          (197, 528);");*/
 
 /* ------------------- INTERESTS ------------------- */
 
@@ -600,7 +600,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `users_interests`
            CONSTRAINT `FK_users_interests_id_interest` FOREIGN KEY (`id_interest`) REFERENCES `interests`(`id_interest`) ON DELETE CASCADE ON UPDATE CASCADE
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("INSERT INTO `users_interests`
+/*$DB->exec("INSERT INTO `users_interests`
           (`id_user`, `id_interest`)
           VALUES
           (2, 1),
@@ -1562,7 +1562,7 @@ $DB->exec("INSERT INTO `users_interests`
           (531, 21),
           (536, 21),
           (538, 21),
-          (549, 21);");
+          (549, 21);");*/
 
 /* ------------------- CHAT ------------------- */
 
@@ -1577,7 +1577,7 @@ $DB->exec("CREATE TABLE IF NOT EXISTS `chat`
            CONSTRAINT `FK_chat_id_user_2` FOREIGN KEY (`id_user_2`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$DB->exec("");
+//$DB->exec("");
 
 $_SESSION['is_setup'] = TRUE;
 header('Location: http://localhost:8081/gitmatcha/');

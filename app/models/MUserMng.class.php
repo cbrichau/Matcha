@@ -107,7 +107,11 @@ class MUserMng extends M_Manager
     $query->bindValue(':date_of_birth', $user->get_date_of_birth(), PDO::PARAM_STR);
     $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
     $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
-    $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
+	$query->bindValue(':gender_self', $user->get_gender_self(), PDO::PARAM_STR);
+	$query->bindValue(':gender_seeked', $user->get_gender_seeked(), PDO::PARAM_STR);
+	$query->bindValue(':popularity_score', $user->get_popularity_score(), PDO::PARAM_INT);
+	$query->bindValue(':bio', $user->get_bio(), PDO::PARAM_STR);
+	$query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
     $query->execute();
   }
 
