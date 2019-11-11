@@ -5,7 +5,7 @@
       <?php foreach ($results as $user): ?>
         <div class="mb-3 col-sm-12 col-md-6 col-lg-3">
           <div class="card">
-            <img src="" class="card-img-top">
+            <img src="<?php echo Config::ROOT.$user->get_profile_pics(0); ?>" class="card-img-top">
             <div class="card-body">
               <p>
                 <a href="<?php echo Config::ROOT.'index.php?cat=profile&id_user='.$user->get_id_user(); ?>" class="stretched-link">

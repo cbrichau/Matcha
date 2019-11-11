@@ -1,12 +1,14 @@
+/* ************************** *\
+    BASICS
+\* ************************** */
+
 body
 {
   background-color: #f3f3f3;
   overflow-wrap: break-word;
 }
 
-/* ************************** *\
-    NAV
-\* ************************** */
+/* ---------- NAV ---------- */
 
 nav .navbar-nav li.nav-item > a
 {
@@ -18,9 +20,7 @@ nav .navbar-nav li.nav-item:hover
   color: #0056b3;text-decoration: underline;
 }
 
-/* ************************** *\
-    NOTIFICATIONS
-\* ************************** */
+/* ----- NOTIFICATIONS ----- */
 
 .alert
 {
@@ -45,9 +45,7 @@ nav .navbar-nav li.nav-item:hover
 .alert-warning { background-image: url('../images/layout/warning.png'); }
 .alert-info    { background-image: url('../images/layout/notice.png'); }
 
-/* ************************** *\
-    FORMS
-\* ************************** */
+/* --------- FORMS --------- */
 
 form
 {
@@ -67,8 +65,10 @@ form input[type="range"]
 }
 
 /* ************************** *\
-    PROFILE
+    PAGES
 \* ************************** */
+
+/* -------- PROFILE -------- */
 
 #profile { max-width: 1400px; }
 #profile p { margin: 0; }
@@ -88,4 +88,11 @@ form input[type="range"]
 #profile > .row .row > p:first-child
 {
   font-weight: bold;
+}
+
+/* --------- SEARCH --------- */
+
+#search form
+{
+  margin-top: 0;
 }

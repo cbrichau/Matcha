@@ -47,7 +47,6 @@ if (count($_GET) > 1)
 $nb_results = $searchMng->count_search_results($filter_conditions);
 $pagination = $searchMng->get_pagination_values($nb_results, $_GET);
 
-print_r($pagination);
 /* *********************************************************** *\
     Search results
 \* *********************************************************** */

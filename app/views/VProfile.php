@@ -9,7 +9,7 @@
       <p class="status offline"><i class="fa fa-times-circle-o"></i> <?php echo $user_details['status']; ?></p>
     <?php endif; ?>
 
-    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="img-fluid">
+    <img src="<?php echo Config::ROOT.$user->get_profile_pics(0); ?>" class="img-fluid">
 
     <?php if ($user_details['id_user'] == $_SESSION['id_user']): ?>
       <a href="<?php echo Config::ROOT; ?>index.php?cat=account" class="btn btn-primary">Modify my account</a>
