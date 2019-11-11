@@ -35,7 +35,7 @@ class MSearchMng extends M_Manager
   }
 
   /* ************************************************************** *\
-      UPDATE_xxx_PREFILL
+      UPDATE_FORM_xxx
       Takes valid form input from GET and sets it as prefill values.
   \* ************************************************************** */
 
@@ -137,8 +137,8 @@ class MSearchMng extends M_Manager
     $filter_conditions = array(
       'current_user' => array(
         'id_user' => $user->get_id_user(),
-        'gender' => $user->get_gender_self(),
-        'age' => $user->get_age(),
+        //'gender' => $user->get_gender_self(),
+        //'age' => $user->get_age(),
         'location' => $user->get_location()
       ),
       'search' => array(
@@ -166,27 +166,45 @@ class MSearchMng extends M_Manager
 
   private function create_search_query($case, array $conditions, array $pagination)
   {
-    if ($case == 'count')
+    // Creates a $statement array with all the elements of the SQL query.
+    if ($case == 'select')
+    {
+      $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';
+      $statement['order'] = '';
+      //$statement['order'] = 'ORDER BY popularity_score DESC';
+      $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
+    }
+    else
     {
       $statement['action'] = 'SELECT COUNT(*) AS nb_results';
       $statement['order'] = '';
       $statement['limit'] = '';
     }
-    else
-    {
-      $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';
-      $statement['order'] = 'ORDER BY popularity_score DESC';
-      $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
-    }
-
     $statement['from'] = 'FROM users';
     $statement['where'] = 'WHERE id_user != :id_user';
     $statement['and'][] = 'AND email_confirmed = "1"';
     $statement['and'][] = 'AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max';
 
-    if ($conditions['search']['gender'] != NULL)
-      $statement['and'][] = 'AND gender_self = :gender_seeked';
+    if ($conditions['search']['gender'] !== NULL)
+      $statement['and'][] = 'AND gender_self = :gender_user_searched';
 
+      // distance
+      //$statement['and'][] = 'AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max';
+
+//https://stevemorse.org/jcal/latlon.php
+//http://tools.locatienet.com/location/edit/map.asp
+//https://nominatim.openstreetmap.org/search.php?q=26+chemin+des+noces+1410+waterloo+belgique&polygon_geojson=1&viewbox=
+//https://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json&polygon=1&addressdetails=1
+
+
+    if ($conditions['search']['interests'] !== NULL)
+      $statement['and'][] = 'AND id_user IN
+                            (SELECT DISTINCT(id_user)
+                             FROM users_interests
+                             WHERE id_interest IN
+                             ('.$conditions['search']['interests'].'))';
+
+    // Transforms the $statement array into a proper $sql string.
     $sql_and = implode(' ', $statement['and']);
     $sql = $statement['action'].' '.
            $statement['from'].' '.
@@ -195,20 +213,8 @@ class MSearchMng extends M_Manager
            $statement['order'].' '.
            $statement['limit'];
     $sql = preg_replace('/\s+/', ' ', $sql);
-    
+
     return $sql;
-    /*
-      $filter_conditions = array(
-        'current_user' => array(
-          'id_user' => $user->get_id_user(),
-          'gender' => $user->get_gender_self(),
-          'age' => $user->get_age(),
-          'location' => $user->get_location()
-        ),
-    'distance' => $f['distance'],
-          */
-    /*if ($conditions['search']['interests'] != NULL)
-      $sql .= ' AND interests IN (:interests)';*/
   }
 
   private function execute_search_query($sql, array $conditions)
@@ -217,15 +223,11 @@ class MSearchMng extends M_Manager
     $query->bindValue(':id_user', $conditions['current_user']['id_user'], PDO::PARAM_INT);
     $query->bindValue(':age_min', $conditions['search']['age_min'], PDO::PARAM_INT);
     $query->bindValue(':age_max', $conditions['search']['age_max'], PDO::PARAM_INT);
-
-    if ($conditions['search']['gender'] != NULL)
-      $query->bindValue(':gender_seeked', $conditions['search']['gender'], PDO::PARAM_STR);
-
+    if ($conditions['search']['gender'] !== NULL)
+      $query->bindValue(':gender_user_searched', $conditions['search']['gender'], PDO::PARAM_STR);
     $query->execute();
 
     return $query;
-    /*if ($conditions['search']['interests'] != NULL)
-      $sql .= ' AND interests IN (:interests)';*/
   }
 
   /* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| *\
@@ -288,8 +290,14 @@ class MSearchMng extends M_Manager
     $query = $this->execute_search_query($sql, $conditions);
 
     $users = array();
+    $i = 0;
     while ($r = $query->fetch())
-      $users[] = new MUser($r);
+    {
+      $users[$i] = new MUser($r);
+      $users[$i]->set_profile_pics();
+      $i++;
+    }
+
     return $users;
   }
 }

@@ -33,6 +33,7 @@ class MUser extends M_Manager
   private $_popularity_score;
   private $_bio;
   private $_interests;
+  private $_profile_pics;
 
   /* ******************************************************** *\
       INITILISATION
@@ -104,7 +105,14 @@ class MUser extends M_Manager
   public function get_gender_seeked()    { return $this->_gender_seeked; }
   public function get_popularity_score() { return $this->_popularity_score; }
   public function get_bio()              { return $this->_bio; }
-  public function get_interests()        { return $this->$_interests; }
+  public function get_interests()        { return $this->_interests; }
+  public function get_profile_pics($i)
+  {
+    if ($i !== NULL)
+      return $this->_profile_pics[$i];
+    else
+      return $this->_profile_pics;
+  }
 
   /* ******************************************************** *\
       SETTERS
@@ -211,5 +219,12 @@ class MUser extends M_Manager
   {
     if (preg_match('/^((\d+)(-{0,1}))+$/', $arg))
       $this->_interests = $arg;
+  }
+
+  public function set_profile_pics()
+  {
+    $this->_profile_pics = glob(Config::IMAGES_PATH.'profile_pictures/'.$this->_id_user.'-[1-5].jpg');
+    if (empty($this->_profile_pics))
+      $this->_profile_pics[0] = Config::IMAGES_PATH.'profile_pictures/0default.jpg';
   }
 }

@@ -18,6 +18,7 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     $valid_profile = TRUE;
     $interests = $userMng->select_user_interests($user);
     $user->set_interests($interests);
+    $user->set_profile_pics();
 
     // Sets the profile's array(label => value) for output
     $user_details['id_user'] = $user->get_id_user();
