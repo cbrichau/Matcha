@@ -23,7 +23,7 @@
   <hr/>
 
   <?php echo $error_alert['date_of_birth']; ?>
-  <input type="text" name="date_of_birth" placeholder="Date of birth" value="" class="form-control my-2">
+  <input type="date" name="date_of_birth" placeholder="Date of birth" value="<?php echo $form_prefill['date_of_birth']; ?>" class="form-control my-2">
 
   <?php echo $error_alert['location']; ?>
   <input type="text" name="location" placeholder="Location" value="" class="form-control my-2">

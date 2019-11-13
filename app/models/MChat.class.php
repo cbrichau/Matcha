@@ -1,10 +1,10 @@
 <?php
 /* ************************************************************** *\
-
+	Send Message and fetch messages.
 \* ************************************************************** */
 class MChat extends MUserMng
 {
-	//Take id_user_1 and id_user_2 plus message
+	//Take id_user_1 , id_user_2 and message
 	public function send_message($sender,$receiver,$message){
 		if($this->is_valid_string_format($message) && $this->is_valid_int_format($receiver) && $this->is_valid_int_format($sender)){
 			$sql = 'INSERT INTO chat
@@ -18,6 +18,7 @@ class MChat extends MUserMng
 		    $query->execute();
 		}
 	}
+	
 	public function fetch_messages($id_user_1, $id_user_2){
 		if($this->is_valid_int_format($id_user_1) && $this->is_valid_int_format($id_user_2)){
 			$sql = 'SELECT message , id_user_1 , message_date
