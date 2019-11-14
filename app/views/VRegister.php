@@ -2,7 +2,8 @@
 	<?php echo $success_alert; ?>
   <h1><?php echo $output->get_head_title(); ?></h1>
 
-	<input type="hidden" name="localisation" value="">
+	<input type="hidden" name="latitude" value="<?php echo $form_prefill['latitude']; ?>">
+	<input type="hidden" name="longitude" value="<?php echo $form_prefill['longitude']; ?>">
 
   <?php echo $error_alert['email']; ?>
   <input type="email" name="email" placeholder="Email" value="<?php echo $form_prefill['email']; ?>" class="form-control my-2" required>

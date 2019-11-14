@@ -27,7 +27,7 @@ class MUser extends M_Manager
   private $_age;
   private $_password;
   private $_last_activity;
-  private $_location;
+  private $_location; // "Latitude Longitude"
   private $_gender_self;
   private $_gender_seeked;
   private $_popularity_score;
@@ -181,10 +181,10 @@ class MUser extends M_Manager
 
   public function set_location($arg)
   {
-    list($latitude, $longitude) = explode(':', $arg);
+    list($latitude, $longitude) = explode(' ', $arg);
     if ($this->is_valid_float_format($latitude) &&
         $this->is_valid_float_format($longitude))
-    $this->_location = $latitude.':'.$longitude;
+    $this->_location = $latitude.' '.$longitude;
   }
 
   public function set_gender_self($arg)

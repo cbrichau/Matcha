@@ -112,19 +112,6 @@ class MSearchMng extends M_Manager
 
   public function define_filter_conditions(array $f, array $list_interests, MUser $user)
   {
-    // Translates the checked interests into a list of ids.
-    if ($f['interest_any'] == 'checked')
-      $interests = NULL;
-    else
-    {
-      foreach ($list_interests as $key => $value)
-      {
-        if ($f['interest_'.$key] == 'checked')
-          $interests[] = $key;
-      }
-      $interests = implode(',', $interests);
-    }
-
     // Translates the checked gender into a key.
     if ($f['gender_F'] == 'checked')
       $gender_seeked = 'F';
@@ -132,6 +119,19 @@ class MSearchMng extends M_Manager
       $gender_seeked = 'M';
     else
       $gender_seeked = NULL;
+
+      // Translates the checked interests into a list of ids.
+      if ($f['interest_any'] == 'checked')
+        $interests = NULL;
+      else
+      {
+        foreach ($list_interests as $key => $value)
+        {
+          if ($f['interest_'.$key] == 'checked')
+            $interests[] = $key;
+        }
+        $interests = implode(',', $interests);
+      }
 
     // Sets the filter array.
     $filter_conditions = array(
@@ -170,8 +170,7 @@ class MSearchMng extends M_Manager
     if ($case == 'select')
     {
       $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';
-      $statement['order'] = '';
-      //$statement['order'] = 'ORDER BY popularity_score DESC';
+      $statement['order'] = 'ORDER BY popularity_score DESC';
       $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
     }
     else
@@ -184,18 +183,15 @@ class MSearchMng extends M_Manager
     $statement['where'] = 'WHERE id_user != :id_user';
     $statement['and'][] = 'AND email_confirmed = "1"';
     $statement['and'][] = 'AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max';
+    $statement['and'][] = 'AND (111.111 *
+                                DEGREES(ACOS(LEAST(1.0, COS(RADIANS(@user_latitude)) *
+                                COS(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))) *
+                                COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
+                                SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5))))))))
+                                < :max_distance';
 
     if ($conditions['search']['gender'] !== NULL)
       $statement['and'][] = 'AND gender_self = :gender_user_searched';
-
-      // distance
-      //$statement['and'][] = 'AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max';
-
-//https://stevemorse.org/jcal/latlon.php
-//http://tools.locatienet.com/location/edit/map.asp
-//https://nominatim.openstreetmap.org/search.php?q=26+chemin+des+noces+1410+waterloo+belgique&polygon_geojson=1&viewbox=
-//https://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json&polygon=1&addressdetails=1
-
 
     if ($conditions['search']['interests'] !== NULL)
       $statement['and'][] = 'AND id_user IN
@@ -219,10 +215,14 @@ class MSearchMng extends M_Manager
 
   private function execute_search_query($sql, array $conditions)
   {
+    list($user_latitude, $user_longitude) = explode(' ', $conditions['current_user']['location']);
+    $this->_db->exec('SET @user_latitude = 50; SET @user_longitude = 4;');
+
     $query = $this->_db->prepare($sql);
     $query->bindValue(':id_user', $conditions['current_user']['id_user'], PDO::PARAM_INT);
     $query->bindValue(':age_min', $conditions['search']['age_min'], PDO::PARAM_INT);
     $query->bindValue(':age_max', $conditions['search']['age_max'], PDO::PARAM_INT);
+    $query->bindValue(':max_distance', $conditions['search']['distance'], PDO::PARAM_INT);
     if ($conditions['search']['gender'] !== NULL)
       $query->bindValue(':gender_user_searched', $conditions['search']['gender'], PDO::PARAM_STR);
     $query->execute();
