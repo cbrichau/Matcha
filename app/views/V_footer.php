@@ -10,5 +10,7 @@
   	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   	<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
   	<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+
+    <script src="<?php echo Config::JS_PATH.'notifications.js?'.time(); ?>"></script>
   </body>
 </html>
