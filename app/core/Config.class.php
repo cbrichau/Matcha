@@ -7,8 +7,9 @@
 class Config
 {
   const ROOT              = 'http://localhost:8081/gitmatcha/'; // Also hardcoded in setup.php and delete_setup.php
-  const MODELS_PATH       = 'app/models/';
+  const AJAX_PATH         = 'app/ajax/';
   const CONTROLLERS_PATH  = 'app/controllers/';
+  const MODELS_PATH       = 'app/models/';
   const VIEWS_PATH        = 'app/views/';
   const IMAGES_PATH       = 'resources/images/';
   const CSS_PATH          = 'resources/css/';
