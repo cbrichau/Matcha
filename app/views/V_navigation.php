@@ -36,7 +36,7 @@
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarNotif" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span id="notifications_count"></span>
+            <span id="notifications_count">0</span>
             <i class="fa fa-bell" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarNotif" id="notifications_list">
