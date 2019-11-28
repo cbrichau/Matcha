@@ -1,7 +1,7 @@
     </div>
 
     <footer class="d-flex flex-column flex-md-row p-3 px-md-4 mt-auto bg-white border-top shadow-lg">
-      <p class="my-0 mr-md-auto font-weight-normal">Matcha 42/19 Coding School &copy; cbrichau 2019</p>
+      <p class="my-0 mr-md-auto font-weight-normal">Matcha 42/19 Coding School &copy; cbrichau &amp; nraziano 2019</p>
     </footer>
 
     <?php

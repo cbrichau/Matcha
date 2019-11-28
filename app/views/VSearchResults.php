@@ -14,7 +14,7 @@
               <p>
                 <?php
                   $s = ($user->get_age() > 1) ? 's' : '';
-                  echo $user->get_gender_self().' | '.$user->get_age().' year'.$s.' old';
+                  echo $user->get_gender().' | '.$user->get_age().' year'.$s.' old | '.$user->get_popularity_score().' points';
                 ?>
               </p>
               <p class="card-text"><?php echo $user->get_bio(); ?></p>

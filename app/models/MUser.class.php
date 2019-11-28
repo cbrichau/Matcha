@@ -28,12 +28,17 @@ class MUser extends M_Manager
   private $_password;
   private $_last_activity;
   private $_location; // "Latitude Longitude"
-  private $_gender_self;
-  private $_gender_seeked;
+  private $_gender;
   private $_popularity_score;
   private $_bio;
   private $_interests;
   private $_profile_pics;
+
+  private $_seeked_gender;
+  private $_seeked_age_range;
+  private $_seeked_distance;
+  private $_seeked_popularity_range;
+  private $_seeked_interests;
 
   /* ******************************************************** *\
       INITILISATION
@@ -90,6 +95,9 @@ class MUser extends M_Manager
     }
     return $properties;
   }
+
+  /* --------------- User "self" properties --------------- */
+
   public function get_id_user()          { return $this->_id_user; }
   public function get_email()            { return $this->_email; }
   public function get_email_confirmed()  { return $this->_email_confirmed; }
@@ -101,22 +109,31 @@ class MUser extends M_Manager
   public function get_password()         { return $this->_password; }
   public function get_last_activity()    { return $this->_last_activity; }
   public function get_location()         { return $this->_location; }
-  public function get_gender_self()      { return $this->_gender_self; }
-  public function get_gender_seeked()    { return $this->_gender_seeked; }
+  public function get_gender()           { return $this->_gender; }
   public function get_popularity_score() { return $this->_popularity_score; }
   public function get_bio()              { return $this->_bio; }
   public function get_interests()        { return $this->_interests; }
   public function get_profile_pics($i)
   {
-    if ($i !== NULL)
-      return $this->_profile_pics[$i];
-    else
+    if ($i === 'all')
       return $this->_profile_pics;
+    else
+      return $this->_profile_pics[$i];
   }
+
+  /* --------------- User "seeked" properties --------------- */
+
+  public function get_seeked_gender()           { return $this->_seeked_gender; }
+  public function get_seeked_age_range()        { return $this->_seeked_age_range; }
+  public function get_seeked_distance()         { return $this->_seeked_distance; }
+  public function get_seeked_popularity_range() { return $this->_seeked_popularity_range; }
+  public function get_seeked_interests()        { return $this->_seeked_interests; }
 
   /* ******************************************************** *\
       SETTERS
   \* ******************************************************** */
+
+  /* --------------- User "self" properties --------------- */
 
   public function set_id_user($arg)
   {
@@ -187,20 +204,12 @@ class MUser extends M_Manager
     $this->_location = $latitude.' '.$longitude;
   }
 
-  public function set_gender_self($arg)
+  public function set_gender($arg)
   {
     if (in_array($arg, array('F', 'M', NULL)))
-      $this->_gender_self = $arg;
+      $this->_gender = $arg;
     else
-      $this->_gender_self = NULL;
-  }
-
-  public function set_gender_seeked($arg)
-  {
-    if (in_array($arg, array('F', 'M', NULL)))
-      $this->_gender_seeked = $arg;
-    else
-      $this->_gender_seeked = NULL;
+      $this->_gender = NULL;
   }
 
   public function set_popularity_score($arg)
@@ -226,5 +235,39 @@ class MUser extends M_Manager
     $this->_profile_pics = glob(Config::IMAGES_PATH.'profile_pictures/'.$this->_id_user.'-[1-5].jpg');
     if (empty($this->_profile_pics))
       $this->_profile_pics[0] = Config::IMAGES_PATH.'profile_pictures/0default.jpg';
+  }
+
+  /* --------------- User "seeked" properties --------------- */
+
+  public function set_seeked_gender($arg)
+  {
+    if (in_array($arg, array('F', 'M', NULL)))
+      $this->_seeked_gender = $arg;
+    else
+      $this->_seeked_gender = NULL;
+  }
+
+  public function set_seeked_age_range($arg)
+  {
+    if ($this->is_valid_int_format($arg))
+      $this->_seeked_age_range = $arg;
+  }
+
+  public function set_seeked_distance($arg)
+  {
+    if ($this->is_valid_int_format($arg))
+      $this->_seeked_distance = $arg;
+  }
+
+  public function set_seeked_popularity_range($arg)
+  {
+    if ($this->is_valid_int_format($arg))
+      $this->_seeked_popularity_range = $arg;
+  }
+
+  public function set_seeked_interests($arg)
+  {
+    if (preg_match('/^((\d+)(-{0,1}))+$/', $arg))
+      $this->_seeked_interests = $arg;
   }
 }

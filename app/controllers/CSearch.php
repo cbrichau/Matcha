@@ -26,6 +26,7 @@ $form_prefill['distance'] = 8;
 foreach ($list_interests as $key => $value)
   $form_prefill['interest_'.$key] = '';
 $form_prefill['interest_any'] = 'checked';
+$form_prefill['popularity_range'] = 500;
 
 // Initialises the filter conditions
 $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $list_interests, $current_user);
