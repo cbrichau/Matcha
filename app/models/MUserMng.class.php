@@ -53,25 +53,6 @@ class MUserMng extends M_Manager
     return implode('-', $interests);
   }
 
-/*
-  public function select_user_visitors(MUser $user)
-  {
-    $sql = 'SELECT id_user_visitor, username
-            FROM users_visits JOIN users ON id_user_visitor = id_user
-            WHERE id_user_visited = :current_user
-            ORDER BY last_visit_DESC';
-    $query = $this->_db->prepare($sql);
-    $query->bindValue(':current_user', $user->get_id_user(), PDO::PARAM_INT);
-    $query->execute();
-
-    $visitors = array();
-    while ($r = $query->fetch())
-      $visitors[] = new MUser($r);
-
-    return $visitors;
-  }
-*/
-
   public function add_user(MUser $user)
   {
     $sql = 'INSERT INTO users

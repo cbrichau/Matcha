@@ -1,5 +1,23 @@
 <main class="col-sm-7 col-md-8 col-lg-9">
   <div class="container-fluid">
+
+    <form method="GET" id="sort_form" class="form-inline bg-white mb-3 mr-0">
+      <label>Sort by:</label>
+      <select class="form-control" form="search_form" name="sort">
+        <?php
+        foreach ($list_sort_options as $value => $label)
+          echo '<option value="'.$value.'" '.$form_prefill['sort_'.$value].'>'.$label.'</option>';
+        ?>
+      </select>
+
+      <?php foreach ($list_order_options as $value => $label): ?>
+        <label class="form-check">
+          <input class="form-check-input" type="radio" name="order" value="<?php echo $value; ?>" <?php echo $form_prefill['order_'.$value]; ?>>
+          <?php echo $label; ?>
+        </label>
+      <?php endforeach; ?>
+    </form>
+
     <div class="row">
       <?php foreach ($results as $user): ?>
         <div class="mb-3 col-sm-12 col-md-6 col-lg-3">
@@ -17,7 +35,7 @@
                   echo $user->get_gender().' | '.$user->get_age().' year'.$s.' old | '.$user->get_popularity_score().' points';
                 ?>
               </p>
-              <p class="card-text"><?php echo $user->get_bio(); ?></p>
+              <p class="card-text"><?php echo '#interests list'; ?></p>
             </div>
           </div>
         </div>

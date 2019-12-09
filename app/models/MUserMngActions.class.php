@@ -2,7 +2,8 @@
 /* ************************************************************** *\
 	Send Message and fetch messages.
 \* ************************************************************** */
-class MActions extends MUserMng
+
+class MUserMngActions extends MUserMng
 {
 	//Take id_user_1 , id_user_2 and message
 	public function send_message($sender,$receiver,$message){

@@ -15,31 +15,46 @@ $current_user = $userMng->select_user_by('id_user', $_SESSION['id_user']);
 // Sets the form's filter elements
 $list_genders = $searchMng->list_gender_options();
 $list_interests = $searchMng->list_interest_options();
+$list_sort_options = $searchMng->list_sort_options();
+$list_order_options = $searchMng->list_order_options();
 
 // Initialises the form's prefill values.
-foreach ($list_genders as $key => $value)
+foreach ($list_genders as $key => $v)
   $form_prefill['gender_'.$key] = '';
-$form_prefill['gender_any'] = 'checked';
-$form_prefill['age_min'] = 1;
-$form_prefill['age_max'] = 25;
-$form_prefill['distance'] = 8;
-foreach ($list_interests as $key => $value)
+foreach ($list_interests as $key => $v)
   $form_prefill['interest_'.$key] = '';
-$form_prefill['interest_any'] = 'checked';
-$form_prefill['popularity_range'] = 500;
+foreach ($list_sort_options as $key => $v)
+  $form_prefill['sort_'.$key] = '';
+foreach ($list_order_options as $key => $v)
+  $form_prefill['order_'.$key] = '';
+
+$form_prefill = array_merge($form_prefill, array(
+  'gender_any' => 'checked',
+  'age_min' => 1,
+  'age_max' => 25,
+  'distance' => 8,
+  'interest_any' => 'checked',
+  'popularity_range' => 500,
+  'sort' => 'potential',
+  'sort_potential' => 'selected',
+  'order' => 'desc',
+  'order_desc' => 'checked'
+));
 
 // Initialises the filter conditions
 $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $list_interests, $current_user);
 
-// Processes the filtering form.
+// Overrides the prefill values with the posted ones,
+// and adapts the filter conditions accordingly.
 if (count($_GET) > 1)
 {
-  // Overrides the prefill values with the posted ones.
-  $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests);
-
-  // Defines the filter conditions to apply to the search query.
+  $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests, $list_sort_options, $list_order_options);
   $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $list_interests, $current_user);
 }
+
+echo '<pre>';
+print_r($filter_conditions);
+echo '</pre>';
 
 /* *********************************************************** *\
     Pagination

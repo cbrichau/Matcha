@@ -17,8 +17,7 @@ class MSearchMng extends M_Manager
 
   public function list_gender_options()
   {
-    $genders = array('any' => 'Any', 'F' => 'Female', 'M' => 'Male');
-    return $genders;
+    return array('any' => 'Any', 'F' => 'Female', 'M' => 'Male');
   }
 
   public function list_interest_options()
@@ -32,6 +31,21 @@ class MSearchMng extends M_Manager
     while ($r = $query->fetch())
       $interests[$r['id_interest']] = $r['interest'];
     return $interests;
+  }
+
+  public function list_sort_options()
+  {
+    return array('potential' => 'Match potential',
+                 'username' => 'Username',
+                 'age' => 'Age',
+                 'location' => 'Distance',
+                 'interests' => 'Common interests',
+                 'popularity_score' => 'Popularity score');
+  }
+
+  public function list_order_options()
+  {
+    return array('asc' => 'Ascending', 'desc' => 'Descending');
   }
 
   /* ************************************************************** *\
@@ -88,7 +102,10 @@ class MSearchMng extends M_Manager
     {
       $selected_interests = explode('-', $get['interests']);
       foreach ($selected_interests as $key)
-        $prefill['interest_'.$key] = 'checked';
+      {
+        if (array_key_exists($key, $list_interests))
+          $prefill['interest_'.$key] = 'checked';
+      }
       $prefill['interest_any'] = '';
     }
     return $prefill;
@@ -105,7 +122,33 @@ class MSearchMng extends M_Manager
     return $prefill;
   }
 
-  public function update_form_prefill(array $prefill, array $get, array $list_genders, array $list_interests)
+  private function update_form_sort(array $prefill, array $get, array $list_sort_options)
+  {
+    if (isset($get['sort']) &&
+        array_key_exists($get['sort'], $list_sort_options))
+    {
+      $prefill['sort'] = $get['sort'];
+      $prefill['sort_potential'] = '';
+      $prefill['sort_'.$get['sort']] = 'selected';
+    }
+    return $prefill;
+  }
+
+  private function update_form_order(array $prefill, array $get, array $list_order_options)
+  {
+    if (isset($get['order']) &&
+        array_key_exists($get['order'], $list_order_options))
+    {
+      $prefill['order'] = $get['order'];
+      $prefill['order_desc'] = '';
+      $prefill['order_'.$get['order']] = 'checked';
+    }
+    return $prefill;
+  }
+
+  public function update_form_prefill(array $prefill, array $get,
+                                      array $list_genders, array $list_interests,
+                                      array $list_sort_options, array $list_order_options)
   {
     $prefill = $this->update_form_gender($prefill, $get, $list_genders);
     $prefill = $this->update_form_age_min($prefill, $get);
@@ -113,6 +156,9 @@ class MSearchMng extends M_Manager
     $prefill = $this->update_form_distance($prefill, $get);
     $prefill = $this->update_form_interests($prefill, $get, $list_interests);
     $prefill = $this->update_form_popularity_range($prefill, $get);
+    $prefill = $this->update_form_sort($prefill, $get, $list_sort_options);
+    $prefill = $this->update_form_order($prefill, $get, $list_order_options);
+
     return $prefill;
   }
 
@@ -125,17 +171,15 @@ class MSearchMng extends M_Manager
   public function define_filter_conditions(array $f, array $list_interests, MUser $user)
   {
     // Translates the checked gender into a key.
+    $gender = NULL;
     if ($f['gender_F'] == 'checked')
       $gender = 'F';
     else if ($f['gender_M'] == 'checked')
       $gender = 'M';
-    else
-      $gender = NULL;
 
     // Translates the checked interests into a list of ids.
-    if ($f['interest_any'] == 'checked')
-      $interests = NULL;
-    else
+    $interests = NULL;
+    if ($f['interest_any'] !== 'checked')
     {
       foreach ($list_interests as $key => $value)
       {
@@ -149,8 +193,6 @@ class MSearchMng extends M_Manager
     $filter_conditions = array(
       'current_user' => array(
         'id_user' => $user->get_id_user(),
-        //'gender' => $user->get_gender_self(),
-        //'age' => $user->get_age(),
         'location' => $user->get_location(),
         'popularity_score' => $user->get_popularity_score()
       ),
@@ -160,7 +202,9 @@ class MSearchMng extends M_Manager
         'age_max' => $f['age_max'],
         'distance' => $f['distance'],
         'interests' => $interests,
-        'popularity_range' => $f['popularity_range']
+        'popularity_range' => $f['popularity_range'],
+        'sort' => $f['sort'],
+        'order' => $f['order']
       ),
     );
 
@@ -183,14 +227,12 @@ class MSearchMng extends M_Manager
     // Creates a $statement array with all the elements of the SQL query.
     if ($case == 'select')
     {
-      $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';  //gender_self - or gender_seeked ????
-      $statement['order'] = '';
+      $statement['action'] = 'SELECT id_user, username, gender, date_of_birth, popularity_score';
       $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
     }
     else
     {
       $statement['action'] = 'SELECT COUNT(*) AS nb_results';
-      $statement['order'] = '';
       $statement['limit'] = '';
     }
     $statement['from'] = 'FROM users';
@@ -206,14 +248,31 @@ class MSearchMng extends M_Manager
     $statement['and'][] = 'AND popularity_score BETWEEN :score_min AND :score_max';
 
     if ($conditions['search']['gender'] !== NULL)
-      $statement['and'][] = 'AND gender = :gender';  //gender_self - or gender_seeked ????
+      $statement['and'][] = 'AND gender = :gender';
 
     if ($conditions['search']['interests'] !== NULL)
-      $statement['and'][] = 'AND id_user IN
-                            (SELECT DISTINCT(id_user)
-                             FROM users_interests
-                             WHERE id_interest IN
-                             ('.$conditions['search']['interests'].'))';
+      $statement['and'][] = 'AND id_user IN (SELECT DISTINCT(id_user) FROM users_interests WHERE id_interest IN ('.$conditions['search']['interests'].'))';
+
+    if ($case == 'select')
+    {
+      if (in_array($conditions['search']['sort'], array('username', 'popularity_score')))
+        $statement['order'] = 'ORDER BY '.$conditions['search']['sort'].' '.$conditions['search']['order'];
+      else if ($conditions['search']['sort'] == 'age')
+      {
+        if ($conditions['search']['order'] == 'asc')
+          $statement['order'] = 'ORDER BY date_of_birth DESC';
+        else
+          $statement['order'] = 'ORDER BY date_of_birth ASC';
+      }
+      else if ($conditions['search']['sort'] == 'potential')
+        $statement['order'] = '';//////////////////////////////
+      else if ($conditions['search']['sort'] == 'location')
+        $statement['order'] = '';///////////////////////////////
+      else if ($conditions['search']['sort'] == 'interests')
+        $statement['order'] = '';///////////////////////////////
+    }
+    else
+      $statement['order'] = '';
 
     // Transforms the $statement array into a proper $sql string.
     $sql_and = implode(' ', $statement['and']);

@@ -33,9 +33,9 @@ class MUser extends M_Manager
   private $_bio;
   private $_interests;
   private $_profile_pics;
-
   private $_seeked_gender;
-  private $_seeked_age_range;
+  private $_seeked_age_min;
+  private $_seeked_age_max;
   private $_seeked_distance;
   private $_seeked_popularity_range;
   private $_seeked_interests;
@@ -64,12 +64,6 @@ class MUser extends M_Manager
       CUSTOM FUNCTIONS
   \* ******************************************************** */
 
-  public function encrypt_and_set_password($pw)
-  {
-    $encrypted_pw = hash('whirlpool', $pw);
-    $this->set_password($encrypted_pw);
-  }
-
   public function update_user_info(MUser $user, array $data)
   {
     foreach ($data as $key => $value)
@@ -79,6 +73,12 @@ class MUser extends M_Manager
         $user->$method($value);
     }
     return $user;
+  }
+
+  public function encrypt_and_set_password($pw)
+  {
+    $encrypted_pw = hash('whirlpool', $pw);
+    $this->set_password($encrypted_pw);
   }
 
   /* ******************************************************** *\
@@ -95,9 +95,6 @@ class MUser extends M_Manager
     }
     return $properties;
   }
-
-  /* --------------- User "self" properties --------------- */
-
   public function get_id_user()          { return $this->_id_user; }
   public function get_email()            { return $this->_email; }
   public function get_email_confirmed()  { return $this->_email_confirmed; }
@@ -120,11 +117,9 @@ class MUser extends M_Manager
     else
       return $this->_profile_pics[$i];
   }
-
-  /* --------------- User "seeked" properties --------------- */
-
   public function get_seeked_gender()           { return $this->_seeked_gender; }
-  public function get_seeked_age_range()        { return $this->_seeked_age_range; }
+  public function get_seeked_age_min()          { return $this->_seeked_age_min; }
+  public function get_seeked_age_max()          { return $this->_seeked_age_max; }
   public function get_seeked_distance()         { return $this->_seeked_distance; }
   public function get_seeked_popularity_range() { return $this->_seeked_popularity_range; }
   public function get_seeked_interests()        { return $this->_seeked_interests; }
@@ -172,7 +167,7 @@ class MUser extends M_Manager
 
   public function set_date_of_birth($arg)
   {
-    //if is valid date format
+        //if is valid date format
     $this->_date_of_birth = $arg;
     $this->set_age();
   }
@@ -192,7 +187,7 @@ class MUser extends M_Manager
 
   public function set_last_activity($arg)
   {
-    //if is valid datetime format
+        //if is valid datetime format
     $this->_last_activity = $arg;
   }
 
@@ -206,10 +201,9 @@ class MUser extends M_Manager
 
   public function set_gender($arg)
   {
-    if (in_array($arg, array('F', 'M', NULL)))
+    $this->_gender = NULL;
+    if (in_array($arg, array('F', 'M')))
       $this->_gender = $arg;
-    else
-      $this->_gender = NULL;
   }
 
   public function set_popularity_score($arg)
@@ -237,20 +231,23 @@ class MUser extends M_Manager
       $this->_profile_pics[0] = Config::IMAGES_PATH.'profile_pictures/0default.jpg';
   }
 
-  /* --------------- User "seeked" properties --------------- */
-
   public function set_seeked_gender($arg)
   {
-    if (in_array($arg, array('F', 'M', NULL)))
+    $this->_seeked_gender = NULL;
+    if (in_array($arg, array('F', 'M')))
       $this->_seeked_gender = $arg;
-    else
-      $this->_seeked_gender = NULL;
   }
 
-  public function set_seeked_age_range($arg)
+  public function set_seeked_age_min($arg)
   {
     if ($this->is_valid_int_format($arg))
-      $this->_seeked_age_range = $arg;
+      $this->_seeked_age_min = $arg;
+  }
+
+  public function set_seeked_age_max($arg)
+  {
+    if ($this->is_valid_int_format($arg))
+      $this->_seeked_age_max = $arg;
   }
 
   public function set_seeked_distance($arg)
