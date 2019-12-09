@@ -22,6 +22,17 @@ nav .navbar-nav li.nav-item:hover
 
 /* ----- NOTIFICATIONS ----- */
 
+#notifications_count
+{
+  display: inline-block;
+  font-size: 0.8em;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  color: white;
+  background-color: red;
+  text-align: center;
+}
 .alert
 {
   padding: .5rem 1.25rem .5rem 1.8rem;

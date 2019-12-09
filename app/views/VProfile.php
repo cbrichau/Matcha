@@ -18,7 +18,7 @@
     <?php else: ?>
       <p class="status offline"><i class="fa fa-times-circle-o"></i> <?php echo $user_details['status']; ?></p>
     <?php endif; ?>
-	
+
 	<a class="nav-link" href="http://localhost:8081/gitmatcha/index.php?cat=chat&id_user=<?=$_GET['id_user']?>">Chat room</a>
 
     <img src="<?php echo Config::ROOT.$user->get_profile_pics(0); ?>" class="img-fluid">
@@ -32,7 +32,8 @@
   </div>
 
   <div class="col-sm-7 col-lg-8 bg-white py-4 px-5">
-    <?php foreach ($user_details_labeled as $label => $value): ?>
+    <h2 class="mb-3">I am:</h2>
+    <?php foreach ($i_am as $label => $value): ?>
       <div class="row">
         <p class="col-md-4 col-lg-3"><?php echo $label; ?></p>
         <p class="col-md-8 col-lg-9"><?php echo $value; ?></p>

@@ -94,6 +94,17 @@ class MSearchMng extends M_Manager
     return $prefill;
   }
 
+  private function update_form_popularity_range(array $prefill, array $get)
+  {
+    if (isset($get['popularity_range']) &&
+        $this->is_valid_int_format($get['popularity_range']) &&
+        $get['popularity_range'] >= 1 &&
+        $get['popularity_range'] <= 1000)
+      $prefill['popularity_range'] = $get['popularity_range'];
+
+    return $prefill;
+  }
+
   public function update_form_prefill(array $prefill, array $get, array $list_genders, array $list_interests)
   {
     $prefill = $this->update_form_gender($prefill, $get, $list_genders);
@@ -101,6 +112,7 @@ class MSearchMng extends M_Manager
     $prefill = $this->update_form_age_max($prefill, $get);
     $prefill = $this->update_form_distance($prefill, $get);
     $prefill = $this->update_form_interests($prefill, $get, $list_interests);
+    $prefill = $this->update_form_popularity_range($prefill, $get);
     return $prefill;
   }
 
@@ -114,24 +126,24 @@ class MSearchMng extends M_Manager
   {
     // Translates the checked gender into a key.
     if ($f['gender_F'] == 'checked')
-      $gender_seeked = 'F';
+      $gender = 'F';
     else if ($f['gender_M'] == 'checked')
-      $gender_seeked = 'M';
+      $gender = 'M';
     else
-      $gender_seeked = NULL;
+      $gender = NULL;
 
-      // Translates the checked interests into a list of ids.
-      if ($f['interest_any'] == 'checked')
-        $interests = NULL;
-      else
+    // Translates the checked interests into a list of ids.
+    if ($f['interest_any'] == 'checked')
+      $interests = NULL;
+    else
+    {
+      foreach ($list_interests as $key => $value)
       {
-        foreach ($list_interests as $key => $value)
-        {
-          if ($f['interest_'.$key] == 'checked')
-            $interests[] = $key;
-        }
-        $interests = implode(',', $interests);
+        if ($f['interest_'.$key] == 'checked')
+          $interests[] = $key;
       }
+      $interests = implode(',', $interests);
+    }
 
     // Sets the filter array.
     $filter_conditions = array(
@@ -139,14 +151,16 @@ class MSearchMng extends M_Manager
         'id_user' => $user->get_id_user(),
         //'gender' => $user->get_gender_self(),
         //'age' => $user->get_age(),
-        'location' => $user->get_location()
+        'location' => $user->get_location(),
+        'popularity_score' => $user->get_popularity_score()
       ),
       'search' => array(
-        'gender' => $gender_seeked,
+        'gender' => $gender,
         'age_min' => $f['age_min'],
         'age_max' => $f['age_max'],
         'distance' => $f['distance'],
-        'interests' => $interests
+        'interests' => $interests,
+        'popularity_range' => $f['popularity_range']
       ),
     );
 
@@ -169,8 +183,8 @@ class MSearchMng extends M_Manager
     // Creates a $statement array with all the elements of the SQL query.
     if ($case == 'select')
     {
-      $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';
-      $statement['order'] = 'ORDER BY popularity_score DESC';
+      $statement['action'] = 'SELECT id_user, username, gender_self, bio, date_of_birth';  //gender_self - or gender_seeked ????
+      $statement['order'] = '';
       $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
     }
     else
@@ -189,9 +203,10 @@ class MSearchMng extends M_Manager
                                 COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
                                 SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5))))))))
                                 < :max_distance';
+    $statement['and'][] = 'AND popularity_score BETWEEN :score_min AND :score_max';
 
     if ($conditions['search']['gender'] !== NULL)
-      $statement['and'][] = 'AND gender_self = :gender_user_searched';
+      $statement['and'][] = 'AND gender = :gender';  //gender_self - or gender_seeked ????
 
     if ($conditions['search']['interests'] !== NULL)
       $statement['and'][] = 'AND id_user IN
@@ -216,19 +231,23 @@ class MSearchMng extends M_Manager
   private function execute_search_query($sql, array $conditions)
   {
     list($user_latitude, $user_longitude) = explode(' ', $conditions['current_user']['location']);
-    $this->_db->exec('SET @user_latitude = 50; SET @user_longitude = 4;');
+    $score_min = $conditions['current_user']['popularity_score'] - $conditions['search']['popularity_range'];
+    $score_max = $conditions['current_user']['popularity_score'] + $conditions['search']['popularity_range'];
 
+    $this->_db->exec('SET @user_latitude = '.$user_latitude.'; SET @user_longitude = '.$user_longitude.';');
     $query = $this->_db->prepare($sql);
     $query->bindValue(':id_user', $conditions['current_user']['id_user'], PDO::PARAM_INT);
     $query->bindValue(':age_min', $conditions['search']['age_min'], PDO::PARAM_INT);
     $query->bindValue(':age_max', $conditions['search']['age_max'], PDO::PARAM_INT);
     $query->bindValue(':max_distance', $conditions['search']['distance'], PDO::PARAM_INT);
     if ($conditions['search']['gender'] !== NULL)
-      $query->bindValue(':gender_user_searched', $conditions['search']['gender'], PDO::PARAM_STR);
+      $query->bindValue(':gender', $conditions['search']['gender'], PDO::PARAM_STR);
+    $query->bindValue(':score_min', $score_min, PDO::PARAM_INT);
+    $query->bindValue(':score_max', $score_max, PDO::PARAM_INT);
     $query->execute();
 
     return $query;
-  }
+}
 
   /* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| *\
                               Pagination

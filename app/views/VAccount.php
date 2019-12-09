@@ -28,15 +28,10 @@
   <?php echo $error_alert['location']; ?>
   <input type="text" name="location" placeholder="Location" value="" class="form-control my-2">
 
-  <?php echo $error_alert['gender_self']; ?>
-  <label><input type="radio" name="gender_self" value="NULL" checked> Undefined</label>
-  <label><input type="radio" name="gender_self" value="F"> Female</label>
-  <label><input type="radio" name="gender_self" value="M"> Male</label>
-
-  <?php echo $error_alert['gender_seeked']; ?>
-  <label><input type="radio" name="gender_seeked" value="NULL" checked> Any</label>
-  <label><input type="radio" name="gender_seeked" value="F"> Female</label>
-  <label><input type="radio" name="gender_seeked" value="M"> Male</label>
+  <?php echo $error_alert['gender']; ?>
+  <label><input type="radio" name="gender" value="NULL" checked> Undefined</label>
+  <label><input type="radio" name="gender" value="F"> Female</label>
+  <label><input type="radio" name="gender" value="M"> Male</label>
 
   <?php echo $error_alert['bio']; ?>
   <textarea name="bio" placeholder="Bio" value="" class="form-control my-2" rows="3"></textarea>

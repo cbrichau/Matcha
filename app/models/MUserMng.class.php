@@ -16,11 +16,18 @@ class MUserMng extends M_Manager
   {
     if (in_array($key, array('id_user', 'email', 'username')) && isset($value))
     {
-      $sql = 'SELECT *
-              FROM users
-              WHERE '.$key.' = :value';
-      $query = $this->_db->prepare($sql);
-      $query->bindValue(':value', $value);
+      if ($key == 'id_user')
+      {
+        $sql = 'SELECT * FROM users WHERE id_user = :value';
+        $query = $this->_db->prepare($sql);
+        $query->bindValue(':value', $value, PDO::PARAM_INT);
+      }
+      else
+      {
+        $sql = 'SELECT * FROM users WHERE '.$key.' = :value';
+        $query = $this->_db->prepare($sql);
+        $query->bindValue(':value', $value, PDO::PARAM_STR);
+      }
       $query->execute();
 
       $r = $query->fetch();
@@ -95,10 +102,15 @@ class MUserMng extends M_Manager
                 password = :password,
                 last_activity = now(),
                 location = :location,
-                gender_self = :gender_self,
-                gender_seeked = :gender_seeked,
+                gender = :gender,
                 popularity_score = :popularity_score,
-                bio = :bio
+                bio = :bio,
+                seeked_gender = :seeked_gender,
+                seeked_age_min = :seeked_age_min,
+                seeked_age_max = :seeked_age_max,
+                seeked_distance = :seeked_distance,
+                seeked_popularity_score = :seeked_popularity_score,
+                seeked_interests = :seeked_interests
             WHERE id_user = :id_user';
     $query = $this->_db->prepare($sql);
     $query->bindValue(':email', $user->get_email(), PDO::PARAM_STR);
@@ -109,11 +121,16 @@ class MUserMng extends M_Manager
     $query->bindValue(':date_of_birth', $user->get_date_of_birth(), PDO::PARAM_STR);
     $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
     $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
-  	$query->bindValue(':gender_self', $user->get_gender_self(), PDO::PARAM_STR);
-  	$query->bindValue(':gender_seeked', $user->get_gender_seeked(), PDO::PARAM_STR);
+  	$query->bindValue(':gender', $user->get_gender(), PDO::PARAM_STR);
   	$query->bindValue(':popularity_score', $user->get_popularity_score(), PDO::PARAM_INT);
   	$query->bindValue(':bio', $user->get_bio(), PDO::PARAM_STR);
   	$query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
+    $query->bindValue(':seeked_gender', $user->get_seeked_gender(), PDO::PARAM_STR);
+    $query->bindValue(':seeked_age_min', $user->get_seeked_age_min(), PDO::PARAM_INT);
+    $query->bindValue(':seeked_age_max', $user->get_seeked_age_max(), PDO::PARAM_INT);
+    $query->bindValue(':seeked_distance', $user->get_seeked_distance(), PDO::PARAM_INT);
+    $query->bindValue(':seeked_popularity_score', $user->get_seeked_popularity_score(), PDO::PARAM_INT);
+    $query->bindValue(':seeked_interests', $user->get_seeked_interests(), PDO::PARAM_STR);
     $query->execute();
   }
 
