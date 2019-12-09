@@ -37,4 +37,19 @@ function actions_user(id_user_1, id_user_2, action) {
 	xhr.send("id_user_1=" + id_user_1 + "&&id_user_2=" + id_user_2 + "&&action=" + action);
  }
 
+ function actual_picture_into_first(action) {
+	var xhr = getXhr();
+	var x = document.getElementsByClassName("active");
+	var srcbis = x[1].children[0].src;
+	xhr.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			document.getElementById("response").innerHTML = this.responseText;
+			location.reload(true);
+		}
+	};
+	xhr.open("POST", "<?=Config::ROOT?>index.php?cat=actions", true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.send("src=" + srcbis + "&&action=" + action);
+ }
+
 </script>

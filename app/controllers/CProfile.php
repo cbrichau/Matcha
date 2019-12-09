@@ -122,6 +122,56 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
   	$user_visitors = $userMng->who_visits_me($_GET['id_user']);
     $user_likers = $userMng->who_like_me($_GET['id_user']);
   }
+	//Upload pictures
+
+
+	// Check if image file is a actual image or fake image
+	if(isset($_POST["submit"])) {
+		$uploadOk = 1;
+		$uploadOkbis = 1;
+		$target_dir = Config::IMAGES_PATH . "profile_pictures/";
+		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+		for ($i=1; $i <= 5; $i++) {
+			if(!(file_exists($target_dir . $_GET['id_user'] . '-' . $i . ".jpg"))){
+				$target_file = $target_dir . $_GET['id_user'] . '-' . $i . ".jpg";
+				break;
+			} elseif ($i == 5){
+				$error = "You have already 5 pictures.";
+				$uploadOkbis = 0;
+			}
+		}
+		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+		if(!isset($error)){
+			if($check !== false) {
+			    $error = "File is an image - " . $check["mime"] . ".";
+			    $uploadOk = 1;
+			} else {
+			    $error = "File is not an image.";
+			    $uploadOk = 0;
+			}
+		}
+		// Check file size
+		if ($_FILES["fileToUpload"]["size"] > 500000) {
+		    $error = "Sorry, your file is too large.";
+		    $uploadOk = 0;
+		}
+		// Allow certain file formats
+		if($imageFileType != "jpg") {
+		    $error = "Sorry, only JPG files are allowed.";
+		    $uploadOk = 0;
+		}
+
+		// Check if $uploadOk is set to 0 by an error
+		if ($uploadOk == 0 || $uploadOkbis == 0) {
+			$error .= " Your file was not uploaded.";
+		// if everything is ok, try to upload file
+		} else {
+		if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+			$error = "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+			}
+		}
+	}
 }
 
 
@@ -132,7 +182,11 @@ $output->set_head_title('Profile');
 require_once(Config::VIEW_HEADER);
 if ($valid_profile){
   require_once(Router::$page['view']);
+<<<<<<< HEAD
   require_once(Config::JS_PATH.'profile.php');
+=======
+  require_once(Config::JS_PATH . "profile.php");
+>>>>>>> e992021145b073eb5e0fafa0d2e68b38d5487c30
 } else {
   echo '<p>Invalid profile.';
 }
