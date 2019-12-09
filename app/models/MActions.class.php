@@ -16,6 +16,7 @@ class MActions extends MUserMng
 		    $query->bindValue(':receiver', $receiver, PDO::PARAM_STR);
 		    $query->bindValue(':message', $message, PDO::PARAM_STR);
 		    $query->execute();
+			notify('message', $id_user_2);
 		}
 	}
 
@@ -185,6 +186,37 @@ class MActions extends MUserMng
 		$query = $this->_db->prepare($sql);
 		$query->bindValue(':id_user_visitor', $id_user_1, PDO::PARAM_INT);
 		$query->bindValue(':id_user_visited', $id_user_2, PDO::PARAM_INT);
+		$query->execute();
+		notify('visited', $id_user_2);
+	}
+
+	public function notify($action, $id_user){
+		$username = $_POST['username'];
+
+		switch ($action) {
+			case 'like':
+				$message = $username . 'liked you.';
+				break;
+			case 'visited':
+				$message = $username . 'visited you.';
+				break;
+			case 'message':
+				$message = $username . 'message you.';
+				break;
+			case 'matched':
+				$message = $username . 'matched with you.';
+				break;
+			case 'un_matched':
+				$message = $username . 'dislike you.';
+				break;
+		}
+
+		$sql = 'INSERT INTO notification
+		(id_user,message)
+		VALUES(:id_user,:message)';
+		$query = $this->_db->prepare($sql);
+		$query->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+		$query->bindValue(':message', $message, PDO::PARAM_STR);
 		$query->execute();
 	}
 }

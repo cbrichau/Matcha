@@ -2,6 +2,7 @@
 
   <div class="col-sm-5 col-lg-4 bg-white py-4 px-5">
     <h2><?php echo $user_details['username']; ?></h2>
+	<?php if ($user_details['id_user'] != $_SESSION['id_user']){ ?>
 	<div class="dropdown">
 	  <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	   <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
@@ -12,6 +13,7 @@
 		<button <?=$display['unblock']?> id="unblock" class="dropdown-item" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'unblock');">Unblock</button>
 	  </div>
 	</div>
+		<?php } ?>
 
     <?php if ($user_details['status'] == 'Online'): ?>
       <p class="status online"><i class="fa fa-check-circle"></i> Online</p>
@@ -21,10 +23,54 @@
 
 	<a class="nav-link" href="http://localhost:8081/gitmatcha/index.php?cat=chat&id_user=<?=$_GET['id_user']?>">Chat room</a>
 
-    <img src="<?php echo Config::ROOT.$user->get_profile_pics(0); ?>" class="img-fluid">
+
+
+	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+		<?php $profile_pics = $user->get_profile_pics("all");?>
+		<ol class="carousel-indicators">
+			<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active" style="margin-bottom:5px;"></li>
+			<?php foreach ($profile_pics as $key => $value): if($key != 0){?>
+			<li data-target="#carouselExampleIndicators" data-slide-to="<?=$key?>"></li>
+			<?php } endforeach; ?>
+		</ol>
+		<div class="carousel-inner" data-interval="false">
+			<div class="carousel-item active">
+				<img src="<?= $user->get_profile_pics(0); ?>" class="d-block w-100 img-fluid" alt="...">
+				<button style="position:absolute; top:30px;right:15px; color:white; z-index:50;" onclick="actual_picture_into_first('delete_pic');" class="btn ">X</button>
+			</div>
+			<?php foreach ($profile_pics as $key => $value): if($key != 0){?>
+				<div class="carousel-item">
+					<img src="<?= $value; ?>" class="d-block w-100 img-fluid" alt="...">
+					<button style="position:absolute; top:30px;right:15px; color:white; z-index:50;" onclick="actual_picture_into_first('delete_pic');" class="btn ">X</button>
+				</div>
+			<?php } endforeach; ?>
+
+
+		</div>
+		<?php if(count($profile_pics) != '1') { ?>
+		<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+		<?php } ?>
+	</div>
+
+
+
+
 
     <?php if ($user_details['id_user'] == $_SESSION['id_user']){ ?>
       <a href="<?php echo Config::ROOT; ?>index.php?cat=account" class="btn btn-primary">Modify my account</a>
+	<form action="<?= Config::ROOT; ?>index.php?cat=profile&id_user=<?=$_GET['id_user']?>" method="post" enctype="multipart/form-data">
+		<input type="file" name="fileToUpload" accept="image/jpg">
+		<input type="submit" value="Upload" name="submit">
+	</form>
+	  <button onclick="actual_picture_into_first('change_pic');" class="btn btn-primary">Change has profile pic</button>
+	  <?php //echo $error; echo $target_file; ?>
   	<?php } else { ?>
 	  <button <?=$display['like']?> id="like" class="btn btn-primary" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'like');">Like</button>
 	  <button <?=$display['unlike']?> id="unlike" class="btn btn-primary" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'dislike');">unlike</button>

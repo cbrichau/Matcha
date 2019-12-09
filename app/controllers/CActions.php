@@ -27,8 +27,19 @@
 				echo 	'<div class="alert alert-success" role="alert">Unblock !</div>';
 				break;
 		}
+	}
 
-
-
+	if(isset($_POST['src'],$_POST['action'])) {
+		$target_dir = Config::IMAGES_PATH . "profile_pictures/";
+		$result = preg_match('/(\d+)\-\d\.jpg/', $_POST['src'], $matches);
+		if($_POST['action'] == 'change_pic'){
+			rename($target_dir . $matches['1'] . '-1.jpg', $target_dir . $matches['1'] . '-1.jpg.temp');
+			rename($target_dir . $matches['0'], $target_dir . $matches['1'] . '-1.jpg');
+			rename($target_dir . $matches['1'] . '-1.jpg.temp', $target_dir . $matches['0']);
+		}
+		if($_POST['action'] == 'delete_pic'){
+			unlink($target_dir . $matches['0']);
+		}
+		echo ('<div class="alert alert-success" role="alert">'. $_POST['src'] .'</div>');
 	}
  ?>
