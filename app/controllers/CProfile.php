@@ -3,7 +3,7 @@
 
 \* *********************************************************** */
 
-$userMng = new MUserMng();
+$userMng = new MActions();
 
 // Initialises error state before going through all the checks.
 $valid_profile = FALSE;
@@ -11,6 +11,9 @@ $valid_profile = FALSE;
 // Checks requested user is defined and exists.
 if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 {
+	//actualise the visits
+	$userMng->I_visit_you($_GET['id_user'],$_SESSION['id_user']);
+
   $user = $userMng->select_user_by('id_user', $_GET['id_user']);
   if (!is_null($user))
   {
@@ -47,14 +50,36 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
   }
 
   //select_user_visitors(MUser $user)
+
+
+  //define the display of like or unlike button same for block and unblock
+  $display = [
+  'like' => 'style=""',
+  'unlike' => 'style="display:none;"',
+  'block' => 'style=""',
+  'unblock' => 'style="display:none;"',
+  ];
+  if ($userMng->user_1_liked_user_2($_SESSION['id_user'],$_GET['id_user']) == 1){
+  $display['like'] = 'style="display:none;"';
+  $display['unlike'] = 'style="display:block;"';
+  }
+  if ($userMng->user_1_blocked_user_2($_SESSION['id_user'],$_GET['id_user']) == 1){
+  $display['block'] = 'style="display:none;"';
+  $display['unblock'] = 'style="display:block;"';
+  }
+
 }
+
+
 
 // Sets the output values and calls the views.
 $output->set_head_title('Profile');
 
 require_once(Config::VIEW_HEADER);
-if ($valid_profile)
+if ($valid_profile){
   require_once(Router::$page['view']);
-else
+  require_once("js/profile.php");
+} else {
   echo '<p>Invalid profile.';
+}
 require_once(Config::VIEW_FOOTER);

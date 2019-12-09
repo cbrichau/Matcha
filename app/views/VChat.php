@@ -19,12 +19,12 @@ https://www.bootdey.com/snippets//User-profile-with-friends-and-chat
         <div class="conversation-new-message">
 
                 <div class="form-group">
-                    <textarea id="message_value" class="form-control" onkeyup="clee(event,1,2);" name="message" rows="2" placeholder="Enter your message..."></textarea>
+                    <textarea id="message_value" class="form-control" onkeyup="clee(event,<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>);" name="message" rows="2" placeholder="Enter your message..."></textarea>
                 </div>
 
                 <div class="clearfix">
 
-                    <button onclick="send_message(1,2);" type="submit" class="btn btn-success pull-right">Send message</button>
+                    <button onclick="send_message(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>);" type="submit" class="btn btn-success pull-right">Send message</button>
                 </div>
 
         </div>

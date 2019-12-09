@@ -32,7 +32,7 @@ function messages(id_user_1, id_user_2, bool) {
  	  xhr.open("POST", "http://localhost:8081/gitmatcha/index.php?cat=chat", true);
  	  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
  	  xhr.send("sender=" + id_user_1 + "&&receiver=" + id_user_2 + "&&message=" + message);
-	 messages(1,2, 'true');
+	 messages(id_user_1,id_user_2, 'true');
   }
   function clee(evt, id_user_1, id_user_2){
   	 if(evt.keyCode == '13'){
@@ -40,13 +40,13 @@ function messages(id_user_1, id_user_2, bool) {
   	 }
    }
 
-	setInterval(messages, 500, '1', '2', 'false');
+	setInterval(messages, 500, <?=$_SESSION['id_user']?>, <?=$_GET['id_user']?>, 'false');
 
   function scrolldown(){
 	  element = document.getElementById('slimScrollDiv');
 	  element.scrollTop = element.scrollHeight;
   }
 
-messages('1', '2', 'true');
+messages(<?=$_SESSION['id_user']?>, <?=$_GET['id_user']?>, 'true');
 scrolldown();
 </script>

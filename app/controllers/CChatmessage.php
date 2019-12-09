@@ -1,11 +1,11 @@
 <?php
 /* if(connected) AND ifnot(blocked) do this*/
 
-$chat = new MChat();
+$actions = new MActions();
 
 if(isset($_POST['id_user_1'],$_POST['id_user_2'])){
-	$tabs = $chat->fetch_messages($_POST['id_user_1'],$_POST['id_user_2']);
-	$user_2 = $chat->select_user_by('id_user',$_POST['id_user_2']);
+	$tabs = $actions->fetch_messages($_POST['id_user_1'],$_POST['id_user_2']);
+	$user_2 = $actions->select_user_by('id_user',$_POST['id_user_2']);
 
 	foreach ($tabs as $key => $value) {
 		$value['message'] = str_replace(' ', '&nbsp;', $value['message']);
