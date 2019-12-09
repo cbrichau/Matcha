@@ -174,19 +174,13 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 	}
 }
 
-
-
 // Sets the output values and calls the views.
 $output->set_head_title('Profile');
 
 require_once(Config::VIEW_HEADER);
 if ($valid_profile){
   require_once(Router::$page['view']);
-<<<<<<< HEAD
   require_once(Config::JS_PATH.'profile.php');
-=======
-  require_once(Config::JS_PATH . "profile.php");
->>>>>>> e992021145b073eb5e0fafa0d2e68b38d5487c30
 } else {
   echo '<p>Invalid profile.';
 }
