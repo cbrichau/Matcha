@@ -17,7 +17,9 @@ class MSearchMng extends M_Manager
 
   public function list_gender_options()
   {
-    return array('any' => 'Any', 'F' => 'Female', 'M' => 'Male');
+    return array('any' => 'Any',
+                 'F' => 'Female',
+                 'M' => 'Male');
   }
 
   public function list_interest_options()
@@ -38,14 +40,15 @@ class MSearchMng extends M_Manager
     return array('potential' => 'Match potential',
                  'username' => 'Username',
                  'age' => 'Age',
-                 'location' => 'Distance',
+                 'distance' => 'Distance',
                  'interests' => 'Common interests',
                  'popularity_score' => 'Popularity score');
   }
 
   public function list_order_options()
   {
-    return array('asc' => 'Ascending', 'desc' => 'Descending');
+    return array('asc' => 'Ascending',
+                 'desc' => 'Descending');
   }
 
   /* ************************************************************** *\
@@ -116,7 +119,7 @@ class MSearchMng extends M_Manager
     if (isset($get['popularity_range']) &&
         $this->is_valid_int_format($get['popularity_range']) &&
         $get['popularity_range'] >= 1 &&
-        $get['popularity_range'] <= 1000)
+        $get['popularity_range'] <= 50)
       $prefill['popularity_range'] = $get['popularity_range'];
 
     return $prefill;
@@ -225,65 +228,80 @@ class MSearchMng extends M_Manager
   private function create_search_query($case, array $conditions, array $pagination)
   {
     // Creates a $statement array with all the elements of the SQL query.
-    if ($case == 'select')
+    if ($case == 'count')
     {
-      $statement['action'] = 'SELECT id_user, username, gender, date_of_birth, popularity_score';
-      $statement['limit'] = 'LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
+      $sql = 'SELECT COUNT(*) AS nb_results
+              FROM (
+                 SELECT id_user, (111.111 * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(@user_latitude)) *
+                                  COS(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))) *
+                                  COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
+                                  SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))))))) AS distance
+                 FROM users
+                 JOIN users_interests USING(id_user)
+                 WHERE id_user != :id_user
+                 AND email_confirmed = "1"
+                 AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max
+                 AND popularity_score BETWEEN :score_min AND :score_max';
+
+      $sql .= ($conditions['search']['gender'] !== NULL) ? ' AND gender = :gender' : '';
+      $sql .= ($conditions['search']['interests'] !== NULL) ? ' AND id_interest IN ('.$conditions['search']['interests'].')' : '';
+
+      $sql .= ' GROUP BY id_user
+               ) AS tmp
+               WHERE distance < :max_distance';
     }
-    else
+    else if ($case == 'select')
     {
-      $statement['action'] = 'SELECT COUNT(*) AS nb_results';
-      $statement['limit'] = '';
-    }
-    $statement['from'] = 'FROM users';
-    $statement['where'] = 'WHERE id_user != :id_user';
-    $statement['and'][] = 'AND email_confirmed = "1"';
-    $statement['and'][] = 'AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max';
-    $statement['and'][] = 'AND (111.111 *
-                                DEGREES(ACOS(LEAST(1.0, COS(RADIANS(@user_latitude)) *
-                                COS(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))) *
-                                COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
-                                SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5))))))))
-                                < :max_distance';
-    $statement['and'][] = 'AND popularity_score BETWEEN :score_min AND :score_max';
+      $sql = 'SELECT id_user, username, gender, date_of_birth, popularity_score, nb_common_interests, distance,
+                     GROUP_CONCAT(id_interest SEPARATOR "-") AS interests,
+                     (nb_common_interests * 100 - distance * 100 + popularity_score * 10) AS match_potential
+              FROM (
+                 SELECT id_user,
+                        COUNT(id_interest) AS nb_common_interests,
+                        (111.111 * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(@user_latitude)) *
+                         COS(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))) *
+                         COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
+                         SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))))))) AS distance
+                 FROM users
+                 JOIN users_interests USING(id_user)
+                 WHERE id_user != :id_user
+                 AND email_confirmed = "1"
+                 AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max
+                 AND popularity_score BETWEEN :score_min AND :score_max';
 
-    if ($conditions['search']['gender'] !== NULL)
-      $statement['and'][] = 'AND gender = :gender';
+      $sql .= ($conditions['search']['gender'] !== NULL) ? ' AND gender = :gender' : '';
+      $sql .= ($conditions['search']['interests'] !== NULL) ? ' AND id_interest IN ('.$conditions['search']['interests'].')' : '';
 
-    if ($conditions['search']['interests'] !== NULL)
-      $statement['and'][] = 'AND id_user IN (SELECT DISTINCT(id_user) FROM users_interests WHERE id_interest IN ('.$conditions['search']['interests'].'))';
+      $sql .= ' GROUP BY id_user
+               ) AS tmp
+               JOIN users USING(id_user)
+               JOIN users_interests USING(id_user)
+               WHERE distance < :max_distance
+               GROUP BY id_user';
 
-    if ($case == 'select')
-    {
-      if (in_array($conditions['search']['sort'], array('username', 'popularity_score')))
-        $statement['order'] = 'ORDER BY '.$conditions['search']['sort'].' '.$conditions['search']['order'];
-      else if ($conditions['search']['sort'] == 'age')
+      switch ($conditions['search']['sort'])
       {
-        if ($conditions['search']['order'] == 'asc')
-          $statement['order'] = 'ORDER BY date_of_birth DESC';
-        else
-          $statement['order'] = 'ORDER BY date_of_birth ASC';
+        case 'potential':
+          $sql .= ' ORDER BY match_potential '.$conditions['search']['order'];
+          break;
+        case 'username':
+        case 'distance':
+        case 'popularity_score':
+          $sql .= ' ORDER BY '.$conditions['search']['sort'].' '.$conditions['search']['order'];
+          break;
+        case 'age':
+          switch($conditions['search']['order'])
+          {
+            case 'asc': $sql .= ' ORDER BY date_of_birth DESC'; break;
+            case 'desc': $sql .= ' ORDER BY date_of_birth ASC'; break;
+          }
+          break;
+        case 'interests':
+          $sql .= ' ORDER BY nb_common_interests '.$conditions['search']['order'];
+          break;
       }
-      else if ($conditions['search']['sort'] == 'potential')
-        $statement['order'] = '';//////////////////////////////
-      else if ($conditions['search']['sort'] == 'location')
-        $statement['order'] = '';///////////////////////////////
-      else if ($conditions['search']['sort'] == 'interests')
-        $statement['order'] = '';///////////////////////////////
+      $sql .= ' LIMIT '.$pagination['start_i'].', '.$pagination['end_i'];
     }
-    else
-      $statement['order'] = '';
-
-    // Transforms the $statement array into a proper $sql string.
-    $sql_and = implode(' ', $statement['and']);
-    $sql = $statement['action'].' '.
-           $statement['from'].' '.
-           $statement['where'].' '.
-           $sql_and.' '.
-           $statement['order'].' '.
-           $statement['limit'];
-    $sql = preg_replace('/\s+/', ' ', $sql);
-
     return $sql;
   }
 
@@ -367,15 +385,19 @@ class MSearchMng extends M_Manager
     $sql = $this->create_search_query('select', $conditions, $pagination);
     $query = $this->execute_search_query($sql, $conditions);
 
+    $list_interests = $this->list_interest_options();
     $users = array();
     $i = 0;
     while ($r = $query->fetch())
     {
-      $users[$i] = new MUser($r);
-      $users[$i]->set_profile_pics();
+      $results[$i]['user'] = new MUser($r);
+      $results[$i]['user']->set_profile_pics();
+      $user_interest_ids = explode('-', $r['interests']);
+      $user_interest_names = array_intersect_key($list_interests, array_flip($user_interest_ids));
+      $results[$i]['interests'] = implode(' ', array_map(function($val) { return '#'.$val; } , $user_interest_names));
+      $results[$i]['distance'] = round($r['distance'], 1);
       $i++;
     }
-
-    return $users;
+    return $results;
   }
 }

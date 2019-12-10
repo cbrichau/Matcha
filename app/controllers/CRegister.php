@@ -9,7 +9,7 @@ $userMng = new MUserMng();
 // Initialises the form's alerts and prefill values to null.
 $success_alert = '';
 $error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password'), '');
-$form_prefill = array_fill_keys(array('email', 'username', 'first_name', 'last_name'), '');
+$form_prefill = array_fill_keys(array('latitude', 'longitude', 'email', 'username', 'first_name', 'last_name'), '');
 
 // Processes the registration confirmation
 // (when the user clicks on the email validation link).
@@ -61,6 +61,7 @@ else if (isset($_POST['register']))
     $user = new MUser($_POST);
     $user->encrypt_and_set_password($_POST['pass']);
     $user->set_email_confirmed(md5(rand(0,1000)));
+    $user->set_location($_POST['latitude'].' '.$_POST['longitude']);
     $userMng->register($user);
     $success_alert = '<div class="alert alert-success"><span>success:</span> An email has been sent to you with a validation link.</div>';
   }

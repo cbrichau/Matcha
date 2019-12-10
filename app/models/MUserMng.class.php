@@ -90,7 +90,7 @@ class MUserMng extends M_Manager
                 seeked_age_min = :seeked_age_min,
                 seeked_age_max = :seeked_age_max,
                 seeked_distance = :seeked_distance,
-                seeked_popularity_score = :seeked_popularity_score,
+                seeked_popularity_range = :seeked_popularity_range,
                 seeked_interests = :seeked_interests
             WHERE id_user = :id_user';
     $query = $this->_db->prepare($sql);
@@ -110,7 +110,7 @@ class MUserMng extends M_Manager
     $query->bindValue(':seeked_age_min', $user->get_seeked_age_min(), PDO::PARAM_INT);
     $query->bindValue(':seeked_age_max', $user->get_seeked_age_max(), PDO::PARAM_INT);
     $query->bindValue(':seeked_distance', $user->get_seeked_distance(), PDO::PARAM_INT);
-    $query->bindValue(':seeked_popularity_score', $user->get_seeked_popularity_score(), PDO::PARAM_INT);
+    $query->bindValue(':seeked_popularity_range', $user->get_seeked_popularity_range(), PDO::PARAM_INT);
     $query->bindValue(':seeked_interests', $user->get_seeked_interests(), PDO::PARAM_STR);
     $query->execute();
   }

@@ -34,7 +34,7 @@ $form_prefill = array_merge($form_prefill, array(
   'age_max' => 25,
   'distance' => 8,
   'interest_any' => 'checked',
-  'popularity_range' => 500,
+  'popularity_range' => 50,
   'sort' => 'potential',
   'sort_potential' => 'selected',
   'order' => 'desc',
@@ -51,10 +51,6 @@ if (count($_GET) > 1)
   $form_prefill = $searchMng->update_form_prefill($form_prefill, $_GET, $list_genders, $list_interests, $list_sort_options, $list_order_options);
   $filter_conditions = $searchMng->define_filter_conditions($form_prefill, $list_interests, $current_user);
 }
-
-echo '<pre>';
-print_r($filter_conditions);
-echo '</pre>';
 
 /* *********************************************************** *\
     Pagination

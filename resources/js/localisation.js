@@ -2,12 +2,14 @@
 {
   if (navigator.geolocation)
   {
-    var localisation = document.querySelector('form [name="localisation"]');
-
+    var latitude = document.querySelector('form [name="latitude"]');
+    var longitude = document.querySelector('form [name="longitude"]');
     var options = { enableHighAccuracy: true };
+
     function success(position)
     {
-      localisation.value = position.coords.latitude + ":" + position.coords.longitude;
+      latitude.value = position.coords.latitude;
+      longitude.value = position.coords.longitude;
     }
     function error(err) {}
 

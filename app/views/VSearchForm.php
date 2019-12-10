@@ -49,7 +49,7 @@
     <h6 class="card-header">Popularity score</h6>
     <div class="card-body">
       <output id="scoreOutputId">Max <?php echo $form_prefill['popularity_range']; ?> points interval</output>
-      <input type="range" id="scoreInputId" class="form-control-range" min="1" max="1000" oninput="scoreOutputId.value = 'Max ' + scoreInputId.value + ' points interval'" name="popularity_range" value="<?php echo $form_prefill['popularity_range']; ?>">
+      <input type="range" id="scoreInputId" class="form-control-range" min="1" max="100" oninput="scoreOutputId.value = 'Max ' + scoreInputId.value + ' points interval'" name="popularity_range" value="<?php echo $form_prefill['popularity_range']; ?>">
     </div>
 
     <input type="hidden" name="sort" value="<?php echo $form_prefill['sort']; ?>">

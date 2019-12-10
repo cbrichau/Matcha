@@ -19,23 +19,22 @@
     </form>
 
     <div class="row">
-      <?php foreach ($results as $user): ?>
+      <?php foreach ($results as $values): ?>
         <div class="mb-3 col-sm-12 col-md-6 col-lg-3">
           <div class="card">
-            <img src="<?php echo Config::ROOT.$user->get_profile_pics(0); ?>" class="card-img-top">
+            <img src="<?php echo Config::ROOT.$values['user']->get_profile_pics(0); ?>" class="card-img-top">
             <div class="card-body">
-              <p>
-                <a href="<?php echo Config::ROOT.'index.php?cat=profile&id_user='.$user->get_id_user(); ?>" class="stretched-link">
-                  <?php echo $user->get_username(); ?>
-                </a>
-              </p>
-              <p>
-                <?php
-                  $s = ($user->get_age() > 1) ? 's' : '';
-                  echo $user->get_gender().' | '.$user->get_age().' year'.$s.' old | '.$user->get_popularity_score().' points';
-                ?>
-              </p>
-              <p class="card-text"><?php echo '#interests list'; ?></p>
+              <div class="card-text">
+              <?php
+                echo '<p><a href="'.Config::ROOT.'index.php?cat=profile&id_user='.$values['user']->get_id_user().'" class="stretched-link">'.$values['user']->get_username().'</a></p>';
+                $s = ($values['user']->get_age() > 1) ? 's' : '';
+                echo '<p>'.$values['user']->get_gender().'</p>';
+                echo '<p>'.$values['user']->get_age().' year'.$s.' old</p>';
+                echo '<p>'.$values['user']->get_popularity_score().' points</p>';
+                echo '<p>'.$values['distance'].' km away</p>';
+                echo '<p>'.$values['interests'].'</p>';
+              ?>
+              </div>
             </div>
           </div>
         </div>

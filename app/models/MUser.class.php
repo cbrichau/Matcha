@@ -7,14 +7,6 @@
     - email_confirmed           --> contains a validation code or TRUE.
 \* ******************************************************************* */
 
-/*
-modify setup and check accordingly:
-min/max lengths:
-email b@x.c 5 255
-username  2 50
-names 1 255
-*/
-
 class MUser extends M_Manager
 {
   private $_id_user;
