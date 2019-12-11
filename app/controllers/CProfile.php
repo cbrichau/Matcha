@@ -21,6 +21,10 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     $valid_profile = TRUE;
     $userMng->I_visit_you($_GET['id_user'], $_SESSION['id_user']);
 
+    /* ----------------------------------------------- *\
+        USER INFO
+    \* ----------------------------------------------- */
+
     // Gets the requested user's info
     // and sets the profile's basic user details for output.
     $interests = $userMng->select_user_interests($user);
@@ -29,32 +33,13 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 
     $user_details['id_user'] = $user->get_id_user();
     $user_details['username'] = $user->get_username();
-    $user_details['status'] = ($user->get_last_activity()) ? 'Online' : 'Offline since '.$user->get_last_activity();
-    /////////////////change if condition to last_activity < 5 minutes
-
-		// Defines the display of like or unlike button same for block and unblock.
-		$display = [
-			'block' => 'style=""',
-			'unblock' => 'style="display:none;"',
-			'like' => 'style=""',
-			'unlike' => 'style="display:none;"'
-		];
-		if ($userMng->user_1_blocked_user_2($_SESSION['id_user'],$_GET['id_user']) == 1)
-		{
-			$display['block'] = 'style="display:none;"';
-			$display['unblock'] = 'style="display:block;"';
-		}
-		if ($userMng->user_1_liked_user_2($_SESSION['id_user'],$_GET['id_user']) == 1)
-		{
-			$display['like'] = 'style="display:none;"';
-			$display['unlike'] = 'style="display:block;"';
-		}
+$user_details['status'] = ($user->get_last_activity()) ? 'Online' : 'Offline since '.$user->get_last_activity();/////////////////change if condition to last_activity < 5 minutes
 
     // Sets the profile's "I am" details, with labels, for output.
     $i_am['Full name'] = $user->get_first_name().' '.$user->get_last_name();
 
     if ($user->get_gender() != NULL)
-			$i_am['Gender'] = ($user->get_gender() == 'F') ? 'Female' : 'Male';
+      $i_am['Gender'] = ($user->get_gender() == 'F') ? 'Female' : 'Male';
 
     if ($user->get_age() != '')
     {
@@ -62,7 +47,7 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $i_am['Age'] = $user->get_age().' year'.$s.' old';
     }
     if ($user->get_location() != '')
-			$i_am['Location'] = $user->get_location();
+      $i_am['Location'] = $user->get_location();
 
     if ($user->get_bio() != '')
       $i_am['Bio'] = $user->get_bio();
@@ -74,14 +59,14 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $i_am['Popularity score'] = $user->get_popularity_score().' points';
 
     // Sets the profile's "Seeking" details, with labels, for output.
-		// Along with the search URL parameters.
-		$seeking['Gender'] = 'Any';
+    // Along with the search URL parameters.
+    $seeking['Gender'] = 'Any';
     $gender = 'any';
     if ($user->get_seeked_gender() != NULL)
-		{
-			$seeking['Gender'] = ($user->get_seeked_gender() == 'F') ? 'Female' : 'Male';
-			$gender = $user->get_seeked_gender();
-		}
+    {
+      $seeking['Gender'] = ($user->get_seeked_gender() == 'F') ? 'Female' : 'Male';
+      $gender = $user->get_seeked_gender();
+    }
 
     $min_age = ($user->get_seeked_age_min() != '') ? $user->get_seeked_age_min() : 1;
     $max_age = ($user->get_seeked_age_max() != '') ? $user->get_seeked_age_max() : 25;
@@ -113,65 +98,98 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $link .= '&age_min='.$min_age;
       $link .= '&age_max='.$max_age;
       $link .= '&distance='.$max_distance;
-      $link .= '&interests=any';
+      $link .= '&interests=any';///////////////////////////////////
       $link .= '&popularity_range='.$popularity_range;
+      $link .= '&sort=potential';
+      $link .= '&order=desc';
       $potential_matches_link = '<a href="'.$link.'" class="btn btn-primary">See potential matches</a>';
     }
 
-		// Gets the list of the user's visitors and likers.
-  	$user_visitors = $userMng->who_visits_me($_GET['id_user']);
+    // Gets the list of the user's visitors and likers.
+    $user_visitors = $userMng->who_visits_me($_GET['id_user']);
     $user_likers = $userMng->who_like_me($_GET['id_user']);
+
+    /* ----------------------------------------------- *\
+        USER ACTIONS
+    \* ----------------------------------------------- */
+
+		// Defines the display of (un)like/block buttons.
+		$display = [
+			'block' => 'style=""',
+			'unblock' => 'style="display:none;"',
+			'like' => 'style=""',
+			'unlike' => 'style="display:none;"'
+		];
+		if ($userMng->user_1_blocked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
+		{
+			$display['block'] = 'style="display:none;"';
+			$display['unblock'] = 'style="display:block;"';
+		}
+		if ($userMng->user_1_liked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
+		{
+			$display['like'] = 'style="display:none;"';
+			$display['unlike'] = 'style="display:block;"';
+		}
+
+    //Upload pictures
+
+
+  	// Check if image file is a actual image or fake image
+  	if (isset($_POST["submit"]))
+    {
+  		$uploadOk = 1;
+  		$uploadOkbis = 1;
+  		$target_dir = Config::IMAGES_PATH . "profile_pictures/";
+  		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+  		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+  		for ($i=1; $i <= 5; $i++)
+      {
+  			if(!(file_exists($target_dir . $_GET['id_user'] . '-' . $i . ".jpg")))
+        {
+  				$target_file = $target_dir . $_GET['id_user'] . '-' . $i . ".jpg";
+  				break;
+  			}
+        elseif ($i == 5)
+        {
+  				$error = "You have already 5 pictures.";
+  				$uploadOkbis = 0;
+  			}
+  		}
+  		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+  		if(!isset($error))
+      {
+  			if ($check !== false)
+        {
+  			    $error = "File is an image - " . $check["mime"] . ".";
+  			    $uploadOk = 1;
+  			} else {
+  			    $error = "File is not an image.";
+  			    $uploadOk = 0;
+  			}
+  		}
+  		// Check file size
+  		if ($_FILES["fileToUpload"]["size"] > 500000) {
+  		    $error = "Sorry, your file is too large.";
+  		    $uploadOk = 0;
+  		}
+  		// Allow certain file formats
+  		if($imageFileType != "jpg") {
+  		    $error = "Sorry, only JPG files are allowed.";
+  		    $uploadOk = 0;
+  		}
+
+  		// Check if $uploadOk is set to 0 by an error
+  		if ($uploadOk == 0 || $uploadOkbis == 0) {
+  			$error .= " Your file was not uploaded.";
+  		// if everything is ok, try to upload file
+  		} else {
+  		if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+  			$error = "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+  			}
+  		}
+  	}
+
   }
-	//Upload pictures
-
-
-	// Check if image file is a actual image or fake image
-	if(isset($_POST["submit"])) {
-		$uploadOk = 1;
-		$uploadOkbis = 1;
-		$target_dir = Config::IMAGES_PATH . "profile_pictures/";
-		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-		for ($i=1; $i <= 5; $i++) {
-			if(!(file_exists($target_dir . $_GET['id_user'] . '-' . $i . ".jpg"))){
-				$target_file = $target_dir . $_GET['id_user'] . '-' . $i . ".jpg";
-				break;
-			} elseif ($i == 5){
-				$error = "You have already 5 pictures.";
-				$uploadOkbis = 0;
-			}
-		}
-		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-		if(!isset($error)){
-			if($check !== false) {
-			    $error = "File is an image - " . $check["mime"] . ".";
-			    $uploadOk = 1;
-			} else {
-			    $error = "File is not an image.";
-			    $uploadOk = 0;
-			}
-		}
-		// Check file size
-		if ($_FILES["fileToUpload"]["size"] > 500000) {
-		    $error = "Sorry, your file is too large.";
-		    $uploadOk = 0;
-		}
-		// Allow certain file formats
-		if($imageFileType != "jpg") {
-		    $error = "Sorry, only JPG files are allowed.";
-		    $uploadOk = 0;
-		}
-
-		// Check if $uploadOk is set to 0 by an error
-		if ($uploadOk == 0 || $uploadOkbis == 0) {
-			$error .= " Your file was not uploaded.";
-		// if everything is ok, try to upload file
-		} else {
-		if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-			$error = "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-			}
-		}
-	}
 }
 
 // Sets the output values and calls the views.

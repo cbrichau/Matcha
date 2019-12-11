@@ -69,15 +69,22 @@ form
   text-align: center;
 }
 
-form label:hover,
-form input[type="range"]
-{
-  cursor: pointer;
-}
-
 /* ************************** *\
     PAGES
 \* ************************** */
+
+/* --------- SEARCH --------- */
+
+#search form
+{
+  margin-top: 0;
+}
+
+#search form label:hover,
+#search form input[type="range"]
+{
+  cursor: pointer;
+}
 
 /* -------- PROFILE -------- */
 
@@ -101,9 +108,19 @@ form input[type="range"]
   font-weight: bold;
 }
 
-/* --------- SEARCH --------- */
+/* -------- ACCOUNT -------- */
 
-#search form
+#account form h2
 {
-  margin-top: 0;
+  text-align: left;
+  margin: 0.5em 0;
+}
+
+#account form label
+{
+  display: block;
+  margin: 1em 0 0 0;
+  text-align: left;
+  font-weight: bold;
+  font-size: 0.9em;
 }
