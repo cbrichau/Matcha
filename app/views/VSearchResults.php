@@ -1,22 +1,24 @@
 <main class="col-sm-7 col-md-8 col-lg-9">
   <div class="container-fluid">
 
-    <form method="GET" id="sort_form" class="form-inline bg-white mb-3 mr-0">
-      <label>Sort by:</label>
-      <select class="form-control" form="search_form" name="sort">
-        <?php
-        foreach ($list_sort_options as $value => $label)
-          echo '<option value="'.$value.'" '.$form_prefill['sort_'.$value].'>'.$label.'</option>';
-        ?>
-      </select>
+    <div class="row mx-1">
+      <form method="GET" id="sort_form" class="col bg-white text-right">
+        <label>Sort by:</label>
+        <select name="sort">
+          <?php
+          foreach ($list_sort_options as $value => $label)
+            echo '<option value="'.$value.'" '.$form_prefill['sort_'.$value].'>'.$label.'</option>';
+          ?>
+        </select>
 
-      <?php foreach ($list_order_options as $value => $label): ?>
-        <label class="form-check">
-          <input class="form-check-input" type="radio" name="order" value="<?php echo $value; ?>" <?php echo $form_prefill['order_'.$value]; ?>>
-          <?php echo $label; ?>
-        </label>
-      <?php endforeach; ?>
-    </form>
+        <?php foreach ($list_order_options as $value => $label): ?>
+          <label class="pl-2">
+            <input type="radio" name="order" value="<?php echo $value; ?>" <?php echo $form_prefill['order_'.$value]; ?>>
+            <?php echo $label; ?>
+          </label>
+        <?php endforeach; ?>
+      </form>
+    </div>
 
     <div class="row">
       <?php foreach ($results as $values): ?>
@@ -24,17 +26,33 @@
           <div class="card">
             <img src="<?php echo Config::ROOT.$values['user']->get_profile_pics(0); ?>" class="card-img-top">
             <div class="card-body">
+
               <div class="card-text">
-              <?php
-                echo '<p><a href="'.Config::ROOT.'index.php?cat=profile&id_user='.$values['user']->get_id_user().'" class="stretched-link">'.$values['user']->get_username().'</a></p>';
-                $s = ($values['user']->get_age() > 1) ? 's' : '';
-                echo '<p>'.$values['user']->get_gender().'</p>';
-                echo '<p>'.$values['user']->get_age().' year'.$s.' old</p>';
-                echo '<p>'.$values['user']->get_popularity_score().' points</p>';
-                echo '<p>'.$values['distance'].' km away</p>';
-                echo '<p>'.$values['interests'].'</p>';
-              ?>
+                <?php
+                $icon_gender = '';
+                if ($values['user']->get_gender() == 'F')
+                  $icon_gender = '<i class="fa fa-female" style="color:#ff99ff;"></i>';
+                elseif ($values['user']->get_gender() == 'M')
+                  $icon_gender = '<i class="fa fa-male" style="color:#66a3ff;"></i>';
+                echo '
+                  <p>
+                    <span class="float-right">'.$icon_gender.'</span>
+                    <a href="'.Config::ROOT.'index.php?cat=profile&id_user='.$values['user']->get_id_user().'" class="stretched-link">
+                      '.$values['user']->get_username().'
+                      ('.$values['user']->get_age().')
+                    </a>
+                  </p>
+                  <p>
+                    <i class="far fa-heart"></i>
+                    '.$values['interests'].'
+                  </p>
+                  <p>
+                    <i class="fas fa-star"></i>'.$values['user']->get_popularity_score().'
+                    <span class="float-right"><i class="fas fa-map-marker-alt"></i> '.$values['distance'].' km</span>
+                  </p>';
+                ?>
               </div>
+
             </div>
           </div>
         </div>

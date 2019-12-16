@@ -10,17 +10,11 @@ body
 
 /* ---------- NAV ---------- */
 
-nav .navbar-nav li.nav-item > a
-{
-  color: #007bff !important;
-}
+nav .navbar-nav li.nav-item > a { color: #007bff !important; }
 nav .navbar-nav li.nav-item > a.active,
-nav .navbar-nav li.nav-item:hover
-{
-  color: #0056b3;text-decoration: underline;
-}
+nav .navbar-nav li.nav-item:hover { color: #0056b3;text-decoration: underline; }
 
-/* ----- NOTIFICATIONS ----- */
+/* ----- NOTIFICATIONS & ALERTS ----- */
 
 #notifications_count
 {
@@ -73,18 +67,49 @@ form
     PAGES
 \* ************************** */
 
+/* --------- HOME --------- */
+
+#home
+{
+  margin-top: -1em;
+  height: 100%;
+  background-image:url("../images/layout/cat-love.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+#home div
+{
+  position: relative;
+  top: 40%;
+  text-align: center;
+  color: white;
+}
+#home h1 { font: bold 4em Verdana; text-shadow: 1px 1px 2px black; }
+#home h4 { font-size: 2em; text-shadow: 1px 1px 2px black; }
+
 /* --------- SEARCH --------- */
 
 #search form
 {
   margin-top: 0;
 }
-
 #search form label:hover,
 #search form input[type="range"]
 {
   cursor: pointer;
 }
+#search #sort_form
+{
+  display: block;
+  
+}
+#search .card-text p:last-of-type
+{
+  margin: 0;
+}
+
 
 /* -------- PROFILE -------- */
 

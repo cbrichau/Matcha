@@ -394,7 +394,8 @@ class MSearchMng extends M_Manager
       $results[$i]['user']->set_profile_pics();
       $user_interest_ids = explode('-', $r['interests']);
       $user_interest_names = array_intersect_key($list_interests, array_flip($user_interest_ids));
-      $results[$i]['interests'] = implode(' ', array_map(function($val) { return '#'.$val; } , $user_interest_names));
+      //$results[$i]['interests'] = implode(', ', array_map(function($val) { return '#'.$val; } , $user_interest_names));
+      $results[$i]['interests'] = implode(', ', $user_interest_names);
       $results[$i]['distance'] = round($r['distance'], 1);
       $i++;
     }

@@ -1,14 +1,9 @@
 <div class="row m-3">
 
-  <div class="col-sm-5 col-lg-4 bg-white py-4 px-5">
+  <div class="col-md-5 bg-white py-4 px-5">
 
     <h2><?php echo $user_details['username']; ?></h2>
-
-    <?php if ($user_details['status'] == 'Online'): ?>
-      <p class="status online"><i class="fa fa-check-circle"></i> Online</p>
-    <?php else: ?>
-      <p class="status offline"><i class="fa fa-times-circle-o"></i> <?= $user_details['status']; ?></p>
-    <?php endif; ?>
+    <?php echo $user_details['status']; ?>
 
   	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
   		<?php $profile_pics = $user->get_profile_pics("all");?>
@@ -57,24 +52,9 @@
     <div id="response"></div>
   </div>
 
-  <div class="col-sm-7 col-lg-8 bg-white py-4 px-5">
-    <?php if ($user_details['id_user'] == $_SESSION['id_user']): ?>
-  	  <a href="<?php echo Config::ROOT; ?>index.php?cat=account" class="btn btn-primary">Modify my account</a>
-    <?php else: ?>
-      <button <?=$display['like']?> id="like" class="btn btn-primary" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'like');">Like</button>
-      <button <?=$display['unlike']?> id="unlike" class="btn btn-primary" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'dislike');">Unlike</button>
-      <a class="dropdown-item" href="http://localhost:8081/gitmatcha/index.php?cat=chat&id_user=<?=$_GET['id_user']?>">Chat</a>
-      <div class="dropdown">
-        <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <button class="dropdown-item" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'report');">Report</button>
-          <button <?=$display['block']?> id="block" class="dropdown-item" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'block');">Block</button>
-          <button <?=$display['unblock']?> id="unblock" class="dropdown-item" onclick="actions_user(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>,'unblock');">Unblock</button>
-        </div>
-      </div>
-    <?php endif; ?>
+  <div class="col-md-7 bg-white py-4 px-5">
+    <div class="text-right"><?php echo $action; ?></div>
+    <?php echo $match; ?>
 
     <h2 class="mb-3">I am:</h2>
     <?php foreach ($i_am as $label => $value): ?>

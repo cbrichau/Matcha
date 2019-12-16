@@ -33,7 +33,9 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 
     $user_details['id_user'] = $user->get_id_user();
     $user_details['username'] = $user->get_username();
-$user_details['status'] = ($user->get_last_activity()) ? 'Online' : 'Offline since '.$user->get_last_activity();/////////////////change if condition to last_activity < 5 minutes
+    $user_details['status'] = '<p class="status online"><i class="fa fa-check-circle"></i> Online</p>';
+    if (strtotime($user->get_last_activity()) > strtotime('-5 minutes'))
+      $user_details['status'] = '<p class="status offline"><i class="far fa-times-circle"></i> Last seen: '.date("j M Y (G:i)", strtotime($user->get_last_activity())).'</p>';
 
     // Sets the profile's "I am" details, with labels, for output.
     $i_am['Full name'] = $user->get_first_name().' '.$user->get_last_name();
@@ -113,12 +115,12 @@ $user_details['status'] = ($user->get_last_activity()) ? 'Online' : 'Offline sin
         USER ACTIONS
     \* ----------------------------------------------- */
 
-		// Defines the display of (un)like/block buttons.
+    // Defines the display of (un)like/block buttons.
 		$display = [
+      'like' => 'style=""',
+      'unlike' => 'style="display:none;"',
 			'block' => 'style=""',
-			'unblock' => 'style="display:none;"',
-			'like' => 'style=""',
-			'unlike' => 'style="display:none;"'
+			'unblock' => 'style="display:none;"'
 		];
 		if ($userMng->user_1_blocked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
 		{
@@ -131,8 +133,44 @@ $user_details['status'] = ($user->get_last_activity()) ? 'Online' : 'Offline sin
 			$display['unlike'] = 'style="display:block;"';
 		}
 
-    //Upload pictures
+    // Defines the actions: Modify for self, match/(un)like/block/report for others.
+    $match = '';
+    if ($user_details['id_user'] == $_SESSION['id_user'])
+      $action = '<a href="'.Config::ROOT.'index.php?cat=account"><i class="fas fa-cog"></i> Modify my account</a>';
+    else
+    {
+      $action = '<span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'like\');" '.$display['like'].' id="like"><i class="fas fa-heart"></i> Like</a></span>
+                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'dislike\');" '.$display['unlike'].' id="unlike"><i class="fas fa-heart-broken"></i> Unlike</a></span>
+                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'report\');"><i class="fas fa-bell"></i> Report as fake</a></span>
+                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'block\');" '.$display['block'].' id="block"><i class="fas fa-ban"></i> Block</a></span>
+                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'unblock\');" '.$display['unblock'].' id="unblock"><i class="fas fa-ban"></i> Unblock</a></span>';
 
+      if ($userMng->user_1_liked_user_2($_GET['id_user'], $_SESSION['id_user']))
+   		{
+        if ($userMng->user_1_liked_user_2($_SESSION['id_user'], $_GET['id_user']))
+       		$match = '<div class="alert alert-primary text-center my-3">It\'s a match! <a href="'.Config::ROOT.'index.php?cat=chat&id_user='.$_GET['id_user'].'">Open chat</a>.</div>';
+        else
+          $match = '<div class="alert alert-primary text-center my-3">This user likes you! Like them back to chat.</div>';
+   		}
+    }
+
+
+
+    /*
+      $action = '<div class="dropdown">
+                  <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ban" aria-hidden="true"></i></button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'report\');">Report</button>
+                    <button '.$display['block'].' id="block" class="dropdown-item" onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'block\');">Block</button>
+                    <button '.$display['unblock'].' id="unblock" class="dropdown-item" onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'unblock\');">Unblock</button>
+                  </div>
+                </div>';*/
+
+
+
+
+
+    //Upload pictures
 
   	// Check if image file is a actual image or fake image
   	if (isset($_POST["submit"]))
