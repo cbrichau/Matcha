@@ -108,19 +108,18 @@ class MUserMngActions extends MUserMng
 	}
 
 	// Gives the likers of the given id.
-	public function who_like_me ($id_user)
+	public function who_likes_me($id_me)
 	{
-		if ($this->is_valid_int_format($id_user))
+		if ($this->is_valid_int_format($id_me))
 		{
-			$sql = 'SELECT id_user_liker
+			$sql = 'SELECT id_user_liker, username, last_activity
 							FROM users_likes
+							JOIN users ON id_user_liker = id_user
 							WHERE id_user_liked = :id_user_liked';
 			$query = $this->_db->prepare($sql);
-			$query->bindValue(':id_user_liked', $id_user, PDO::PARAM_INT);
+			$query->bindValue(':id_user_liked', $id_me, PDO::PARAM_INT);
 			$query->execute();
 			$res = $query->fetchAll();
-			foreach ($res as $key => $value)
-				$res[$key] = $this->select_user_by('id_user',$value['id_user_liker']);
 			return($res);
 		}
 	}
@@ -183,27 +182,32 @@ class MUserMngActions extends MUserMng
 
 	/* ----------- Visit actions ----------- */
 
-	public function who_visits_me($id_user)
+	public function who_visits_me($id_me)
 	{
-		$sql = 'SELECT username, last_visit, id_user_visited
-						FROM users
-						JOIN users_visits ON users.id_user = users_visits.id_user_visited
-						WHERE id_user_visitor = :id_user_visitor';
-		$query = $this->_db->prepare($sql);
-		$query->bindValue(':id_user_visitor', $id_user, PDO::PARAM_INT);
-		$query->execute();
-		$res = $query->fetchAll();
-		return ($res);
+		if ($this->is_valid_int_format($id_me))
+		{
+			$sql = 'SELECT id_user_visitor, username, last_visit
+							FROM users_visits
+							JOIN users ON id_user_visitor = id_user
+							WHERE id_user_visited = :id_user_visited';
+			$query = $this->_db->prepare($sql);
+			$query->bindValue(':id_user_visited', $id_me, PDO::PARAM_INT);
+			$query->execute();
+			$res = $query->fetchAll();
+			return ($res);
+		}
 	}
 
 	//send the profile visited and after the user
 	public function I_visit_you($id_user_1, $id_user_2)
 	{
-		if ($id_user_1 !== $id_user_2)
+		if ($this->is_valid_int_format($id_user_1) &&
+				$this->is_valid_int_format($id_user_2) &&
+				$id_user_1 !== $id_user_2)
 		{
-			$sql = 'INSERT INTO users_visits (id_user_visitor,id_user_visited,last_visit)
+			$sql = 'INSERT INTO users_visits (id_user_visitor, id_user_visited, last_visit)
 							VALUES (:id_user_1, :id_user_2, now())
-							ON DUPLICATE KEY UPDATE last_visit=now()';
+							ON DUPLICATE KEY UPDATE last_visit = now()';
 			$this->execute_action($id_user_1, $id_user_2, $sql);
 			$this->notify('visited', $id_user_2);
 		}

@@ -103,13 +103,11 @@ form
 #search #sort_form
 {
   display: block;
-  
 }
 #search .card-text p:last-of-type
 {
   margin: 0;
 }
-
 
 /* -------- PROFILE -------- */
 
@@ -117,7 +115,7 @@ form
 #profile p { margin: 0; }
 #profile .status.online { color: green; }
 #profile .status.offline { color: grey; }
-#profile img
+#profile .carousel img
 {
   border: 1px solid #e1e1e1;
   padding: 0.5em;
@@ -132,20 +130,35 @@ form
 {
   font-weight: bold;
 }
-
-/* -------- ACCOUNT -------- */
-
-#account form h2
+#profile .card-text p:last-child
 {
-  text-align: left;
-  margin: 0.5em 0;
+  font-size: 0.8em;
+  margin-top: 1em;
 }
 
-#account form label
+/* -------- MODIFY-ACCOUNT/PROFILE/PICTURES/MATE -------- */
+
+#modify-account form .label,
+#modify-profile form .label,
+#modify-pictures form .label,
+#modify-mate form .label
 {
   display: block;
-  margin: 1em 0 0 0;
+  margin: 1.2em 0 0.2em 0.2em;
   text-align: left;
   font-weight: bold;
   font-size: 0.9em;
+}
+#modify-account form label:hover,
+#modify-profile form label:hover,
+#modify-pictures form label:hover,
+#modify-mate form label:hover
+{
+  cursor: pointer;
+}
+#modify-profile .interests_list .form-check,
+#modify-mate .interests_list .form-check
+{
+  display: inline-block;
+  width: 45%;
 }

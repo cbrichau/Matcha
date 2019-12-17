@@ -19,7 +19,7 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
   {
     // Sets profile as valid and marks the profile visit.
     $valid_profile = TRUE;
-    $userMng->I_visit_you($_GET['id_user'], $_SESSION['id_user']);
+    $userMng->I_visit_you($_SESSION['id_user'], $_GET['id_user']);
 
     /* ----------------------------------------------- *\
         USER INFO
@@ -109,7 +109,7 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 
     // Gets the list of the user's visitors and likers.
     $user_visitors = $userMng->who_visits_me($_GET['id_user']);
-    $user_likers = $userMng->who_like_me($_GET['id_user']);
+    $user_likers = $userMng->who_likes_me($_GET['id_user']);
 
     /* ----------------------------------------------- *\
         USER ACTIONS
@@ -136,7 +136,17 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     // Defines the actions: Modify for self, match/(un)like/block/report for others.
     $match = '';
     if ($user_details['id_user'] == $_SESSION['id_user'])
-      $action = '<a href="'.Config::ROOT.'index.php?cat=account"><i class="fas fa-cog"></i> Modify my account</a>';
+    {
+      $action = '<div class="dropdown">
+                   <span class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i> Modify</span>
+                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                     <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-account">My account</a>
+                     <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-profile">My profile</a>
+                     <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-pictures">My pictures</a>
+                     <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-mate">My ideal mate</a>
+                   </div>
+                 </div>';
+    }
     else
     {
       $action = '<span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'like\');" '.$display['like'].' id="like"><i class="fas fa-heart"></i> Like</a></span>
@@ -144,7 +154,6 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
                  <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'report\');"><i class="fas fa-bell"></i> Report as fake</a></span>
                  <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'block\');" '.$display['block'].' id="block"><i class="fas fa-ban"></i> Block</a></span>
                  <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'unblock\');" '.$display['unblock'].' id="unblock"><i class="fas fa-ban"></i> Unblock</a></span>';
-
       if ($userMng->user_1_liked_user_2($_GET['id_user'], $_SESSION['id_user']))
    		{
         if ($userMng->user_1_liked_user_2($_SESSION['id_user'], $_GET['id_user']))

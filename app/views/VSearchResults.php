@@ -22,7 +22,7 @@
 
     <div class="row">
       <?php foreach ($results as $values): ?>
-        <div class="mb-3 col-sm-12 col-md-6 col-lg-3">
+        <div class="col-sm-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <img src="<?php echo Config::ROOT.$values['user']->get_profile_pics(0); ?>" class="card-img-top">
             <div class="card-body">

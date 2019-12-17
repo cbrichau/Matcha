@@ -9,7 +9,7 @@
 class MUserMng extends M_Manager
 {
   /* *********************************************************** *\
-      SELECT, ADD, UPDATE, DELETE functions
+      SELECT, ADD, DELETE functions
   \* *********************************************************** */
 
   public function select_user_by($key, $value)
@@ -53,6 +53,24 @@ class MUserMng extends M_Manager
     return implode('-', $interests);
   }
 
+  public function select_user_matches(MUser $user)
+  {
+    $sql = 'SELECT id_user, username
+            FROM users_likes JOIN users ON id_user_liker = id_user
+            WHERE id_user_liked = :id_user
+            AND id_user_liker IN (SELECT id_user_liked
+                                  FROM users_likes
+                                  WHERE id_user_liker = :id_user)';
+    $query = $this->_db->prepare($sql);
+    $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
+    $query->execute();
+
+    $matches = array();
+    while ($r = $query->fetch())
+      $matches[] = new MUser($r);
+    return $matches;
+  }
+
   public function add_user(MUser $user)
   {
     $sql = 'INSERT INTO users
@@ -69,50 +87,6 @@ class MUserMng extends M_Manager
     $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
     $query->execute();
     return $this->_db->lastInsertId();
-  }
-
-  public function update_user(MUser $user)
-  {
-    $sql = 'UPDATE users
-            SET email = :email,
-                email_confirmed = :email_confirmed,
-                username = :username,
-                first_name = :first_name,
-                last_name = :last_name,
-                date_of_birth = :date_of_birth,
-                password = :password,
-                last_activity = now(),
-                location = :location,
-                gender = :gender,
-                popularity_score = :popularity_score,
-                bio = :bio,
-                seeked_gender = :seeked_gender,
-                seeked_age_min = :seeked_age_min,
-                seeked_age_max = :seeked_age_max,
-                seeked_distance = :seeked_distance,
-                seeked_popularity_range = :seeked_popularity_range,
-                seeked_interests = :seeked_interests
-            WHERE id_user = :id_user';
-    $query = $this->_db->prepare($sql);
-    $query->bindValue(':email', $user->get_email(), PDO::PARAM_STR);
-    $query->bindValue(':email_confirmed', $user->get_email_confirmed(), PDO::PARAM_STR);
-    $query->bindValue(':username', $user->get_username(), PDO::PARAM_STR);
-    $query->bindValue(':first_name', $user->get_first_name(), PDO::PARAM_STR);
-    $query->bindValue(':last_name', $user->get_last_name(), PDO::PARAM_STR);
-    $query->bindValue(':date_of_birth', $user->get_date_of_birth(), PDO::PARAM_STR);
-    $query->bindValue(':password', $user->get_password(), PDO::PARAM_STR);
-    $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
-  	$query->bindValue(':gender', $user->get_gender(), PDO::PARAM_STR);
-  	$query->bindValue(':popularity_score', $user->get_popularity_score(), PDO::PARAM_INT);
-  	$query->bindValue(':bio', $user->get_bio(), PDO::PARAM_STR);
-  	$query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
-    $query->bindValue(':seeked_gender', $user->get_seeked_gender(), PDO::PARAM_STR);
-    $query->bindValue(':seeked_age_min', $user->get_seeked_age_min(), PDO::PARAM_INT);
-    $query->bindValue(':seeked_age_max', $user->get_seeked_age_max(), PDO::PARAM_INT);
-    $query->bindValue(':seeked_distance', $user->get_seeked_distance(), PDO::PARAM_INT);
-    $query->bindValue(':seeked_popularity_range', $user->get_seeked_popularity_range(), PDO::PARAM_INT);
-    $query->bindValue(':seeked_interests', $user->get_seeked_interests(), PDO::PARAM_STR);
-    $query->execute();
   }
 
   /* *********************************************************** *\
@@ -152,7 +126,7 @@ class MUserMng extends M_Manager
   }
 
   /* *************************************************************** *\
-      CHECK_REGISTRATION/LOGIN/MODIFY/RESET_values
+      CHECK_REGISTRATION/LOGIN/RESET_values
       Checks input from $_POST is valid, or returns an error message.
   \* *************************************************************** */
 
@@ -253,44 +227,6 @@ class MUserMng extends M_Manager
     $user_fetched = $this->select_user_by('username', $post['username']);
     if ($user_posted->get_password() != $user_fetched->get_password())
       return 'error';
-
-    return FALSE;
-  }
-
-  /* ------------------------- MODIFY ------------------------- */
-
-  public function check_modify_email(array $post, MUser $user)
-  {
-    if (empty($post['email']))
-      return 'Please enter an email address.';
-
-    if ($this->is_valid_email_format($post['email']) === FALSE)
-      return 'Invalid email address.';
-
-    if ($post['email'] != $user->get_email())
-    {
-      $user_check = $this->select_user_by('email', $post['email']);
-      if (!is_null($user_check))
-        return 'Email taken.';
-    }
-
-    return FALSE;
-  }
-
-  public function check_modify_username(array $post, MUser $user)
-  {
-    if (empty($post['username']))
-      return 'Please enter a username.';
-
-    if ($this->is_valid_string_format($post['username']) === FALSE)
-      return 'Invalid username.';
-
-    if ($post['username'] != $user->get_username())
-    {
-      $user = $this->select_user_by('username', $post['username']);
-      if (!is_null($user))
-        return 'Username taken.';
-    }
 
     return FALSE;
   }

@@ -4,15 +4,13 @@
     Shows a form to a logged user to modify his/her info.
 \* *********************************************************** */
 
-$userMng = new MUserMng();
+$userMng = new MUserMngModifications();
 $current_user = $userMng->select_user_by('id_user', $_SESSION['id_user']);
 
 // Initialises the form's alerts to null,
 // and its and prefill values to the user's current info from the DB.
 $success_alert = '';
-$error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password',
-                                     'gender', 'date_of_birth', 'location', 'bio', 'interests',
-                                     'seeked_gender', 'seeked_age_min', 'seeked_age_max', 'seeked_distance', 'seeked_interests', 'seeked_popularity_range'), '');
+$error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password'), '');
 $form_prefill = $userMng->sanitize_for_output($current_user->get_all_properties());
 
 // Processes the modification confirmation
@@ -60,7 +58,7 @@ else if (isset($_POST['modify']))
   {
     $current_user = $current_user->update_user_info($current_user, $_POST);
     $current_user->encrypt_and_set_password($_POST['pass']);
-    $userMng->update_user($current_user);
+    $userMng->update_account($current_user);
     ////////////////////// if email has changed, resend validation link and logout
     // see register
     // else: relog to update session

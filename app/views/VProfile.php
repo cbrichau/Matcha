@@ -77,32 +77,56 @@
 </div>
 
 <div class="row m-3">
-  <div class="col-md-6 bg-white mb-3">
+  <div class="col-md-6 bg-white mb-3 py-4 px-5">
     <h3>My visitors</h3>
-		<?php
-    foreach ($user_visitors as $key => $value)
-    {
-      if (file_exists(Config::IMAGES_PATH.'profile_pictures/'.$value['id_user_visited'].'-1.jpg'))
-        echo '<img style="width:20%;height:auto;" class="user-icon" src="'.Config::IMAGES_PATH.'profile_pictures/'.$value['id_user_visited'].'-1.jpg">';
-      else
-        echo '<img style="width:20%;height:auto;" class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png">';
-      echo '<div>'.$value['username'].'</div>
-            <div class="time hidden-xs">Last visit : '.$value['last_visit'].'</div>';
-		}
-    ?>
+    <div class="row">
+      <?php
+      foreach ($user_visitors as $values)
+      {
+        $profile_pic = Config::IMAGES_PATH.'profile_pictures/'.$values['id_user_visitor'].'-1.jpg';
+        $avatar = (file_exists($profile_pic)) ? $profile_pic : Config::IMAGES_PATH.'profile_pictures/0default.jpg';
+        $last_visit = date("j M Y (G:i)", strtotime($values['last_visit']));
+        ?>
+        <div class="col-6 col-sm-6 col-xl-4 mb-3">
+          <div class="card">
+            <img src="<?php echo $avatar; ?>" class="card-img-top">
+            <div class="card-body">
+              <div class="card-text">
+                <p><a href="<?php echo Config::ROOT.'index.php?cat=profile&id_user='.$values['id_user_visitor']; ?>" class="stretched-link"><?php echo $values['username']; ?></a></p>
+                <p>Last visit: <?php echo $last_visit; ?></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php
+      }
+      ?>
+    </div>
   </div>
-  <div class="col-md-6 bg-white mb-3">
+  <div class="col-md-6 bg-white mb-3 py-4 px-5">
     <h3>My likers</h3>
-		<?php
-    foreach ($user_likers as $key => $value)
-    {
-      if (file_exists(Config::IMAGES_PATH.'profile_pictures/'.$value->get_id_user().'-1.jpg'))
-        echo '<img style="width:20%;height:auto;" class="user-icon" src="'.Config::IMAGES_PATH.'profile_pictures/'.$value->get_id_user().'-1.jpg">';
-      else
-        echo '<img style="width:20%;height:auto;" class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png">';
-      echo '<div>'.$value->get_username().'</div>
-            <div class="time hidden-xs">Last activity : '.$value->get_last_activity().'</div>';
-		}
-    ?>
+    <div class="row">
+      <?php
+      foreach ($user_likers as $values)
+      {
+        $profile_pic = Config::IMAGES_PATH.'profile_pictures/'.$values['id_user_liker'].'-1.jpg';
+        $avatar = (file_exists($profile_pic)) ? $profile_pic : Config::IMAGES_PATH.'profile_pictures/0default.jpg';
+        $last_visit = date("j M Y (G:i)", strtotime($values['last_activity']));
+        ?>
+        <div class="col-6 col-sm-6 col-xl-4 mb-3">
+          <div class="card">
+            <img src="<?php echo $avatar; ?>" class="card-img-top">
+            <div class="card-body">
+              <div class="card-text">
+                <p><a href="<?php echo Config::ROOT.'index.php?cat=profile&id_user='.$values['id_user_liker']; ?>" class="stretched-link"><?php echo $values['username']; ?></a></p>
+                <p>Last seen: <?php echo $last_visit; ?></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php
+      }
+      ?>
+    </div>
   </div>
 </div>
