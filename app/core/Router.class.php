@@ -58,7 +58,7 @@ class Router extends Config
     $page = self::$page['name'];
     $common_area = array('home');
     $visitors_only = array('register', 'login', 'reset');
-    $members_only = array('search', 'chatroom', 'chat', 'chatmessage', 'actions',
+    $members_only = array('search', 'chatroom', 'chat',
                           'profile', 'logout', 'modify-account', 'modify-profile', 'modify-pictures', 'modify-mate');
 
     if (!in_array($page, $common_area) &&

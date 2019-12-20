@@ -109,6 +109,53 @@ form
   margin: 0;
 }
 
+/* -------- CHAT -------- */
+
+#chat #chat_window { max-width: 900px; }
+#chat #messages { overflow-y: auto; }
+#chat #messages div
+{
+  margin: 1em;
+  clear: both;
+}
+#chat #messages .msg
+{
+  margin: 0;
+  padding: 0.5em 1em;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+#chat .incoming .msg{ background-color: #dcebfa; }
+#chat .outgoing .msg { background-color: #91c7ff; }
+#chat .incoming { float: left; }
+#chat .outgoing { float: right; }
+#chat #messages .time
+{
+  color: gray;
+  font-size: 0.8em;
+  margin: 0.2em 0 0 0.2em;
+}
+#chat #send_box
+{
+  border-top: 1px solid #c4c4c4;
+  margin: 1em;
+  position: relative;
+}
+
+#chat #send_box input {
+  border: none;
+  padding: 1em 0.5em;
+  width: 100%;
+}
+
+#chat #send_box button
+{
+  position: absolute;
+  right: 0;
+  top: 0.5em;
+}
+
 /* -------- PROFILE -------- */
 
 #profile { max-width: 1400px; }

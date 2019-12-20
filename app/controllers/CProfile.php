@@ -7,6 +7,7 @@
 \* *********************************************************** */
 
 $userMng = new MUserMngActions();
+$searchMng = new MSearchMng();
 
 // Initialises error state before going through all the checks.
 $valid_profile = FALSE;
@@ -55,10 +56,10 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $i_am['Bio'] = $user->get_bio();
 
     if ($user->get_interests() != '')
-      $i_am['Interests'] = $user->get_interests();
+      $i_am['Interests'] = $searchMng->list_interest_names($user->get_interests());
 
     if ($user->get_popularity_score() != '')
-      $i_am['Popularity score'] = $user->get_popularity_score().' points';
+      $i_am['Popularity'] = $user->get_popularity_score().' points';
 
     // Sets the profile's "Seeking" details, with labels, for output.
     // Along with the search URL parameters.
@@ -78,12 +79,8 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     $seeking['Location'] = 'Max '.$max_distance.' km away';
 
     $seeking['Interests'] = 'Any';
-    $interests = 'any';
-    if ($user->get_seeked_interests() != '')
-    {
-      $seeking['Interests'] = $user->get_interests();
-      $interests = $user->get_interests();
-    }
+    if ($user->get_seeked_interests() != 0)
+      $seeking['Interests'] = $searchMng->list_interest_names($user->get_seeked_interests());
 
     $popularity_range = ($user->get_seeked_popularity_range() != '') ? $user->get_seeked_popularity_range() : 500;
     $min_popularity = $user->get_popularity_score() - $popularity_range;
@@ -104,7 +101,7 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $link .= '&popularity_range='.$popularity_range;
       $link .= '&sort=potential';
       $link .= '&order=desc';
-      $potential_matches_link = '<a href="'.$link.'" class="btn btn-primary">See potential matches</a>';
+      $potential_matches_link = '<a href="'.$link.'" class="btn btn-primary mt-5 mx-auto">See potential matches</a>';
     }
 
     // Gets the list of the user's visitors and likers.

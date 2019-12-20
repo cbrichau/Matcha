@@ -55,20 +55,43 @@ class MUserMng extends M_Manager
 
   public function select_user_matches(MUser $user)
   {
-    $sql = 'SELECT id_user, username
-            FROM users_likes JOIN users ON id_user_liker = id_user
+    list($user_latitude, $user_longitude) = explode(' ', $user->get_location());
+    $searchMng = new MSearchMng;
+
+    $sql = 'SELECT id_user, username, gender, date_of_birth, popularity_score, distance,
+                   GROUP_CONCAT(id_interest SEPARATOR "-") AS interests
+            FROM (
+              SELECT id_user,
+                     (111.111 * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(@user_latitude)) *
+                      COS(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))) *
+                      COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
+                      SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))))))) AS distance
+              FROM users
+              GROUP BY id_user
+            ) AS tmp
+            JOIN users USING(id_user)
+            JOIN users_likes ON id_user_liker = id_user
+            JOIN users_interests USING(id_user)
             WHERE id_user_liked = :id_user
             AND id_user_liker IN (SELECT id_user_liked
                                   FROM users_likes
                                   WHERE id_user_liker = :id_user)';
+    $this->_db->exec('SET @user_latitude = '.$user_latitude.'; SET @user_longitude = '.$user_longitude.';');
     $query = $this->_db->prepare($sql);
     $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
     $query->execute();
 
-    $matches = array();
+    $results = array();
+    $i = 0;
     while ($r = $query->fetch())
-      $matches[] = new MUser($r);
-    return $matches;
+    {
+      $results[$i]['user'] = new MUser($r);
+      $results[$i]['user']->set_profile_pics();
+      $results[$i]['interests'] = $searchMng->list_interest_names($r['interests']);
+      $results[$i]['distance'] = round($r['distance'], 1);
+      $i++;
+    }
+    return $results;
   }
 
   public function add_user(MUser $user)

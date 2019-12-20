@@ -56,7 +56,7 @@
     <div class="text-right"><?php echo $action; ?></div>
     <?php echo $match; ?>
 
-    <h2 class="mb-3">I am:</h2>
+    <h2 class="my-3">I am:</h2>
     <?php foreach ($i_am as $label => $value): ?>
       <div class="row">
         <p class="col-md-4 col-lg-3"><?= $label; ?></p>
@@ -64,7 +64,7 @@
       </div>
     <?php endforeach; ?>
 
-    <h2 class="mb-3">My ideal mate:</h2>
+    <h2 class="my-3">My ideal mate:</h2>
     <?php foreach ($seeking as $label => $value): ?>
       <div class="row">
         <p class="col-md-4 col-lg-3"><?= $label; ?></p>

@@ -23,5 +23,3 @@
 
 	<button type="submit" name="register" class="btn btn-primary btn-block"><?php echo $output->get_head_title(); ?></button>
 </form>
-
-<script src="<?php echo Config::JS_PATH.'localisation.js?'.time(); ?>"></script>

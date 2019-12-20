@@ -28,7 +28,6 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">[<?php echo $_SESSION['username']; ?>]</a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="<?php echo Config::ROOT; ?>index.php?cat=profile&id_user=<?php echo $_SESSION['id_user']; ?>">Profile</a>
-            <a class="dropdown-item" href="<?php echo Config::ROOT; ?>index.php?cat=modify-account">Account</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="<?php echo Config::ROOT; ?>index.php?cat=logout">Log out</a>
           </div>

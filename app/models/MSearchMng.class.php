@@ -376,6 +376,19 @@ class MSearchMng extends M_Manager
   \* |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| */
 
   /* ************************************************************** *\
+      LIST_INTERESTS
+      Transforms the user's interests id list, to a word list
+  \* ************************************************************** */
+
+  public function list_interest_names($user_interests)
+  {
+    $interest_ids = explode('-', $user_interests);
+    $interest_names = array_intersect_key($this->list_interest_options(), array_flip($interest_ids));
+    $interest_names = implode(', ', $interest_names);
+    return $interest_names;
+  }
+
+  /* ************************************************************** *\
       SELECT_SEARCH_RESULTS
       Selects the users that fit into the search conditions.
   \* ************************************************************** */
@@ -385,17 +398,13 @@ class MSearchMng extends M_Manager
     $sql = $this->create_search_query('select', $conditions, $pagination);
     $query = $this->execute_search_query($sql, $conditions);
 
-    $list_interests = $this->list_interest_options();
-    $users = array();
+    $results = array();
     $i = 0;
     while ($r = $query->fetch())
     {
       $results[$i]['user'] = new MUser($r);
       $results[$i]['user']->set_profile_pics();
-      $user_interest_ids = explode('-', $r['interests']);
-      $user_interest_names = array_intersect_key($list_interests, array_flip($user_interest_ids));
-      //$results[$i]['interests'] = implode(', ', array_map(function($val) { return '#'.$val; } , $user_interest_names));
-      $results[$i]['interests'] = implode(', ', $user_interest_names);
+      $results[$i]['interests'] = $this->list_interest_names($r['interests']);
       $results[$i]['distance'] = round($r['distance'], 1);
       $i++;
     }

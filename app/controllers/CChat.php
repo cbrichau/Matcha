@@ -4,29 +4,22 @@
     Connects 2 users and allows them to chat.
 \* *********************************************************** */
 
-$actions = new MUserMngActions();
+$userMngActions = new MUserMngActions();
+$user_1 = $userMngActions->select_user_by('id_user', $_GET['id_user_1']);
+$user_2 = $userMngActions->select_user_by('id_user', $_GET['id_user_2']);
 
-if (isset($_POST['sender']) &&
-		isset($_POST['receiver']) &&
-		isset($_POST['message']))
+if (is_null($user_1) ||
+		is_null($user_2) ||
+		!($_SESSION['id_user'] == $user_1->get_id_user() ||
+			$_SESSION['id_user'] == $user_2->get_id_user()))
 {
-	$message =  trim($_POST['message']);
-	if(!empty($message) /*&& strlen($message) <= 65,535*/)
-		$actions->send_message($_POST['sender'],$_POST['receiver'],$message);
-	}
-
-if(isset($_SESSION['username']))
-{
-	$sender = $actions->select_user_by('username',$_SESSION['username']);
-}
-
-if(isset($_POST['receiver'])){
-	$receiver = $actions->select_user_by('id_user',$_POST['receiver']); //change into $_POST['receiver']
+  header('Location: '.Config::ROOT.'');
 }
 
 // Sets the output values and calls the views.
-$output->set_head_title('Chat room');
+$output->set_head_title('Chat with '.$user_2->get_username());
 
 require_once(Config::VIEW_HEADER);
 require_once(Router::$page['view']);
+echo '<script src="'.Config::JS_PATH.'chat.js?'.time().'"></script>';
 require_once(Config::VIEW_FOOTER);

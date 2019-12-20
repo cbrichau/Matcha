@@ -21,14 +21,14 @@ class MUserMngActions extends MUserMng
 				$this->is_valid_int_format($receiver) &&
 				$this->is_valid_int_format($sender))
 		{
-			$sql = 'INSERT INTO chat (id_user_1, id_user_2, message, message_date)
+			$sql = 'INSERT INTO chat (sender, receiver, message, message_date)
 		          VALUES (:sender, :receiver, :message, now())';
 		  $query = $this->_db->prepare($sql);
 		  $query->bindValue(':sender', $sender, PDO::PARAM_STR);
 		  $query->bindValue(':receiver', $receiver, PDO::PARAM_STR);
 		  $query->bindValue(':message', $message, PDO::PARAM_STR);
 		  $query->execute();
-			$this->notify('message', $id_user_2);
+			////////////////////$this->notify('message', $id_user_2);
 		}
 	}
 
@@ -38,10 +38,10 @@ class MUserMngActions extends MUserMng
 		if ($this->is_valid_int_format($id_user_1) &&
 		    $this->is_valid_int_format($id_user_2))
 		{
-			$sql = 'SELECT message , id_user_1 , message_date
+			$sql = 'SELECT sender, receiver, message, message_date
 							FROM chat
-							WHERE ((id_user_1 = :id_user_1 AND id_user_2 = :id_user_2) OR
-										 (id_user_1 = :id_user_2 AND id_user_2 = :id_user_1))
+							WHERE ((sender = :id_user_1 AND receiver = :id_user_2) OR
+										 (sender = :id_user_2 AND receiver = :id_user_1))
 							ORDER BY message_date ASC';
 		  $query = $this->_db->prepare($sql);
 			$query->bindValue(':id_user_1', $id_user_1, PDO::PARAM_INT);

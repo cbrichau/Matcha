@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css">
     <link rel="stylesheet" href="<?php echo Config::CSS_PATH; ?>main.css?<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo Config::CSS_PATH; ?>chat.css?<?php echo time(); ?>">
     <title><?php echo $output->get_head_title(); ?> | Purrfect Partner</title>
   </head>
   <body class="d-flex flex-column h-100">

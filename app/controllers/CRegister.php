@@ -72,4 +72,5 @@ $output->set_head_title('Create my account');
 
 require_once(Config::VIEW_HEADER);
 require_once(Router::$page['view']);
+echo '<script src="'.Config::JS_PATH.'localisation.js?'.time().'"></script>';
 require_once(Config::VIEW_FOOTER);

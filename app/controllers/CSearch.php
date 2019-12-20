@@ -70,4 +70,5 @@ $output->set_head_title('Search results');
 
 require_once(Config::VIEW_HEADER);
 require_once(Router::$page['view']);
+echo '<script src="'.Config::JS_PATH.'search_form.js?'.time().'"></script>';
 require_once(Config::VIEW_FOOTER);

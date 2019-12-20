@@ -5,7 +5,7 @@ if (!isset($_SESSION['is_logged']))
   $_SESSION['is_logged'] = FALSE;
 
 // (De)activate debugging by (de)commenting the line.
-require_once('app/core/Debugging.php');
+//require_once('app/core/Debugging.php');
 
 // Defines all paths as constants and establishes the DB connection.
 require_once('app/core/Config.class.php');

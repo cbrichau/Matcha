@@ -42,12 +42,9 @@
                       ('.$values['user']->get_age().')
                     </a>
                   </p>
+                  <p><i class="far fa-heart"></i> '.$values['interests'].'</p>
                   <p>
-                    <i class="far fa-heart"></i>
-                    '.$values['interests'].'
-                  </p>
-                  <p>
-                    <i class="fas fa-star"></i>'.$values['user']->get_popularity_score().'
+                    <i class="fas fa-star"></i> '.$values['user']->get_popularity_score().'
                     <span class="float-right"><i class="fas fa-map-marker-alt"></i> '.$values['distance'].' km</span>
                   </p>';
                 ?>

@@ -11,15 +11,13 @@
   ?>
   </select>
 
-
-  <label class="label">Age</label>
   <div class="form-row">
     <div class="form-group col-6">
-      <p>Min</p>
+      <label class="label">Age min</label>
       <input type="number" min="0" max="35" name="seeked_age_min" value="<?php echo $form_prefill['seeked_age_min']; ?>" class="form-control">
     </div>
     <div class="form-group col-6 text-right">
-      <p>Max</p>
+      <label class="label">Age max</label>
       <input type="number" min="0" max="35" name="seeked_age_max" value="<?php echo $form_prefill['seeked_age_max']; ?>" class="form-control">
     </div>
   </div>
@@ -31,7 +29,7 @@
   </div>
 
   <label class="label">Interests</label>
-  <?php echo $error_alert['interests']; ?>
+  <?php echo $error_alert['seeked_interests']; ?>
   <div class="interests_list">
     <?php
     foreach ($list_interests as $value => $label)

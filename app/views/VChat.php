@@ -1,6 +1,19 @@
-Chat
-https://www.bootdey.com/snippets//User-profile-with-friends-and-chat
+<h1 class="text-center">Chat with <?= $user_2->get_username(); ?></h1>
+<span style="display:none;" id="id_user_1"><?= $user_1->get_id_user(); ?></span>
+<span style="display:none;" id="id_user_2"><?= $user_2->get_id_user(); ?></span>
 
+<div class="bg-white my-3 mx-auto" id="chat_window">
+  <div id="messages">
+  </div>
+
+  <div id="send_box">
+    <input type="text" id="message_content" placeholder="Write a message">
+    <button type="submit" id="send_button" class="btn btn-primary">Send</button>
+  </div>
+</div>
+
+<?php
+/*
 <div class="tab-pane" id="tab-chat">
   <div class="conversation-wrapper">
 
@@ -19,11 +32,42 @@ https://www.bootdey.com/snippets//User-profile-with-friends-and-chat
         <textarea id="message_value" class="form-control" onkeyup="clee(event,<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>);" name="message" rows="2" placeholder="Enter your message..."></textarea>
       </div>
       <div class="clearfix">
-        <button onclick="send_message(<?=$_SESSION['id_user']?>,<?=$_GET['id_user']?>);" type="submit" class="btn btn-success pull-right">Send message</button>
+        <button  class="btn btn-success pull-right">Send message</button>
       </div>
     </div>
 
   </div>
 </div>
 
-<?php require_once(Config::JS_PATH.'chat.php'); ?>
+
+foreach ($tabs as $key => $value)
+{
+  $value['message'] = str_replace(' ', '&nbsp;', $value['message']);
+  if( $value['id_user_1'] != $_POST['id_user_1'])
+  {
+  echo '<div class="conversation-item item-left clearfix">';
+  }
+  else
+  {
+    echo '<div class="conversation-item item-right clearfix">';
+  }
+  echo '<div class="conversation-user">';
+  echo '<img class="user-icon" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">';
+  echo '</div>';
+  echo '<div class="conversation-body">';
+  if ($value['id_user_1'] != $_POST['id_user_1'])
+  {
+    echo '<div class="name">' . $user_2->get_username() . '</div>';
+  }
+  else
+  {
+    echo '<div class="name">' . $_SESSION['username'] . '</div>';
+  }
+  echo '<div class="time hidden-xs">' . $tabs[$key]['message_date'] . ' </div>';
+  echo '<div class="text">' . $value['message'] . ' </div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+}
+*/
+ ?>

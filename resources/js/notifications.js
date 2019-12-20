@@ -1,5 +1,6 @@
 (function()
 {
+  var base_url = 'http://localhost:8081/gitmatcha/index_ajax.php';
   var i = 0;
   var xhr;
   var notifications_count = document.getElementById('notifications_count');
@@ -41,7 +42,7 @@
       document.getElementById(notif.srcElement.id).className = 'dropdown-item';
       notifications_count.innerText -= 1;
 
-      xhr.open('GET', 'http://localhost:8081/gitmatcha/index_ajax.php?notifications=seen&id=' + notif.srcElement.id.substr(1), true);
+      xhr.open('GET', base_url + '?notifications=seen&id=' + notif.srcElement.id.substr(1), true);
       xhr.send();
     }
   }
@@ -81,7 +82,7 @@
     xhr.send();
   }
 
-  // Calls get_notifications() every 5 seconds.
+  // Calls get_notifications() every 1 second.
   get_notifications();
   setInterval(get_notifications, 1 * 1000);
 })();
