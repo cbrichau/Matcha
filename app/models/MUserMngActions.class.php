@@ -114,11 +114,7 @@ class MUserMngActions extends MUserMng
 			$sql = 'DELETE FROM users_likes
 							WHERE id_user_liker = :id_user_1 AND id_user_liked = :id_user_2';
 			if ($this->execute_action($id_user_1, $id_user_2, $sql))
-			{
-				if ($this->user_1_liked_user_2($id_user_2, $id_user_1) == 0)
-					$this->notify('unlike', $id_user_2);
-				else
-					$this->notify('unmatch', $id_user_2);
+				$this->notify('unlike', $id_user_2);
 			}
 		}
 	}
@@ -159,8 +155,7 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_blocks (id_user_blocker, id_user_blocked)
 							VALUES (:id_user_1, :id_user_2)';
-			if ($this->execute_action($id_user_1, $id_user_2, $sql))
-				$this->notify('block', $id_user_2);
+			$this->execute_action($id_user_1, $id_user_2, $sql);
 		}
 	}
 
@@ -170,8 +165,7 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'DELETE FROM users_blocks
 							WHERE id_user_blocker = :id_user_1 AND id_user_blocked = :id_user_2';
-			if ($this->execute_action($id_user_1, $id_user_2, $sql))
-				$this->notify('unblock', $id_user_2);
+			$this->execute_action($id_user_1, $id_user_2, $sql);
 		}
 	}
 
@@ -194,8 +188,7 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_reports (id_user_reporter, id_user_reported)
 							VALUES (:id_user_1, :id_user_2)';
-			if ($this->execute_action($id_user_1, $id_user_2, $sql))
-				$this->notify('report', $id_user_2);
+			$this->execute_action($id_user_1, $id_user_2, $sql);
 		}
 	}
 
@@ -242,12 +235,8 @@ class MUserMngActions extends MUserMng
 			case 'message':	$message = $username.' messaged you.'; break;
 			case 'like':		$message = $username.' liked you.'; break;
 			case 'unlike':	$message = $username.' unliked you.'; break;
-			case 'block':		$message = $username.' blocked you.'; break;
-			case 'unblock':	$message = $username.' unblocked you.'; break;
-			case 'report':	$message = $username.' reported you.'; break;
 			case 'visit':		$message = $username.' visited you.'; break;
 			case 'match':		$message = $username.' matched you.'; break;
-			case 'unmatch':	$message = $username.' unmatched you.'; break;
 		}
 		$sql = 'INSERT INTO notifications (id_user, message)
 						VALUES(:id_user, :message)';
