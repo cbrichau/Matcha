@@ -1,6 +1,7 @@
 <?php
 /* ----------------------------- *\
     GET UNSEEN NOTIFICATIONS
+    Also deletes seen ones
 \* ----------------------------- */
 
 if ($_GET['notifications'] == 'get' &&
@@ -14,7 +15,6 @@ if ($_GET['notifications'] == 'get' &&
           AND id_notification NOT IN('.$_GET["ids"].')
           ORDER BY id_notification DESC
           LIMIT 10';
-
   $query = $DB->prepare($sql);
   $query->bindValue(':id_user', $_SESSION['id_user'], PDO::PARAM_INT);
   $query->execute();
@@ -23,6 +23,11 @@ if ($_GET['notifications'] == 'get' &&
     $notifications[$r['id_notification']] = $r['message'];
 
   echo json_encode($notifications);
+
+  $sql = 'DELETE FROM notifications
+          WHERE seen = 1';
+  $query = $DB->prepare($sql);
+  $query->execute();
 }
 
 /* ----------------------------- *\

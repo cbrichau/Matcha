@@ -37,12 +37,28 @@ if (isset($_POST['modify']))
   $form_prefill = array_replace($form_prefill, $_POST);
   $form_prefill = $userMng->sanitize_for_output($form_prefill);
 
+  foreach ($list_genders as $key => $v)
+  {
+    $form_prefill['gender_'.$key] = '';
+    if ($form_prefill['gender'] == $key)
+      $form_prefill['gender_'.$key] = 'selected';
+  }
+
+  $selected_interests = str_replace('i_', '', preg_grep('/i_[0-9]+/', array_keys($_POST)));
+  foreach ($list_interests as $key => $v)
+  {
+    $form_prefill['interest_'.$key] = '';
+    if (in_array($key, $selected_interests))
+      $form_prefill['interest_'.$key] = 'checked';
+  }
+  $selected_interests = implode('-', $selected_interests);
+
   // Checks the input is valid, or returns an error message.
-  $error_msg['gender'] = $userMng->check_modify_gender($_POST, $current_user);
-  $error_msg['date_of_birth'] = $userMng->check_modify_date_of_birth($_POST, $current_user);
-  $error_msg['location'] = $userMng->check_modify_location($_POST, 'first_name');
-  $error_msg['bio'] = $userMng->check_modify_bio($_POST, 'last_name');
-  $error_msg['interests'] = $userMng->check_modify_interests($_POST);
+  $error_msg['gender'] = $userMng->check_modify_gender($_POST);
+  $error_msg['date_of_birth'] = $userMng->check_modify_date_of_birth($_POST);
+  $error_msg['location'] = $userMng->check_modify_location($_POST);
+  $error_msg['bio'] = $userMng->check_modify_bio($_POST);
+  $error_msg['interests'] = $userMng->check_modify_interests($selected_interests);
 
   // If the input is not valid (i.e. there's at least one non-false error),
   // sets the corresponding alert(s).
@@ -57,7 +73,8 @@ if (isset($_POST['modify']))
   // If all good, modifies the user (updates the user object and the database).
   else
   {
-    $current_user = $current_user->update_user_info($current_user, $_POST);
+    $current_user->update_user_info($current_user, $_POST);
+    $current_user->set_interests($selected_interests);
     $userMng->update_profile($current_user);
     $success_alert = '<div class="alert alert-success"><span>success:</span> Your profile has been modified</div>';
   }

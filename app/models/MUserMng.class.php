@@ -85,11 +85,14 @@ class MUserMng extends M_Manager
     $i = 0;
     while ($r = $query->fetch())
     {
-      $results[$i]['user'] = new MUser($r);
-      $results[$i]['user']->set_profile_pics();
-      $results[$i]['interests'] = $searchMng->list_interest_names($r['interests']);
-      $results[$i]['distance'] = round($r['distance'], 1);
-      $i++;
+      if ($r['id_user'] != '')
+      {
+        $results[$i]['user'] = new MUser($r);
+        $results[$i]['user']->set_profile_pics();
+        $results[$i]['interests'] = $searchMng->list_interest_names($r['interests']);
+        $results[$i]['distance'] = round($r['distance'], 1);
+        $i++;
+      }
     }
     return $results;
   }
@@ -110,6 +113,16 @@ class MUserMng extends M_Manager
     $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
     $query->execute();
     return $this->_db->lastInsertId();
+  }
+
+  public function update_last_activity()
+  {
+    $sql = 'UPDATE users
+            SET last_activity = now()
+            WHERE id_user = :id_user';
+    $query = $this->_db->prepare($sql);
+    $query->bindValue(':id_user', $_SESSION['id_user'], PDO::PARAM_INT);
+    $query->execute();
   }
 
   /* *********************************************************** *\

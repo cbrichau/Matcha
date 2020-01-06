@@ -1,11 +1,11 @@
 <div class="alert alert-primary text-center my-3">
   You can only chat with users you like, and who like you.
-  <a href="'.Config::ROOT.'index.php?cat=chat&id_user='.$_GET['id_user'].'">Go find users you like</a>.
+  <a href="<?= Config::ROOT.'index.php?cat=search'; ?>">Go find users you like</a>.
 </div>
 
 <div class="row">
   <?php foreach ($results as $values): ?>
-    <div class="col-sm-12 col-md-6 col-lg-3 mb-3">
+    <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-3">
       <div class="card">
         <img src="<?php echo Config::ROOT.$values['user']->get_profile_pics(0); ?>" class="card-img-top">
         <div class="card-body">

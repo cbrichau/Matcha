@@ -7,6 +7,7 @@
   var chat_window = document.getElementById('messages');
   var id_user_1 = document.getElementById('id_user_1').innerText;
   var id_user_2 = document.getElementById('id_user_2').innerText;
+  var id_last_message = 0;
   var message_content = document.getElementById('message_content');
   var send_button = document.getElementById('send_button');
 
@@ -27,13 +28,14 @@
     var message_class = (msg[1].sender == id_user_1) ? 'outgoing' : 'incoming';
     var d = new Date(msg[1].message_date);
     var msg_date = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ' (' + d.getHours() + ':' + d.getMinutes() + ')';
-
     var output_str = '<div><div class="' + message_class + '">';
-    output_str += '<p class="msg">' + msg[1].message + '</p>';
-    output_str += '<p class="time">' + msg_date + '</p>';
-    output_str += '</div></div>';
+        output_str += '<p class="msg">' + msg[1].message + '</p>';
+        output_str += '<p class="time">' + msg_date + '</p>';
+        output_str += '</div></div>';
 
     chat_window.innerHTML += output_str;
+
+    id_last_message = msg[1].id_message;
   }
 
   /* ------------------------------------------------- *\
@@ -61,7 +63,7 @@
           scrolldown();
        }
     };
-    xhr.open('GET', base_url + '?chat=get_messages&id_user_1=' + id_user_1 + '&id_user_2=' + id_user_2, true);
+    xhr.open('GET', base_url + '?chat=get_messages&id_user_1=' + id_user_1 + '&id_user_2=' + id_user_2 + '&id_last_message=' + id_last_message, true);
     xhr.send();
   }
 
@@ -110,5 +112,5 @@
 
   // Calls get_messages() every 1 second.
   get_messages('true');
-  //setInterval(get_messages, 1 * 1000, 'false');
+  setInterval(get_messages, 1 * 1000, 'false');
 })();

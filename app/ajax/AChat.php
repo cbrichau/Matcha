@@ -7,9 +7,10 @@ $userMngActions = new MUserMngActions();
 
 if ($_GET['chat'] == 'get_messages' &&
     isset($_GET['id_user_1']) &&
-    isset($_GET['id_user_2']))
+    isset($_GET['id_user_2']) &&
+    isset($_GET['id_last_message']))
 {
-	$messages = $userMngActions->fetch_messages($_GET['id_user_1'], $_GET['id_user_2']);
+	$messages = $userMngActions->fetch_messages($_GET['id_user_1'], $_GET['id_user_2'], $_GET['id_last_message']);
   echo json_encode($messages);
 }
 

@@ -64,7 +64,6 @@ class MUser extends M_Manager
       if (method_exists($this, $method))
         $user->$method($value);
     }
-    return $user;
   }
 
   public function encrypt_and_set_password($pw)

@@ -237,8 +237,8 @@ class MSearchMng extends M_Manager
                                   COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
                                   SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))))))) AS distance
                  FROM users
-                 JOIN users_interests USING(id_user)
-                 WHERE id_user != :id_user
+                 LEFT JOIN users_interests USING(id_user)
+                 WHERE id_user != :id_current_user
                  AND email_confirmed = "1"
                  AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max
                  AND popularity_score BETWEEN :score_min AND :score_max';
@@ -263,8 +263,8 @@ class MSearchMng extends M_Manager
                          COS(RADIANS(@user_longitude - CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(location, " ", 2), " ", -1) AS DECIMAL(9,5)))) +
                          SIN(RADIANS(@user_latitude)) * SIN(RADIANS(CAST(SUBSTRING_INDEX(location, " ", 1) AS DECIMAL(9,5)))))))) AS distance
                  FROM users
-                 JOIN users_interests USING(id_user)
-                 WHERE id_user != :id_user
+                 LEFT JOIN users_interests USING(id_user)
+                 WHERE id_user != :id_current_user
                  AND email_confirmed = "1"
                  AND TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN :age_min AND :age_max
                  AND popularity_score BETWEEN :score_min AND :score_max';
@@ -275,8 +275,11 @@ class MSearchMng extends M_Manager
       $sql .= ' GROUP BY id_user
                ) AS tmp
                JOIN users USING(id_user)
-               JOIN users_interests USING(id_user)
+               LEFT JOIN users_interests USING(id_user)
                WHERE distance < :max_distance
+               AND id_user NOT IN (SELECT id_user_blocked
+                                   FROM users_blocks
+                                   WHERE id_user_blocker = :id_current_user)
                GROUP BY id_user';
 
       switch ($conditions['search']['sort'])
@@ -313,7 +316,7 @@ class MSearchMng extends M_Manager
 
     $this->_db->exec('SET @user_latitude = '.$user_latitude.'; SET @user_longitude = '.$user_longitude.';');
     $query = $this->_db->prepare($sql);
-    $query->bindValue(':id_user', $conditions['current_user']['id_user'], PDO::PARAM_INT);
+    $query->bindValue(':id_current_user', $conditions['current_user']['id_user'], PDO::PARAM_INT);
     $query->bindValue(':age_min', $conditions['search']['age_min'], PDO::PARAM_INT);
     $query->bindValue(':age_max', $conditions['search']['age_max'], PDO::PARAM_INT);
     $query->bindValue(':max_distance', $conditions['search']['distance'], PDO::PARAM_INT);

@@ -34,8 +34,13 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 
     $user_details['id_user'] = $user->get_id_user();
     $user_details['username'] = $user->get_username();
-    $user_details['status'] = '<p class="status online"><i class="fa fa-check-circle"></i> Online</p>';
-    if (strtotime($user->get_last_activity()) > strtotime('-5 minutes'))
+
+    $last_activity_datetime = explode(' ', $user->get_last_activity());
+    $last_activity_date = $last_activity_datetime[0];
+    $last_activity_time = $last_activity_datetime[1];
+    if (strptime($last_activity_date, $last_activity_time) <= strtotime('-5 minutes'))
+      $user_details['status'] = '<p class="status online"><i class="fa fa-check-circle"></i> Online</p>';
+    else
       $user_details['status'] = '<p class="status offline"><i class="far fa-times-circle"></i> Last seen: '.date("j M Y (G:i)", strtotime($user->get_last_activity())).'</p>';
 
     // Sets the profile's "I am" details, with labels, for output.
@@ -80,7 +85,13 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
 
     $seeking['Interests'] = 'Any';
     if ($user->get_seeked_interests() != 0)
+    {
       $seeking['Interests'] = $searchMng->list_interest_names($user->get_seeked_interests());
+      $interests = $user->get_seeked_interests();
+    }
+    else
+      $interests = 'any';
+
 
     $popularity_range = ($user->get_seeked_popularity_range() != '') ? $user->get_seeked_popularity_range() : 500;
     $min_popularity = $user->get_popularity_score() - $popularity_range;
@@ -97,7 +108,7 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $link .= '&age_min='.$min_age;
       $link .= '&age_max='.$max_age;
       $link .= '&distance='.$max_distance;
-      $link .= '&interests=any';///////////////////////////////////
+      $link .= '&interests='.$interests;
       $link .= '&popularity_range='.$popularity_range;
       $link .= '&sort=potential';
       $link .= '&order=desc';
@@ -112,26 +123,8 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
         USER ACTIONS
     \* ----------------------------------------------- */
 
-    // Defines the display of (un)like/block buttons.
-		$display = [
-      'like' => 'style=""',
-      'unlike' => 'style="display:none;"',
-			'block' => 'style=""',
-			'unblock' => 'style="display:none;"'
-		];
-		if ($userMng->user_1_blocked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
-		{
-			$display['block'] = 'style="display:none;"';
-			$display['unblock'] = 'style="display:block;"';
-		}
-		if ($userMng->user_1_liked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
-		{
-			$display['like'] = 'style="display:none;"';
-			$display['unlike'] = 'style="display:block;"';
-		}
-
-    // Defines the actions: Modify for self, match/(un)like/block/report for others.
-    $match = '';
+    // Defines the actions:
+    // Modify for self, match/(un)like/block/report for others.
     if ($user_details['id_user'] == $_SESSION['id_user'])
     {
       $action = '<div class="dropdown">
@@ -143,21 +136,44 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
                      <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-mate">My ideal mate</a>
                    </div>
                  </div>';
+      $match = '';
     }
     else
     {
-      $action = '<span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'like\');" '.$display['like'].' id="like"><i class="fas fa-heart"></i> Like</a></span>
-                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'dislike\');" '.$display['unlike'].' id="unlike"><i class="fas fa-heart-broken"></i> Unlike</a></span>
-                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'report\');"><i class="fas fa-bell"></i> Report as fake</a></span>
-                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'block\');" '.$display['block'].' id="block"><i class="fas fa-ban"></i> Block</a></span>
-                 <span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \'unblock\');" '.$display['unblock'].' id="unblock"><i class="fas fa-ban"></i> Unblock</a></span>';
+      $action_options = array(
+        'like'    => array('style' => '',              'icon' => 'heart', 'cta' => 'Like'),
+        'unlike'  => array('style' => 'display:none;', 'icon' => 'heart', 'cta' => 'Unlike'),
+        'report'  => array('style' => '',              'icon' => 'bell',  'cta' => 'Report as fake'),
+        'block'   => array('style' => '',              'icon' => 'ban',   'cta' => 'Block'),
+        'unblock' => array('style' => 'display:none;', 'icon' => 'ban',   'cta' => 'Unblock')
+      );
+      if ($userMng->user_1_liked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
+      {
+        $action_options['like']['style'] = 'display:none;';
+        $action_options['unlike']['style'] = '';
+      }
+      if ($userMng->user_1_blocked_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
+      {
+        $action_options['block']['style'] = 'display:none;';
+        $action_options['unblock']['style'] = '';
+      }
+
+      $match = '';
       if ($userMng->user_1_liked_user_2($_GET['id_user'], $_SESSION['id_user']))
-   		{
+      {
         if ($userMng->user_1_liked_user_2($_SESSION['id_user'], $_GET['id_user']))
-       		$match = '<div class="alert alert-primary text-center my-3">It\'s a match! <a href="'.Config::ROOT.'index.php?cat=chat&id_user='.$_GET['id_user'].'">Open chat</a>.</div>';
+          $match = '<div class="alert alert-primary text-center my-3">
+                      It\'s a match!
+                      <a href="'.Config::ROOT.'index.php?cat=chat&id_user_1='.$_SESSION['id_user'].'&id_user_2='.$_GET['id_user'].'">Open chat</a>.
+                    </div>';
         else
-          $match = '<div class="alert alert-primary text-center my-3">This user likes you! Like them back to chat.</div>';
-   		}
+          $match = '<div class="alert alert-primary text-center my-3">
+                      This user likes you! Like them back to chat.
+                    </div>';
+      }
+      $action = '';
+      foreach ($action_options as $key => $val)
+        $action .= '<span onclick="actions_user('.$_SESSION['id_user'].', '.$_GET['id_user'].', \''.$key.'\');" style="'.$val['style'].'" id="'.$key.'"><i class="fas fa-'.$val['icon'].'"></i> '.$val['cta'].'</a></span>';
     }
 
 

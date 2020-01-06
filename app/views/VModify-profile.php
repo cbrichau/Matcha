@@ -5,7 +5,7 @@
   <label class="label">Gender</label>
   <?php echo $error_alert['gender']; ?>
   <select class="form-control" name="gender">
-    <option value="NULL" <?php echo $form_prefill['gender_any']; ?>>Undefined</option>
+    <option value="" <?php echo $form_prefill['gender_any']; ?>>Undefined</option>
     <option value="F" <?php echo $form_prefill['gender_F']; ?>>Female</option>
     <option value="M" <?php echo $form_prefill['gender_M']; ?>>Male</option>
   </select>

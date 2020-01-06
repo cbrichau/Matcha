@@ -2,7 +2,7 @@
 /* ************************************************************** *\
 		MUserMngActions is a continuity of MUserMng
 		and manages all actions users may take towards each other:
-		- Chat: Send/fetch messages
+		- Chat: Fetch/Send messages
 		- Like:
 		- Block
 		- Report:
@@ -14,6 +14,29 @@ class MUserMngActions extends MUserMng
 {
 	/* ----------- Chat actions ----------- */
 
+	// Fetches the chat messages of a given user duo.
+	public function fetch_messages($id_user_1, $id_user_2, $id_last_message)
+	{
+		if ($this->is_valid_int_format($id_user_1) &&
+				$this->is_valid_int_format($id_user_2) &&
+		    $this->is_valid_int_format($id_last_message))
+		{
+			$sql = 'SELECT id_message, sender, receiver, message, message_date
+							FROM chat
+							WHERE ((sender = :id_user_1 AND receiver = :id_user_2) OR
+										 (sender = :id_user_2 AND receiver = :id_user_1)) AND
+										 id_message > :id_last_message
+							ORDER BY message_date ASC';
+		  $query = $this->_db->prepare($sql);
+			$query->bindValue(':id_user_1', $id_user_1, PDO::PARAM_INT);
+			$query->bindValue(':id_user_2', $id_user_2, PDO::PARAM_INT);
+		  $query->bindValue(':id_last_message', $id_last_message, PDO::PARAM_INT);
+			$query->execute();
+			$res = $query->fetchAll();
+			return ($res);
+		}
+	}
+
 	// Adds a chat message to the database and notifies the receiver.
 	public function send_message($sender, $receiver, $message)
 	{
@@ -22,33 +45,14 @@ class MUserMngActions extends MUserMng
 				$this->is_valid_int_format($sender))
 		{
 			$sql = 'INSERT INTO chat (sender, receiver, message, message_date)
-		          VALUES (:sender, :receiver, :message, now())';
-		  $query = $this->_db->prepare($sql);
-		  $query->bindValue(':sender', $sender, PDO::PARAM_STR);
-		  $query->bindValue(':receiver', $receiver, PDO::PARAM_STR);
-		  $query->bindValue(':message', $message, PDO::PARAM_STR);
-		  $query->execute();
-			////////////////////$this->notify('message', $id_user_2);
-		}
-	}
-
-	// Fetches the chat messages of a given user duo.
-	public function fetch_messages($id_user_1, $id_user_2)
-	{
-		if ($this->is_valid_int_format($id_user_1) &&
-		    $this->is_valid_int_format($id_user_2))
-		{
-			$sql = 'SELECT sender, receiver, message, message_date
-							FROM chat
-							WHERE ((sender = :id_user_1 AND receiver = :id_user_2) OR
-										 (sender = :id_user_2 AND receiver = :id_user_1))
-							ORDER BY message_date ASC';
-		  $query = $this->_db->prepare($sql);
-			$query->bindValue(':id_user_1', $id_user_1, PDO::PARAM_INT);
-		  $query->bindValue(':id_user_2', $id_user_2, PDO::PARAM_INT);
+							VALUES (:sender, :receiver, :message, now())';
+			$query = $this->_db->prepare($sql);
+			$query->bindValue(':sender', $sender, PDO::PARAM_STR);
+			$query->bindValue(':receiver', $receiver, PDO::PARAM_STR);
+			$query->bindValue(':message', $message, PDO::PARAM_STR);
 			$query->execute();
-			$res = $query->fetchAll();
-			return ($res);
+
+			$this->notify('message', $receiver);
 		}
 	}
 
@@ -92,7 +96,13 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_likes (id_user_liker, id_user_liked)
 							VALUES (:id_user_1, :id_user_2)';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+			{
+				if ($this->user_1_liked_user_2($id_user_2, $id_user_1) == 0)
+					$this->notify('like', $id_user_2);
+				else
+					$this->notify('match', $id_user_2);
+			}
 		}
 	}
 
@@ -103,7 +113,13 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'DELETE FROM users_likes
 							WHERE id_user_liker = :id_user_1 AND id_user_liked = :id_user_2';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+			{
+				if ($this->user_1_liked_user_2($id_user_2, $id_user_1) == 0)
+					$this->notify('unlike', $id_user_2);
+				else
+					$this->notify('unmatch', $id_user_2);
+			}
 		}
 	}
 
@@ -143,7 +159,8 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_blocks (id_user_blocker, id_user_blocked)
 							VALUES (:id_user_1, :id_user_2)';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->notify('block', $id_user_2);
 		}
 	}
 
@@ -153,7 +170,8 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'DELETE FROM users_blocks
 							WHERE id_user_blocker = :id_user_1 AND id_user_blocked = :id_user_2';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->notify('unblock', $id_user_2);
 		}
 	}
 
@@ -176,7 +194,8 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_reports (id_user_reporter, id_user_reported)
 							VALUES (:id_user_1, :id_user_2)';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->notify('report', $id_user_2);
 		}
 	}
 
@@ -208,8 +227,8 @@ class MUserMngActions extends MUserMng
 			$sql = 'INSERT INTO users_visits (id_user_visitor, id_user_visited, last_visit)
 							VALUES (:id_user_1, :id_user_2, now())
 							ON DUPLICATE KEY UPDATE last_visit = now()';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
-			$this->notify('visited', $id_user_2);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->notify('visit', $id_user_2);
 		}
 	}
 
@@ -220,21 +239,15 @@ class MUserMngActions extends MUserMng
 		$username = $_SESSION['username'];
 		switch ($action)
 		{
-			case 'like':
-				$message = $username.' liked you.';
-				break;
-			case 'visited':
-				$message = $username.' visited you.';
-				break;
-			case 'message':
-				$message = $username.' messaged you.';
-				break;
-			case 'matched':
-				$message = $username.' matched with you.';
-				break;
-			case 'un_matched':
-				$message = $username.' disliked you.';
-				break;
+			case 'message':	$message = $username.' messaged you.'; break;
+			case 'like':		$message = $username.' liked you.'; break;
+			case 'unlike':	$message = $username.' unliked you.'; break;
+			case 'block':		$message = $username.' blocked you.'; break;
+			case 'unblock':	$message = $username.' unblocked you.'; break;
+			case 'report':	$message = $username.' reported you.'; break;
+			case 'visit':		$message = $username.' visited you.'; break;
+			case 'match':		$message = $username.' matched you.'; break;
+			case 'unmatch':	$message = $username.' unmatched you.'; break;
 		}
 		$sql = 'INSERT INTO notifications (id_user, message)
 						VALUES(:id_user, :message)';

@@ -182,6 +182,8 @@ form
   font-size: 0.8em;
   margin-top: 1em;
 }
+#profile .text-right span:hover { cursor: pointer; }
+#profile .text-right > span { margin: 0 5px; }
 
 /* -------- MODIFY-ACCOUNT/PROFILE/PICTURES/MATE -------- */
 

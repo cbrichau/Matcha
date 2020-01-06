@@ -22,8 +22,8 @@ if (isset($_GET['confirm']))
   if ($userMng->is_ok_modification_validation_code($_GET, $current_user))
   {
     $user->set_email_confirmed(TRUE);
-    $userMng->update_user($user);
-    $userMng->login($user->get_username());
+    $userMng->update_account($user);
+    $userMng->login($current_user->get_username());
   }
   else
     $success_alert = '<div class="alert alert-danger"><span>error:</span> Bad validation link.</div>';
@@ -56,7 +56,7 @@ else if (isset($_POST['modify']))
   // If all good, modifies the user (updates the user object and the database).
   else
   {
-    $current_user = $current_user->update_user_info($current_user, $_POST);
+    $current_user->update_user_info($current_user, $_POST);
     $current_user->encrypt_and_set_password($_POST['pass']);
     $userMng->update_account($current_user);
     ////////////////////// if email has changed, resend validation link and logout

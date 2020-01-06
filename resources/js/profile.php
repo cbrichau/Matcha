@@ -15,18 +15,21 @@ function actions_user(id_user_1, id_user_2, action) {
 			switch (action){
 				case 'like':
 					document.getElementById("like").style.display = "none";
-					document.getElementById("unlike").style.display = "block";
+					document.getElementById("unlike").style.display = "";
+					break;
+				case 'unlike':
+					document.getElementById("like").style.display = "";
+					document.getElementById("unlike").style.display = "none";
+					break;
+				case 'report':
+					document.getElementById("report").style.display = "none";
 					break;
 				case 'block':
 					document.getElementById("block").style.display = "none";
-					document.getElementById("unblock").style.display = "block";
-					break;
-				case 'dislike':
-					document.getElementById("like").style.display = "block";
-					document.getElementById("unlike").style.display = "none";
+					document.getElementById("unblock").style.display = "";
 					break;
 				case 'unblock':
-					document.getElementById("block").style.display = "block";
+					document.getElementById("block").style.display = "";
 					document.getElementById("unblock").style.display = "none";
 					break;
 			}
@@ -37,7 +40,8 @@ function actions_user(id_user_1, id_user_2, action) {
 	xhr.send("id_user_1=" + id_user_1 + "&&id_user_2=" + id_user_2 + "&&action=" + action);
  }
 
- function actual_picture_into_first(action) {
+ function actual_picture_into_first(action)
+ {
 	var xhr = getXhr();
 	var x = document.getElementsByClassName("active");
 	var srcbis = x[1].children[0].src;
