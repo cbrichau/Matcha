@@ -102,6 +102,7 @@ class MUserMngActions extends MUserMng
 					$this->notify('like', $id_user_2);
 				else
 					$this->notify('match', $id_user_2);
+				$this->update_score('like', $id_user_2);
 			}
 		}
 	}
@@ -114,7 +115,10 @@ class MUserMngActions extends MUserMng
 			$sql = 'DELETE FROM users_likes
 							WHERE id_user_liker = :id_user_1 AND id_user_liked = :id_user_2';
 			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+			{
 				$this->notify('unlike', $id_user_2);
+				$this->update_score('unlike', $id_user_2);
+			}
 		}
 	}
 
@@ -154,7 +158,8 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_blocks (id_user_blocker, id_user_blocked)
 							VALUES (:id_user_1, :id_user_2)';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->update_score('block', $id_user_2);
 		}
 	}
 
@@ -164,7 +169,8 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'DELETE FROM users_blocks
 							WHERE id_user_blocker = :id_user_1 AND id_user_blocked = :id_user_2';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->update_score('unblock', $id_user_2);
 		}
 	}
 
@@ -187,7 +193,8 @@ class MUserMngActions extends MUserMng
 		{
 			$sql = 'INSERT INTO users_reports (id_user_reporter, id_user_reported)
 							VALUES (:id_user_1, :id_user_2)';
-			$this->execute_action($id_user_1, $id_user_2, $sql);
+			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+				$this->update_score('report', $id_user_2);
 		}
 	}
 
@@ -220,7 +227,10 @@ class MUserMngActions extends MUserMng
 							VALUES (:id_user_1, :id_user_2, now())
 							ON DUPLICATE KEY UPDATE last_visit = now()';
 			if ($this->execute_action($id_user_1, $id_user_2, $sql))
+			{
 				$this->notify('visit', $id_user_2);
+				$this->update_score('visit', $id_user_2);
+			}
 		}
 	}
 
@@ -237,6 +247,7 @@ class MUserMngActions extends MUserMng
 			case 'visit':		$message = $username.' visited you.'; break;
 			case 'match':		$message = $username.' matched you.'; break;
 		}
+
 		$sql = 'INSERT INTO notifications (id_user, message)
 						VALUES(:id_user, :message)';
 		$query = $this->_db->prepare($sql);
@@ -244,6 +255,30 @@ class MUserMngActions extends MUserMng
 		$query->bindValue(':message', $message, PDO::PARAM_STR);
 		$query->execute();
 	}
-}
 
- ?>
+	/* ----------- Update popularity score based on action ----------- */
+
+	public function update_score($action, $id_user)
+	{
+		switch ($action)
+		{
+			case 'like':								 $score_change = 10; break;
+			case 'unlike':							 $score_change = -10; break;
+			case 'block':	case 'report': $score_change = -50; break;
+			case 'unblock':							 $score_change = 50; break;
+			case 'visit':								 $score_change = 1; break;
+		}
+
+		$user = $this->select_user_by('id_user', $id_user);
+		$user->set_popularity_score($user->get_popularity_score() + $score_change);
+		
+		$sql = 'UPDATE users
+						SET popularity_score = :popularity_score
+						WHERE id_user = :id_user';
+		$query = $this->_db->prepare($sql);
+		$query->bindValue(':popularity_score', $user->get_popularity_score(), PDO::PARAM_INT);
+		$query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
+		$query->execute();
+	}
+}
+?>

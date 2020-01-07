@@ -11,7 +11,6 @@
   </select>
 
   <div class="form-row">
-    <?php echo $error_alert['seeked_age']; ?>
     <div class="form-group col-6">
       <label class="label">Age min</label>
       <input type="number" min="0" max="35" name="seeked_age_min" value="<?php echo $form_prefill['seeked_age_min']; ?>" class="form-control">
@@ -20,6 +19,7 @@
       <label class="label">Age max</label>
       <input type="number" min="0" max="35" name="seeked_age_max" value="<?php echo $form_prefill['seeked_age_max']; ?>" class="form-control">
     </div>
+    <?php echo $error_alert['seeked_age']; ?>
   </div>
 
   <label class="label">Distance</label>

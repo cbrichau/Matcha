@@ -39,12 +39,14 @@ class MUserMngModifications extends MUserMng
     $sql = 'UPDATE users
             SET date_of_birth = :date_of_birth,
                 location = :location,
+                location_on = :location_on,
                 gender = :gender,
                 bio = :bio
             WHERE id_user = :id_user';
     $query = $this->_db->prepare($sql);
     $query->bindValue(':date_of_birth', $user->get_date_of_birth(), PDO::PARAM_STR);
     $query->bindValue(':location', $user->get_location(), PDO::PARAM_STR);
+    $query->bindValue(':location_on', $user->get_location_on(), PDO::PARAM_INT);
     $query->bindValue(':gender', $user->get_gender(), PDO::PARAM_STR);
     $query->bindValue(':bio', $user->get_bio(), PDO::PARAM_STR);
     $query->bindValue(':id_user', $user->get_id_user(), PDO::PARAM_INT);
@@ -58,11 +60,12 @@ class MUserMngModifications extends MUserMng
     $query->execute();
 
     // Insert the new interests.
-    $interests = explode('-', $user->get_interests());
-    if (!empty($interests))
+    if ($user->get_interests())
     {
+      $interests = explode('-', $user->get_interests());
       foreach ($interests as $id)
         $values[] = '('.$user->get_id_user().', '.$id.')';
+
       $values = implode(', ', $values);
       $sql = 'INSERT INTO users_interests (id_user, id_interest)
               VALUES '.$values;
@@ -155,7 +158,8 @@ class MUserMngModifications extends MUserMng
   public function check_modify_location(array $post)
   {
     list($latitude, $longitude) = explode(' ', $post['location']);
-    if (!$this->is_valid_float_format($latitude) ||
+    if (!in_array($post['location_on'], array('0', '1')) ||
+        !$this->is_valid_float_format($latitude) ||
         !$this->is_valid_float_format($longitude))
         return 'Invalid location.';
     return FALSE;
@@ -193,15 +197,17 @@ class MUserMngModifications extends MUserMng
 
   public function check_modify_seeked_age(array $post)
   {
-    if ((!empty($post['seeked_age_min']) &&
-         !$this->is_valid_int_format($post['seeked_age_min'])) ||
-        (!empty($post['seeked_age_max']) &&
-         !$this->is_valid_int_format($post['seeked_age_max'])))
+    if (($post['seeked_age_min'] != '' && !$this->is_valid_int_format($post['seeked_age_min'])) ||
+        ($post['seeked_age_max'] != '' && !$this->is_valid_int_format($post['seeked_age_max'])))
       return 'Invalid age values.';
 
-    if (!empty($post['seeked_age_min']) &&
-        !empty($post['seeked_age_max']) &&
+    if ($post['seeked_age_min'] != '' &&
+        $post['seeked_age_max'] != '' &&
         $post['seeked_age_min'] > $post['seeked_age_max'])
+      return 'Age min must be lower than age max';
+
+    if ($post['seeked_age_min'] != '' &&
+        $post['seeked_age_max'] == '')
       return 'Age min must be lower than age max';
 
     return FALSE;

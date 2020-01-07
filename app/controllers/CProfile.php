@@ -35,10 +35,9 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     $user_details['id_user'] = $user->get_id_user();
     $user_details['username'] = $user->get_username();
 
-    $last_activity_datetime = explode(' ', $user->get_last_activity());
-    $last_activity_date = $last_activity_datetime[0];
-    $last_activity_time = $last_activity_datetime[1];
-    if (strptime($last_activity_date, $last_activity_time) <= strtotime('-5 minutes'))
+    $last_activity_delay_localised = (time() + 1 * 3600) - (strtotime($user->get_last_activity()) - 8 * 3600);
+    $comparison_delay = time() - strtotime('-5 minutes');
+    if ($last_activity_delay_localised <= $comparison_delay)
       $user_details['status'] = '<p class="status online"><i class="fa fa-check-circle"></i> Online</p>';
     else
       $user_details['status'] = '<p class="status offline"><i class="far fa-times-circle"></i> Last seen: '.date("j M Y (G:i)", strtotime($user->get_last_activity())).'</p>';
@@ -54,8 +53,12 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
       $s = ($user->get_age() > 1) ? 's' : '';
       $i_am['Age'] = $user->get_age().' year'.$s.' old';
     }
-    if ($user->get_location() != '')
-      $i_am['Location'] = $user->get_location();
+
+    if ($user->get_location_on() === 1)
+    {
+      $loc = str_replace(' ', ',', $user->get_location());
+      $i_am['Location'] = '<a href="https://www.google.be/maps/place/'.$loc.'" target="_blank">View on Maps</a>';
+    }
 
     if ($user->get_bio() != '')
       $i_am['Bio'] = $user->get_bio();
@@ -91,7 +94,6 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
     }
     else
       $interests = 'any';
-
 
     $popularity_range = ($user->get_seeked_popularity_range() != '') ? $user->get_seeked_popularity_range() : 500;
     $min_popularity = $user->get_popularity_score() - $popularity_range;
