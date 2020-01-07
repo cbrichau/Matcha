@@ -29,7 +29,7 @@
     <h6 class="card-header">Distance</h6>
     <div class="card-body">
       <output id="ageOutputId">Max <?php echo $form_prefill['distance']; ?> km</output>
-      <input type="range" id="ageInputId" class="form-control-range" min="1" max="15" oninput="ageOutputId.value = 'Max ' + ageInputId.value + ' km'" name="distance" value="<?php echo $form_prefill['distance']; ?>">
+      <input type="range" id="ageInputId" class="form-control-range" min="1" max="100" oninput="ageOutputId.value = 'Max ' + ageInputId.value + ' km'" name="distance" value="<?php echo $form_prefill['distance']; ?>">
     </div>
 
     <h6 class="card-header">Interests</h6>

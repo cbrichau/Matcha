@@ -32,8 +32,8 @@ class MEmailMng extends M_Manager
 	{
 		$to = $user->get_email();
 		$code = $user->get_id_user().'-'.$user->get_email_confirmed();
-		$subject = 'Validate your registration';
-		$message = 'Please click on the link to validate your registration: '.Config::ROOT.'index.php?cat=register&confirm='.$code;
+		$subject = 'Validate your email';
+		$message = 'Please click on the link to validate your email: '.Config::ROOT.'index.php?cat=register&confirm='.$code;
 		$this->send_email($to, $subject, $message);
 	}
 

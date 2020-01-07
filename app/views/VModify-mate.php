@@ -51,7 +51,6 @@
 
   <button type="submit" name="modify" class="btn btn-primary btn-block my-3"><?php echo $output->get_head_title(); ?></button>
 
-  <p>Modify my <a href="<?php echo Config::ROOT.'index.php?cat=modify-account'; ?>">account</a>,
-    <a href="<?php echo Config::ROOT.'index.php?cat=modify-profile'; ?>">profile</a>, or
-    <a href="<?php echo Config::ROOT.'index.php?cat=modify-pictures'; ?>">pictures</a>.</p>
+  <p>Modify my <a href="<?php echo Config::ROOT.'index.php?cat=modify-account'; ?>">account</a> or
+    <a href="<?php echo Config::ROOT.'index.php?cat=modify-profile'; ?>">profile</a>.</p>
 </form>

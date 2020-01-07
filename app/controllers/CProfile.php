@@ -134,7 +134,6 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                      <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-account">My account</a>
                      <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-profile">My profile</a>
-                     <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-pictures">My pictures</a>
                      <a class="dropdown-item" href="'.Config::ROOT.'index.php?cat=modify-mate">My ideal mate</a>
                    </div>
                  </div>';
