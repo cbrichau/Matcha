@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../app/core/Debugging.php'); // (De)activate debugging by (de)commenting the line.
+//require_once('../app/core/Debugging.php'); // (De)activate debugging by (de)commenting the line.
 require_once('database.php');
 
 /* ************************************************** *\

@@ -115,7 +115,6 @@ class MUserMngActions extends MUserMng
 							WHERE id_user_liker = :id_user_1 AND id_user_liked = :id_user_2';
 			if ($this->execute_action($id_user_1, $id_user_2, $sql))
 				$this->notify('unlike', $id_user_2);
-			}
 		}
 	}
 
