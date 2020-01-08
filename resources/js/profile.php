@@ -45,8 +45,10 @@ function actions_user(id_user_1, id_user_2, action) {
  function actual_picture_into_first(action)
  {
 	var xhr = getXhr();
-	var x = document.getElementsByClassName("active");
-	var srcbis = x[1].children[0].src;
+	var x = document.getElementsByClassName("carousel-item active");
+	//console.log(x);
+	var srcbis = x[0].children[0].src;
+	//console.log(srcbis);
 	xhr.onreadystatechange = function() {
 		if (this.readyState == 4) {
 			document.getElementById("response").innerHTML = this.responseText;
