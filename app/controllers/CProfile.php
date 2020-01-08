@@ -249,6 +249,13 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
   		}
   	}
 
+
+	//Set variable $NotDefault in case of no profile pics
+	$user_session = $userMng->select_user_by('id_user', $_SESSION['id_user']);
+	$user_session->set_profile_pics();
+	$NotDefault = $user_session->get_profile_pics('0');
+
+
   }
 }
 

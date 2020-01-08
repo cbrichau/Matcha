@@ -53,13 +53,15 @@
     {
       if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText)
       {
+		if (chat_window.scrollHeight - chat_window.scrollTop === chat_window.clientHeight)
+			bool = 'true';
         var messages_array = JSON.parse(xhr.responseText);
         if (messages_array)
         {
           messages_array = Object.entries(messages_array);
           messages_array.forEach(show_message);
         }
-        if (chat_window.scrollHeight - chat_window.scrollTop === chat_window.clientHeight || bool == 'true')
+        if (bool == 'true')
           scrolldown();
        }
     };
@@ -89,16 +91,15 @@
     false
   );
 
-  /* ---------------------------------------------- *\
-      CLEE
-      ...
-  \* ---------------------------------------------- */
-
-  function clee(evt, id_user_1, id_user_2)
-  {
-    if (evt.keyCode == '13')
-      send_message(id_user_1, id_user_2);
-  }
+  message_content.addEventListener(
+    'keyup',
+    function(event) {
+		if (event.keyCode === 13) {
+			send_message(id_user_1, id_user_2);
+			}
+		 },
+    false
+);
 
   /* ---------------------------------------------- *\
       SCROLLDOWN

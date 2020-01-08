@@ -34,7 +34,7 @@
   <?php } ?>
 </div>
 
-<?php if ($user_details['id_user'] == $_SESSION['id_user']){ ?>
+<?php if ($user->get_id_user() == $_SESSION['id_user']){ ?>
   <form action="<?= Config::ROOT; ?>index.php?cat=profile&id_user=<?=$_GET['id_user']?>" method="post" enctype="multipart/form-data">
     <input type="file" name="fileToUpload" accept="image/jpg">
     <input type="submit" value="Upload" name="submit">

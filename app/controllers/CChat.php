@@ -10,8 +10,9 @@ $user_2 = $userMngActions->select_user_by('id_user', $_GET['id_user_2']);
 
 if (is_null($user_1) ||
 		is_null($user_2) ||
-		!($_SESSION['id_user'] == $user_1->get_id_user() ||
-			$_SESSION['id_user'] == $user_2->get_id_user()))
+		!($_SESSION['id_user'] == $user_1->get_id_user() &&
+			($userMngActions->user_1_liked_user_2($user_1->get_id_user(),$user_2->get_id_user()) &&
+				$userMngActions->user_1_liked_user_2($user_2->get_id_user(),$user_1->get_id_user()))))
 {
   header('Location: '.Config::ROOT.'');
 }

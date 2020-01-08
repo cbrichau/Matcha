@@ -39,7 +39,7 @@
   		<?php } ?>
   	</div>
 
-    <?php if ($user_details['id_user'] == $_SESSION['id_user']){ ?>
+    <?php if ($user_details['id_user'] == $_SESSION['id_user'] && count($profile_pics) != '5'){ ?>
     	<form action="<?= Config::ROOT; ?>index.php?cat=profile&id_user=<?=$_GET['id_user']?>" method="post" enctype="multipart/form-data">
     		<input type="file" name="fileToUpload" accept="image/jpg">
     		<input type="submit" value="Upload" name="submit">
@@ -53,7 +53,9 @@
   </div>
 
   <div class="col-md-7 bg-white py-4 px-5">
-    <div class="text-right"><?php echo $action; ?></div>
+    <div class="text-right"><?php if($NotDefault != "resources/images/profile_pictures/0default.jpg" && $profile_pics[0] != "resources/images/profile_pictures/0default.jpg") {
+		 echo $action;
+	 } ?></div>
     <?php echo $match; ?>
 
     <h2 class="my-3">I am:</h2>

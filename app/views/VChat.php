@@ -2,8 +2,8 @@
 <span style="display:none;" id="id_user_1"><?= $user_1->get_id_user(); ?></span>
 <span style="display:none;" id="id_user_2"><?= $user_2->get_id_user(); ?></span>
 
-<div class="bg-white my-3 mx-auto" id="chat_window">
-  <div id="messages">
+<div class="bg-white my-3 mx-auto" id="chat_window" >
+  <div id="messages" class"slimScrollDiv" style="overflow: scroll;position: relative; width: auto; height: 600px;">
   </div>
 
   <div id="send_box">
