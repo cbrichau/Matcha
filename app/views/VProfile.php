@@ -56,7 +56,7 @@
   </div>
 
   <div class="col-md-7 bg-white py-4 px-5">
-    <div class="text-right"><?php if($NotDefault != "resources/images/profile_pictures/0default.jpg" && $profile_pics[0] != "resources/images/profile_pictures/0default.jpg") {
+    <div class="text-right"><?php if(($NotDefault != "resources/images/profile_pictures/0default.jpg" && $profile_pics[0] != "resources/images/profile_pictures/0default.jpg") || $user_details['id_user'] == $_SESSION['id_user']) {
 		 echo $action;
 	 } ?></div>
     <?php echo $match; ?>

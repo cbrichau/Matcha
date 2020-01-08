@@ -39,6 +39,7 @@ if (isset($_POST['src'],$_POST['action']))
 		rename($target_dir . $matches['1'] . '-1.jpg', $target_dir . $matches['1'] . '-1.jpg.temp');
 		rename($target_dir . $matches['0'], $target_dir . $matches['1'] . '-1.jpg');
 		rename($target_dir . $matches['1'] . '-1.jpg.temp', $target_dir . $matches['0']);
+		header('Location: '.Config::ROOT.'');
 	}
 	if($_POST['action'] == 'delete_pic')
 	{
