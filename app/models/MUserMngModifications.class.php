@@ -162,7 +162,7 @@ class MUserMngModifications extends MUserMng
         empty($post['longitude']) ||
         !$this->is_valid_float_format($post['latitude']) ||
         !$this->is_valid_float_format($post['longitude']))
-      return 'Invalid location.';
+      return 'Invalid location. Please allow geolocation in your browser.';
 
     return FALSE;
   }
