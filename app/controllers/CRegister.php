@@ -4,7 +4,7 @@
     Shows a form to a non-logged user to create an account.
 \* *********************************************************** */
 
-$userMng = new MUserMng();
+$userMng = new MUserMngModifications();
 
 // Initialises the form's alerts and prefill values to null.
 $success_alert = '';
@@ -21,7 +21,7 @@ if (isset($_GET['confirm']))
   if (!is_null($user))
   {
     $user->set_email_confirmed(TRUE);
-    $userMng->update_user($user);
+    $userMng->update_account($user);
     $userMng->login($user->get_username());
     header('Location: '.Config::ROOT.'');
   }

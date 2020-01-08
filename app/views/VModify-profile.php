@@ -16,7 +16,19 @@
 
   <label class="label">Location</label>
   <?php echo $error_alert['location']; ?>
-  <input type="text" name="location" value="<?php echo $form_prefill['location']; ?>" class="form-control">
+  <select class="form-control" name="location_on">
+    <option value="1" <?php echo $form_prefill['location_yes']; ?>>On</option>
+    <option value="0" <?php echo $form_prefill['location_no']; ?>>Off</option>
+  </select>
+
+  <?php
+  $loc = str_replace(' ', ',', $form_prefill['location']);
+  if ($form_prefill['location_on'] == '1')
+    echo '<input type="text" name="location" value="'.$form_prefill['location'].'" class="form-control">
+          <a href="https://www.google.be/maps/place/'.$loc.'" target="_blank">View on Maps</a>';
+  else
+    echo '<input type="hidden" name="location" value="'.$form_prefill['location'].'" class="form-control">';
+  ?>
 
   <label class="label">Bio</label>
   <?php echo $error_alert['bio']; ?>
@@ -37,7 +49,6 @@
 
   <button type="submit" name="modify" class="btn btn-primary btn-block my-3"><?php echo $output->get_head_title(); ?></button>
 
-  <p>Modify my <a href="<?php echo Config::ROOT.'index.php?cat=modify-account'; ?>">account</a>,
-    <a href="<?php echo Config::ROOT.'index.php?cat=modify-pictures'; ?>">pictures</a>, or
+  <p>Modify my <a href="<?php echo Config::ROOT.'index.php?cat=modify-account'; ?>">account</a> or
     <a href="<?php echo Config::ROOT.'index.php?cat=modify-mate'; ?>">ideal mate</a>.</p>
 </form>

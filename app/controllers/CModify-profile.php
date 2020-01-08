@@ -17,6 +17,7 @@ $list_interests = $searchMng->list_interest_options();
 $success_alert = '';
 $error_alert = array_fill_keys(array('gender', 'date_of_birth', 'location', 'bio', 'interests'), '');
 $form_prefill = $userMng->sanitize_for_output($current_user->get_all_properties());
+
 foreach ($list_genders as $key => $v)
 {
   $form_prefill['gender_'.$key] = '';
@@ -28,6 +29,16 @@ foreach ($list_interests as $key => $v)
   $form_prefill['interest_'.$key] = '';
   if (in_array($key, $current_user_interests))
     $form_prefill['interest_'.$key] = 'checked';
+}
+if ($form_prefill['location_on'] == 1)
+{
+  $form_prefill['location_yes'] = 'selected';
+  $form_prefill['location_no'] = '';
+}
+else
+{
+  $form_prefill['location_yes'] = '';
+  $form_prefill['location_no'] = 'selected';
 }
 
 // Processes the modification form.
@@ -53,6 +64,17 @@ if (isset($_POST['modify']))
   }
   $selected_interests = implode('-', $selected_interests);
 
+  if ($form_prefill['location_on'] == '1')
+  {
+    $form_prefill['location_yes'] = 'selected';
+    $form_prefill['location_no'] = '';
+  }
+  else
+  {
+    $form_prefill['location_yes'] = '';
+    $form_prefill['location_no'] = 'selected';
+  }
+
   // Checks the input is valid, or returns an error message.
   $error_msg['gender'] = $userMng->check_modify_gender($_POST);
   $error_msg['date_of_birth'] = $userMng->check_modify_date_of_birth($_POST);
@@ -75,6 +97,7 @@ if (isset($_POST['modify']))
   {
     $current_user->update_user_info($current_user, $_POST);
     $current_user->set_interests($selected_interests);
+    $current_user->set_location_on($_POST['location_on']);
     $userMng->update_profile($current_user);
     $success_alert = '<div class="alert alert-success"><span>success:</span> Your profile has been modified</div>';
   }

@@ -11,7 +11,6 @@
   </select>
 
   <div class="form-row">
-    <?php echo $error_alert['seeked_age']; ?>
     <div class="form-group col-6">
       <label class="label">Age min</label>
       <input type="number" min="0" max="35" name="seeked_age_min" value="<?php echo $form_prefill['seeked_age_min']; ?>" class="form-control">
@@ -20,6 +19,7 @@
       <label class="label">Age max</label>
       <input type="number" min="0" max="35" name="seeked_age_max" value="<?php echo $form_prefill['seeked_age_max']; ?>" class="form-control">
     </div>
+    <?php echo $error_alert['seeked_age']; ?>
   </div>
 
   <label class="label">Distance</label>
@@ -51,7 +51,6 @@
 
   <button type="submit" name="modify" class="btn btn-primary btn-block my-3"><?php echo $output->get_head_title(); ?></button>
 
-  <p>Modify my <a href="<?php echo Config::ROOT.'index.php?cat=modify-account'; ?>">account</a>,
-    <a href="<?php echo Config::ROOT.'index.php?cat=modify-profile'; ?>">profile</a>, or
-    <a href="<?php echo Config::ROOT.'index.php?cat=modify-pictures'; ?>">pictures</a>.</p>
+  <p>Modify my <a href="<?php echo Config::ROOT.'index.php?cat=modify-account'; ?>">account</a> or
+    <a href="<?php echo Config::ROOT.'index.php?cat=modify-profile'; ?>">profile</a>.</p>
 </form>

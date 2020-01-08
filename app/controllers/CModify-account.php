@@ -13,24 +13,8 @@ $success_alert = '';
 $error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password'), '');
 $form_prefill = $userMng->sanitize_for_output($current_user->get_all_properties());
 
-// Processes the modification confirmation
-// (when the user clicks on the email validation link).
-if (isset($_GET['confirm']))
-{
-  // Checks the validation code from the URL is valid.
-  // If so, updates the current user (object + database entry + SESSION).
-  if ($userMng->is_ok_modification_validation_code($_GET, $current_user))
-  {
-    $user->set_email_confirmed(TRUE);
-    $userMng->update_account($user);
-    $userMng->login($current_user->get_username());
-  }
-  else
-    $success_alert = '<div class="alert alert-danger"><span>error:</span> Bad validation link.</div>';
-}
-
 // Processes the modification form.
-else if (isset($_POST['modify']))
+if (isset($_POST['modify']))
 {
   // Overrides the prefill values with the posted ones.
   $form_prefill = array_replace($form_prefill, $_POST);
@@ -56,14 +40,27 @@ else if (isset($_POST['modify']))
   // If all good, modifies the user (updates the user object and the database).
   else
   {
+    // if email has changed, resend validation link and logout.
+    // else relog to update session.
+    $revalidate_email = ($_POST['email'] != $current_user->get_email()) ? TRUE : FALSE;
+
     $current_user->update_user_info($current_user, $_POST);
     $current_user->encrypt_and_set_password($_POST['pass']);
-    $userMng->update_account($current_user);
-    ////////////////////// if email has changed, resend validation link and logout
-    // see register
-    // else: relog to update session
-    $userMng->login($current_user->get_username());
-    $success_alert = '<div class="alert alert-success"><span>success:</span> Your account has been modified</div>';
+    if ($revalidate_email)
+    {
+      $current_user->set_email_confirmed(md5(rand(0,1000)));
+      $userMng->update_account($current_user);
+      $emailMng = new MEmailMng();
+      $emailMng->send_registration_confirmation($current_user);
+      $userMng->logout();
+      $success_alert = '<div class="alert alert-success"><span>success:</span> An email has been sent to you with a validation link.</div>';
+    }
+    else
+    {
+      $userMng->update_account($current_user);
+      $userMng->login($current_user->get_username());
+      $success_alert = '<div class="alert alert-success"><span>success:</span> Your account has been modified</div>';
+    }
   }
 }
 

@@ -20,6 +20,7 @@ class MUser extends M_Manager
   private $_password;
   private $_last_activity;
   private $_location; // "Latitude Longitude"
+  private $_location_on;
   private $_gender;
   private $_popularity_score;
   private $_bio;
@@ -97,6 +98,7 @@ class MUser extends M_Manager
   public function get_password()         { return $this->_password; }
   public function get_last_activity()    { return $this->_last_activity; }
   public function get_location()         { return $this->_location; }
+  public function get_location_on()      { return $this->_location_on; }
   public function get_gender()           { return $this->_gender; }
   public function get_popularity_score() { return $this->_popularity_score; }
   public function get_bio()              { return $this->_bio; }
@@ -158,14 +160,21 @@ class MUser extends M_Manager
 
   public function set_date_of_birth($arg)
   {
-        //if is valid date format
-    $this->_date_of_birth = $arg;
-    $this->set_age();
+    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $arg, $matches))
+    {
+      $year = $matches[1];
+      $month = $matches[2];
+      $day = $matches[3];
+      if (checkdate($month, $day, $year))
+      {
+        $this->_date_of_birth = $arg;
+        $this->set_age();
+      }
+    }
   }
 
   public function set_age()
   {
-        // if _dob is valid date
     $now = time();
     $dob = strtotime($this->_date_of_birth);
     $this->_age = floor(($now - $dob) / 31556926);
@@ -188,6 +197,13 @@ class MUser extends M_Manager
     if ($this->is_valid_float_format($latitude) &&
         $this->is_valid_float_format($longitude))
     $this->_location = $latitude.' '.$longitude;
+  }
+
+  public function set_location_on($arg)
+  {
+    $this->_location_on = 0;
+    if ($arg == '1')
+      $this->_location_on = 1;
   }
 
   public function set_gender($arg)

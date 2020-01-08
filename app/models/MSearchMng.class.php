@@ -92,7 +92,7 @@ class MSearchMng extends M_Manager
     if (isset($get['distance']) &&
         $this->is_valid_int_format($get['distance']) &&
         $get['distance'] >= 1 &&
-        $get['distance'] <= 15)
+        $get['distance'] <= 100)
       $prefill['distance'] = $get['distance'];
 
     return $prefill;
@@ -119,7 +119,7 @@ class MSearchMng extends M_Manager
     if (isset($get['popularity_range']) &&
         $this->is_valid_int_format($get['popularity_range']) &&
         $get['popularity_range'] >= 1 &&
-        $get['popularity_range'] <= 50)
+        $get['popularity_range'] <= 100)
       $prefill['popularity_range'] = $get['popularity_range'];
 
     return $prefill;

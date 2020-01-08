@@ -30,11 +30,11 @@ foreach ($list_order_options as $key => $v)
 
 $form_prefill = array_merge($form_prefill, array(
   'gender_any' => 'checked',
-  'age_min' => 1,
-  'age_max' => 25,
-  'distance' => 8,
+  'age_min' => 0,
+  'age_max' => 35,
+  'distance' => 100,
   'interest_any' => 'checked',
-  'popularity_range' => 50,
+  'popularity_range' => 100,
   'sort' => 'potential',
   'sort_potential' => 'selected',
   'order' => 'desc',
