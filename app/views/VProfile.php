@@ -17,12 +17,16 @@
   		<div class="carousel-inner" data-interval="false">
   			<div class="carousel-item active">
   				<img src="<?= $user->get_profile_pics(0); ?>" class="d-block w-100 img-fluid" alt="...">
+				<?php if ($_SESSION['id_user'] == $_GET['id_user']){ ?>
   				<button style="position:absolute; top:30px;right:15px; color:white; z-index:50;" onclick="actual_picture_into_first('delete_pic');" class="btn ">X</button>
+				<?php }  ?>
   			</div>
   			<?php foreach ($profile_pics as $key => $value): if($key != 0){?>
   				<div class="carousel-item">
   					<img src="<?= $value; ?>" class="d-block w-100 img-fluid" alt="...">
+					<?php if ($_SESSION['id_user'] == $_GET['id_user']){ ?>
   					<button style="position:absolute; top:30px;right:15px; color:white; z-index:50;" onclick="actual_picture_into_first('delete_pic');" class="btn ">X</button>
+					<?php }  ?>
   				</div>
   			<?php } endforeach; ?>
 
@@ -44,7 +48,6 @@
     		<input type="file" name="fileToUpload" accept="image/jpg">
     		<input type="submit" value="Upload" name="submit">
     	</form>
-
       <button onclick="actual_picture_into_first('change_pic');" class="btn btn-primary">Change has profile pic</button>
       <?php //echo $error; echo $target_file; ?>
     <?php } ?>

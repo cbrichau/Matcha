@@ -59,7 +59,7 @@ class Router extends Config
     $common_area = array('home');
     $visitors_only = array('register', 'login', 'reset');
     $members_only = array('search', 'chatroom', 'chat',
-                          'profile', 'logout', 'modify-account', 'modify-profile', 'modify-mate');
+                          'profile', 'logout', 'modify-account', 'modify-profile', 'modify-mate', 'actions');
 
     if (!in_array($page, $common_area) &&
         !(in_array($page, $visitors_only) && !$_SESSION['is_logged']) &&

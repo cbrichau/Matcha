@@ -82,7 +82,8 @@
     xhr.open("POST", base_url + "?chat=send_message", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("sender=" + sender + "&&receiver=" + receiver + "&&message=" + message);
- 	  get_messages(id_user_1, id_user_2, 'true');
+	scrolldown()
+ 	get_messages(id_user_1, id_user_2, 'true');
   }
 
   send_button.addEventListener(
