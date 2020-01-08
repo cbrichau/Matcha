@@ -197,6 +197,17 @@ class MUserMng extends M_Manager
 
   /* ------------------------- REGISTRATION ------------------------- */
 
+  public function check_registration_location(array $post)
+  {
+    if (empty($post['latitude']) ||
+        empty($post['longitude']) ||
+        !$this->is_valid_float_format($post['latitude']) ||
+        !$this->is_valid_float_format($post['longitude']))
+      return 'An error has occured. Please re-submit the form.';
+
+    return FALSE;
+  }
+
   public function check_registration_email(array $post)
   {
     if (empty($post['email']))

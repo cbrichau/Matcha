@@ -157,11 +157,13 @@ class MUserMngModifications extends MUserMng
 
   public function check_modify_location(array $post)
   {
-    list($latitude, $longitude) = explode(' ', $post['location']);
     if (!in_array($post['location_on'], array('0', '1')) ||
-        !$this->is_valid_float_format($latitude) ||
-        !$this->is_valid_float_format($longitude))
-        return 'Invalid location.';
+        empty($post['latitude']) ||
+        empty($post['longitude']) ||
+        !$this->is_valid_float_format($post['latitude']) ||
+        !$this->is_valid_float_format($post['longitude']))
+      return 'Invalid location.';
+
     return FALSE;
   }
 
@@ -179,12 +181,6 @@ class MUserMngModifications extends MUserMng
       return 'Invalid interests';
     return FALSE;
   }
-
-  /* ------------------------- PICTURES ------------------------- */
-
-
-
-
 
   /* ------------------------- MATE ------------------------- */
 

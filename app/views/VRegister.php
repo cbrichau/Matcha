@@ -2,6 +2,7 @@
 	<?php echo $success_alert; ?>
   <h1><?php echo $output->get_head_title(); ?></h1>
 
+	<?php echo $error_alert['location']; ?>
 	<input type="hidden" name="latitude" value="<?php echo $form_prefill['latitude']; ?>">
 	<input type="hidden" name="longitude" value="<?php echo $form_prefill['longitude']; ?>">
 

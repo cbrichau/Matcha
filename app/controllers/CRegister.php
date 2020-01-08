@@ -8,7 +8,7 @@ $userMng = new MUserMngModifications();
 
 // Initialises the form's alerts and prefill values to null.
 $success_alert = '';
-$error_alert = array_fill_keys(array('email', 'username', 'first_name', 'last_name', 'password'), '');
+$error_alert = array_fill_keys(array('location', 'email', 'username', 'first_name', 'last_name', 'password'), '');
 $form_prefill = array_fill_keys(array('latitude', 'longitude', 'email', 'username', 'first_name', 'last_name'), '');
 
 // Processes the registration confirmation
@@ -38,6 +38,7 @@ else if (isset($_POST['register']))
   $form_prefill = $userMng->sanitize_for_output($form_prefill);
 
   // Checks the input is valid, or returns an error message.
+  $error_msg['location'] = $userMng->check_registration_location($_POST);
   $error_msg['email'] = $userMng->check_registration_email($_POST);
   $error_msg['username'] = $userMng->check_registration_username($_POST);
   $error_msg['first_name'] = $userMng->check_name($_POST, 'first_name');

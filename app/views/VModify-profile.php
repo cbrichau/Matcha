@@ -21,13 +21,15 @@
     <option value="0" <?php echo $form_prefill['location_no']; ?>>Off</option>
   </select>
 
+  <input type="hidden" name="latitude" value="<?php echo $form_prefill['latitude']; ?>">
+	<input type="hidden" name="longitude" value="<?php echo $form_prefill['longitude']; ?>">
+
   <?php
   $loc = str_replace(' ', ',', $form_prefill['location']);
   if ($form_prefill['location_on'] == '1')
-    echo '<input type="text" name="location" value="'.$form_prefill['location'].'" class="form-control">
-          <a href="https://www.google.be/maps/place/'.$loc.'" target="_blank">View on Maps</a>';
+    echo '<a href="https://www.google.be/maps/place/'.$loc.'" target="_blank">View on Maps</a> or Submit form to update';
   else
-    echo '<input type="hidden" name="location" value="'.$form_prefill['location'].'" class="form-control">';
+    echo '<input type="hidden" name="location" value="'.$form_prefill['location'].'" class="form-control" readonly>';
   ?>
 
   <label class="label">Bio</label>

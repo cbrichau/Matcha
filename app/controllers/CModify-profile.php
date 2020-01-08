@@ -15,7 +15,7 @@ $list_interests = $searchMng->list_interest_options();
 // Initialises the form's alerts to null,
 // and its and prefill values to the user's current info from the DB.
 $success_alert = '';
-$error_alert = array_fill_keys(array('gender', 'date_of_birth', 'location', 'bio', 'interests'), '');
+$error_alert = array_fill_keys(array('location', 'gender', 'date_of_birth', 'location', 'bio', 'interests'), '');
 $form_prefill = $userMng->sanitize_for_output($current_user->get_all_properties());
 
 foreach ($list_genders as $key => $v)
@@ -98,6 +98,7 @@ if (isset($_POST['modify']))
     $current_user->update_user_info($current_user, $_POST);
     $current_user->set_interests($selected_interests);
     $current_user->set_location_on($_POST['location_on']);
+    $current_user->set_location($_POST['latitude'].' '.$_POST['longitude']);
     $userMng->update_profile($current_user);
     $success_alert = '<div class="alert alert-success"><span>success:</span> Your profile has been modified</div>';
   }
@@ -108,4 +109,5 @@ $output->set_head_title('Modify my profile');
 
 require_once(Config::VIEW_HEADER);
 require_once(Router::$page['view']);
+echo '<script src="'.Config::JS_PATH.'localisation.js?'.time().'"></script>';
 require_once(Config::VIEW_FOOTER);

@@ -158,6 +158,8 @@ if (isset($_GET['id_user']) && !empty($_GET['id_user']))
         $action_options['block']['style'] = 'display:none;';
         $action_options['unblock']['style'] = '';
       }
+      if ($userMng->user_1_reported_user_2($_SESSION['id_user'], $_GET['id_user']) == 1)
+        $action_options['report']['style'] = 'display:none;';
 
       $match = '';
       if ($userMng->user_1_liked_user_2($_GET['id_user'], $_SESSION['id_user']))

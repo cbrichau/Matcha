@@ -16,10 +16,12 @@ function actions_user(id_user_1, id_user_2, action) {
 				case 'like':
 					document.getElementById("like").style.display = "none";
 					document.getElementById("unlike").style.display = "";
+					location.reload();
 					break;
 				case 'unlike':
 					document.getElementById("like").style.display = "";
 					document.getElementById("unlike").style.display = "none";
+					location.reload();
 					break;
 				case 'report':
 					document.getElementById("report").style.display = "none";
