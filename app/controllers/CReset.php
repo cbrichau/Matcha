@@ -21,7 +21,7 @@ $new_password_form = FALSE;
 if (isset($_GET['confirm']))
 {
   // Checks the validation code from the URL is valid. If so, returns a user object matching the user being confirmed,
-  // and updates that user (object + database entry) to validate him/her. Then logs the user and redirects to home.
+  // and s that user (object + database entry) to validate him/her. Then logs the user and redirects to home.
   $user = $userMng->get_user_reset_validation_code($_GET);
   if (!is_null($user))
   {
@@ -53,7 +53,7 @@ if (isset($_POST['reset_request']))
         $error_alert[$field] = '<div class="alert alert-danger"><span>error:</span> '.$msg.'</div>';
     }
   }
-  // If all good, modifies the user (updates the user object and the database).
+  // If all good, modifies the user (s the user object and the database).
   else
   {
     $user = $userMng->select_user_by('email', $_POST['email']);
@@ -83,7 +83,7 @@ if (isset($_POST['new_password']))
         $error_alert[$field] = '<div class="alert alert-danger"><span>error:</span> '.$msg.'</div>';
     }
   }
-  // If all good, modifies the user (updates the user object and the database).
+  // If all good, modifies the user (s the user object and the database).
   else
   {
     $user = $userMng->get_user_reset_validation_code(array('confirm' => $_POST['validation_code']));
@@ -91,7 +91,8 @@ if (isset($_POST['new_password']))
     {
       $user->encrypt_and_set_password($_POST['pass']);
       $user->set_email_confirmed(TRUE);
-      $userMng->update_user($user);
+	  $account_manager = new MUserMngModifications();
+      $account_manager->update_account($user);
       $userMng->login($user->get_username());
       header('Location: '.Config::ROOT.'');
     }

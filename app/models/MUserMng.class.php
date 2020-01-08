@@ -155,7 +155,8 @@ class MUserMng extends M_Manager
 
   public function reset_password(MUser $user)
   {
-    $this->update_user($user);
+	$account_manager = new MUserMngModifications();
+    $account_manager->update_account($user);
 
     $emailMng = new MEmailMng();
     $emailMng->send_reset_confirmation($user);
