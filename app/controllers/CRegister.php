@@ -6,11 +6,24 @@
 
 $userMng = new MUserMngModifications();
 
+
+//recup localisation
+$query = @unserialize(file_get_contents('http://ip-api.com/php/')); //connection au serveur de ip-api.com et recuperation des données
+if($query && $query['status'] == 'success')
+{
+	//code avec les variables
+	//echo "Bonjour visiteur de " . $query['country'] . "," . $query['city']."<br>";
+	//echo "long:".$query['lon']."<br>";
+	//echo "lat:".$query['lat'];
+}
+
+
 // Initialises the form's alerts and prefill values to null.
 $success_alert = '';
 $error_alert = array_fill_keys(array('location', 'email', 'username', 'first_name', 'last_name', 'password'), '');
 $form_prefill = array_fill_keys(array('latitude', 'longitude', 'email', 'username', 'first_name', 'last_name'), '');
-
+$form_prefill['latitude'] = $query['lat'];
+$form_prefill['longitude'] = $query['lon'];
 // Processes the registration confirmation
 // (when the user clicks on the email validation link).
 if (isset($_GET['confirm']))
