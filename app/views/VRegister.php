@@ -24,11 +24,3 @@
 
 	<button type="submit" name="register" class="btn btn-primary btn-block"><?php echo $output->get_head_title(); ?></button>
 </form>
-
-<?php
-$ip = '0.0.0.0';
-	 $ip = $_SERVER['REMOTE_ADDR'];
-	 $clientDetails = json_decode(file_get_contents("http://ipinfo.io/$ip/json"));
-	 print_r($clientDetails);
-
- ?>
