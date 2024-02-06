@@ -6,9 +6,12 @@ This website allows users to create an account, complete their personal profile 
 
 This was a 19 Coding School web project. It was created using PHP/PDO, MySQL, JavaScript/Ajax and HTML/CSS over 4 weeks by Clio Brichaut (@cbrichau) and Nicolas Raziano (@nraziano).
 
-Final grade: 100%.
+**Final grade: 100%.**
 
 Peer evaluations:
-1) 100% "gg"
-2) 100% "good dans l'ensemble, application du MVC très propre ! bonne continuation !"
-3) 100% "Bon projet, on se revoit sur hypertube !"
+
+> 100% _"gg"_
+
+> 100% _"good dans l'ensemble, application du MVC très propre ! bonne continuation !"_
+
+> 100% _"Bon projet, on se revoit sur hypertube !"_
